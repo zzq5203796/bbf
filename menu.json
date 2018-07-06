@@ -1,0 +1,42 @@
+{
+  "menu": [
+    {
+      "name": "快速链接",
+      "url": "#",
+      "hide": true,
+      "child": [
+        {
+          "name": "tp5.0手册",
+          "url": "https://www.kancloud.cn/manual/thinkphp5/125019",
+          "child": []
+        },
+        {
+          "name": "phpinfo",
+          "url": "/?a=phpinfo",
+          "child": []
+        },
+        {
+          "name": "server",
+          "url": "/?a=server",
+          "child": []
+        },
+        {
+          "name": "百度",
+          "url": "http://baidu.com",
+          "child": []
+        },
+        {
+          "name": "百度翻译",
+          "url": "http://fanyi.baidu.com/translate",
+          "child": []
+        }
+      ]
+    }
+  ],
+  "dir": {
+    "font_goods_html/html": "字谷网",
+    "template": "模板",
+    "drop": "drop",
+    "json": "json"
+  }
+}

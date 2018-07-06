@@ -1,0 +1,39 @@
+
+.icon {
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    display: inline-block;
+    background: url("/public/images/icon/loading.gif") no-repeat center;
+    background-size: contain;
+}
+
+.icon.icon-cir {
+    border: 2px solid #999;
+    box-sizing: border-box;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0);
+}
+
+.icon-dir {
+    background: #00a0e9;
+}
+.icon-link {
+    background-color: #a5a5a5;
+    background-image: url("/public/images/icon/link.png");
+    border-radius: 34%;
+    background-size: 75%;
+    padding-right: 1px;
+}
+.icon.icon-blue{
+    background-color: #0a77ff;
+}
+.layui-icon{
+    display: inline-block;
+    background: url("/public/images/icon/icon.png") no-repeat center;
+    width: 18px;
+    height: 18px;
+}
+.layui-icon.layui-close{
+    background-position: 3px -38px;
+}

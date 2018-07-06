@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>json</title>
+    <script type="text/javascript" src="/public/static/systemjs/system.min.js"></script>
+    <script type="text/javascript" src="/public/static/config.js"></script>
+    <style>
+        pre {
+            outline: 1px solid #ccc;
+            padding: 5px;
+            margin: 5px;
+        }
+
+        .title {
+            color: blue;
+        }
+
+        .value {
+            color: darkorange;
+        }
+
+        ul li {
+            list-style: none;
+        }
+
+        ul.josn-list {
+            padding-left: 20px;
+            font-size: 11px;
+        }
+
+        ul.josn-list li {
+            position: relative;
+            line-height: 18px;
+        }
+
+        .josn-list li .josn-list {
+            position: relative;
+        }
+
+        .josn-list li .key-value:hover {
+            background: #00a0e9;
+        }
+
+        ul.josn-list .icon {
+            width: 18px;
+            height: 17.5px;
+            float: left;
+            background-repeat: no-repeat;
+        }
+
+        ul.josn-list .icon.node {
+            margin-left: 2px;
+        }
+
+        ul.josn-list > li > .icon {
+            background-image: url("/Public/images/level-node.gif");
+        }
+
+        ul.josn-list > li:first-child > .icon {
+            /*background-image: url("/Public/images/level-node-show.gif");*/
+        }
+
+        ul.josn-list > li:last-child > .icon {
+            background-image: url("/Public/images/level-node-end.gif");
+        }
+
+        ul.josn-list > li.has-child > .icon {
+            background-image: url("/Public/images/level-node-hide.gif");
+        }
+
+        ul.josn-list > li.has-child.show > .icon {
+            background-image: url("/Public/images/level-node-show.gif");
+        }
+
+        ul.josn-list > li.has-child:last-child > .icon {
+            background-image: url("/Public/images/level-node-last-hide.gif");
+        }
+
+        ul.josn-list > li.has-child.show:last-child > .icon {
+            background-image: url("/Public/images/level-node-last-show.gif");
+        }
+
+        ul.josn-list > li > .icon.node {
+            background-image: url("/Public/images/level-item.gif");
+        }
+
+        ul.josn-list > li.has-child > .icon.node {
+            background-image: url("/Public/images/level-item-object.gif") !important;
+        }
+
+        ul.josn-list > li.has-child > .icon.node.array {
+            background-image: url("/Public/images/level-item-array.gif") !important;
+        }
+
+        ul.josn-list > li > ul.josn-list {
+            background-image: url("/Public/images/level-node-pass.gif");
+            background-repeat: repeat-y;
+        }
+
+        ul.josn-list > li:last-child > ul.josn-list {
+            background-image: url("..");
+        }
+        .fr{
+            float: right;
+        }
+        .box{
+            padding: 5px;
+            margin: 5px;
+            outline: 1px solid #ccc;
+            background: #f5f5f5;
+        }
+        .nav{
+            display: inline-block;
+            width: 100%;
+            padding: 2px 0;
+        }
+        .content{
+            padding: 0px;
+            margin: 5px 0 0 0;
+            outline: 0;
+            border-top: 1px dashed #ddd;
+        }
+        .toggle{
+            padding: 2px 8px;
+            margin: -2px 0px;
+            border-radius: 6px;
+            cursor: pointer;
+            background: rgba(0,0,0,.05);
+        }
+        .toggle:hover{
+            background: rgba(0,0,0,.08);
+        }
+        .sure{
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div  class="box">
+    <div class="nav">
+        JSON字符串
+        <div class="toggle fr" data-for="#strJson">切换</div>
+        <div class="fr toggle sure" data-for="#NULL">RUN</div>
+    </div>
+    <div class="content" id="strJson" style="border: 0">
+        <textarea style="width: 99%; min-height: 220px;"></textarea>
+    </div>
+</div>
+
+<div class="box">
+    <div class="nav">
+        内容
+        <div class="toggle fr" data-for="#songReqJson">toggle</div>
+    </div>
+    <pre class="content" id="songReqJson"></pre>
+</div>
+
+<div class="box">
+    <div class="nav">
+        结果
+        <div class="toggle fr" data-for="#jsonLevel">toggle</div>
+    </div>
+    <div class="content" id="jsonLevel" data-bind="template:{name:  'jsonItemTemplate'}"></div>
+</div>
+<script type="text/html" id="jsonItemTemplate">
+    <ul class="josn-list" data-bind="foreach: jsonData">
+        <li class="json-item"
+            onclick="var obj = $(this); obj.stop(true, false); obj.children('.josn-list').slideToggle(100, function(){obj.toggleClass('show');}); arguments[0].stopPropagation();"
+            data-bind="css: has_child?'has-child':''">
+            <i class="icon"></i>
+            <i class="icon node" data-bind="css: type"></i>
+            <div class="key-value">
+                <span class="title" data-bind="text: name+':'"></span>
+                <span class="value" data-bind="text: text"></span>
+            </div>
+            <!-- ko template:{name:  'jsonItemTemplate', data: {jsonData: child}} -->
+            <!-- /ko -->
+        </li>
+    </ul>
+</script>
+</body>
+<script type="application/javascript">
+    var songResJson = {
+        "service": "ALL",
+        test: {
+            a: 1,
+            b: 2
+        },
+        s: [
+            'a', 'sad'
+        ],
+        "qt": 581,
+        "content": {
+            "answer": {
+                "song": "如果缘只到遇见",
+                "album": "如果缘只到遇见",
+                "artist": "吴奇隆 严艺丹",
+                "pic_url": "http://p1.music.126.net/-u3WgIXsFNCW7d8Jy7pCEA==/5921969627395387.jpg"
+            },
+            "scene": "music"
+        }
+    };
+
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function (match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
+    // document.getElementById("songReqJson").innerHTML = JSON.stringify(songResJson,null,2);
+    document.getElementById("songReqJson").innerHTML = syntaxHighlight(songResJson);
+
+    var baseUrl = window.location.host;
+    window.entryJS = "/js/json.js";
+    importM(window.entryJS, function (module) {
+        window.myEntry = module;
+        console.log("加载完成", module);
+        if (window.onEntryLoad) {
+            window.onEntryLoad(module);
+        }
+    });
+    window.onEntryLoad = function () {
+        $('.toggle').click(function () {
+            var for_ele = $(this).attr('data-for');
+            for_ele = for_ele ? $(for_ele) : $(this);
+
+            for_ele.stop(true, false);
+            for_ele.slideToggle(100, function () {
+                for_ele.toggleClass('show');
+            });
+            arguments[0].stopPropagation();
+        });
+
+        $('.sure').click(function () {
+            var json_str = $('textarea').val();
+            window.myEntry.myViewModel.jsonData(window.myEntry.comm.json_data(json_str));
+            document.getElementById("songReqJson").innerHTML = syntaxHighlight(json_str);
+        });
+    }
+</script>
+</html>

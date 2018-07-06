@@ -1,0 +1,40 @@
+html,body,.window{ /*width: 100%;*/ height: 100%; }
+#left{width: 220px; height: 100%;float: left; overflow: hidden; background: #fafafa; color: #666; position: relative;}
+#right{height: 100%;background: #f5f5f5;margin-left: 0%; overflow: hidden;  position: relative;}
+#left .main, #right .main{height: 100%; width: 100%; overflow: auto;}
+
+.toggle-box{height: 100%; float: left; width: 10px; background: #f5f5f5;}
+/*#left .toggle-box:hover{opacity: 0.5;}*/
+.toggle-box .toggle-icon{position: relative; top: 39%;  z-index: +9999; width: 120%; height: 40px; line-height: 40px; padding-left: 4px; border: 0px solid  rgba(255,255,255,0.3); border-left: 0; border-radius: 0 8px 8px 0; background: rgba(180,180,180,0.5); opacity: 0.9;}
+.toggle-box:hover .toggle-icon{width: 140%; opacity: 1; background: rgba(180,180,180,1); }
+
+.hide #left{width: 0;}
+.hide #right{margin-left: 0;}
+#iframe { width: 100%;height: 99%; border: 0;}
+.point{cursor: pointer;}
+
+.top-tip{height: auto; padding: 5px 10px; background: #f5f5f5; border-bottom: 1px solid #ddd;}
+#left .main{position: absolute; top: 0; bottom: 2px; height: auto;}
+ul{padding: 0; margin: 0;}
+li{list-style: none;}
+.menu-level{ padding: 0 0 30px 0;}
+.menu-level li.menu-node{overflow: hidden;}
+.menu-level li.menu-node .menu-text{padding: 4px 8px; cursor: pointer; display: block; color: #666; text-decoration: none; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.menu-level li.menu-node .menu-text:hover{background: #e5e5e5;}
+.menu-level li.menu-node .menu-text.active{background: #e5e0e5;}
+.menu-level li.menu-node .menu-text > .icon{position: relative;}
+.menu-level li.menu-node .menu-next{padding-bottom: 4px; border-bottom: 0 solid #fff;}
+.menu-level li.menu-node:last-child > .menu-next {padding-bottom: 0; border: 0;}
+
+.menu-level li.menu-node .menu-next .menu-text{padding-left: 20px;}
+.menu-level.padded li.menu-node .menu-next .menu-next .menu-text{padding-left: 40px;}
+.menu-level.padded li.menu-node .menu-next .menu-next .menu-next .menu-text{padding-left: 60px;}
+.menu-level.padded li.menu-node .menu-next .menu-next .menu-next .menu-next .menu-text{padding-left: 80px;}
+.menu-level.margin li.menu-node .menu-next{ margin-left: 20px;}
+
+.scroll::-webkit-scrollbar{width: 8px;}
+.scroll::-webkit-scrollbar-button    { /* 定义滚动条的轨道的两端按钮 */ height: 0;}
+.scroll::-webkit-scrollbar-track     { /*定义滚动条轨道 内阴影+圆角*/-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 12px; background-color: #F5F5F5;}
+.scroll::-webkit-scrollbar-track-piece { /*background: #82AF0F;*/}
+.scroll::-webkit-scrollbar-thumb{ /* 定义滚动条滑块 内阴影+圆角 */border-radius: 12px;-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.1); background-color: rgba(72, 72, 72, 0.32); background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .2) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .2) 50%, rgba(255, 255, 255, .2) 75%, transparent 75%, transparent);}
+.scroll::-webkit-scrollbar-thumb:hover{ /* 定义滚动条滑块 鼠标滑动 */background-color: rgba(0, 0, 0, 0.52);}

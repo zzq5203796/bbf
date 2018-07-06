@@ -1,0 +1,146 @@
+@import "bbf.base.css";
+@import "icon.css";
+
+.scale-8 {
+    transform: scale(0.8, 0.8);
+}
+
+/* bbf-div-box statr */
+.bbf-div-box {
+    position: relative;
+    width: 420px;
+    background: #f9cc9d;
+    padding: 30px;
+    display: inline-block;
+}
+
+.bbf-div-box .bbf-div-name {
+    position: absolute;
+    width: 100%;
+    line-height: 30px;
+    text-align: center;
+    left: 0;
+    top: 0;
+    font-size: 16px;
+}
+
+.bbf-div-box .next .bbf-div-name {
+    top: 30px;
+}
+
+.bbf-div-box .bbf-div-name .bbf-input {
+    width: 64px;
+    padding: 6px 8px;
+    margin-left: 5px;
+    border: 0;
+    background: rgba(255, 255, 255, 0.2);
+}
+
+.bbf-input-title, .bbf-input-text {
+    width: 60px;
+    color: #424242;
+    text-align: right;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.bbf-input-text {
+    text-align: left;
+}
+
+.bbf-div-box .bbf-div-box-item {
+    position: relative;
+    padding: 30px;
+    background: #bcad3f;
+}
+
+.bbf-div-box > .bbf-div-box-item > .bbf-div-box-item {
+    background: #fddd9d;
+}
+
+.bbf-div-box > .bbf-div-box-item > .bbf-div-box-item > .bbf-div-box-item {
+    background: #8bb5c0;
+}
+
+/* bbf-div-box end */
+
+/* bbf-div-box-new start */
+.bbf-div-box.bbf-div-box-new {
+    width: 336px;
+}
+
+.bbf-div-box.bbf-div-box-new, .bbf-div-box.bbf-div-box-new .bbf-div-box-item {
+    padding: 24px;
+}
+
+.bbf-div-box.bbf-div-box-new .bbf-div-name {
+    line-height: 24px;
+}
+
+.bbf-div-box.bbf-div-box-new .next .bbf-div-name {
+    top: 24px;
+}
+
+.bbf-div-box.bbf-div-box-new .bbf-div-name .bbf-input {
+    font-size: 14px;
+    width: 52px;
+    padding: 5px 7px;
+}
+
+.bbf-div-box-new .bbf-input-title, .bbf-div-box-new .bbf-input-text {
+    width: 48px;
+}
+
+/* bbf-div-box-new end */
+
+.table {
+    display: table;
+}
+
+.table > div {
+    display: table-cell;
+}
+
+.table > div {
+    background: #f5f5f5;
+    padding: 0px 0px 4px 0px;
+    border: 1px solid #fff;
+}
+
+.table > div:nth-of-type(odd) {
+    background: #e6e6e6;
+}
+
+.table > div span {
+    background: #f5f5f5;
+}
+
+.table > div:nth-of-type(odd) span {
+    background: #e6e6e6;
+}
+
+.close-window{
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: +99999;
+    max-width: 36px;
+    max-height: 36px;
+    cursor: pointer;
+    box-sizing: border-box;
+    padding: 9px;
+    background: #f5f5f5;
+    display: none;
+}
+.close-window:hover{
+    background: #e5e5e5;
+}
+
+.full-window.in-full{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: +99900;
+}
