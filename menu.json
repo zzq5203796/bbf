@@ -11,6 +11,32 @@
           "child": []
         },
         {
+          "name": "layer",
+          "url": "http://layer.layui.com/",
+          "child": []
+        },
+        {
+          "name": "RMT-RUN",
+          "url": "http://rmt.cc",
+          "child": [
+            {
+              "name": "GAME",
+              "url": "http://rmt.cc/home/test/game",
+              "child": []
+            },
+            {
+              "name": "GOODS",
+              "url": "http://rmt.cc/home/test/goods",
+              "child": []
+            }
+          ]
+        },
+        {
+          "name": "jquery",
+          "url": "http://www.w3school.com.cn/jquery/index.asp",
+          "child": []
+        },
+        {
           "name": "phpinfo",
           "url": "/?a=phpinfo",
           "child": []
@@ -35,6 +61,9 @@
   ],
   "dir": {
     "font_goods_html/html": "字谷网",
+    "html/rmt0711/html": "RMT0711",
+    "rmt0714/html": "RMT0714",
+    "html/RMT/html": "RMT",
     "template": "模板",
     "drop": "drop",
     "json": "json"

@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>menu</title>
-    <link rel="stylesheet" href="/public/static/layui/css/layui.css"  media="all">
-    <link rel="stylesheet" href="/css/menu.css?t=123" media="all">
+    <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
+    <link rel="stylesheet" href="/css/menu.css?t=123" media="all">
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
 </head>
@@ -13,12 +13,55 @@
 <div class="window">
     <div id="left">
         <div class="top-tip">
-            <div class="button menu-show-all" title="展开所有">+</div>
-            <div class="button menu-hide-all" title="隐藏所有">-</div>
-            <div class="button ajax pull" url="/?a=font_goods_html/html&is_ajax=1" ajax-cb="pullCb" title="pull">pull</div>
+            <div class="auto-box">
+                <div class="button menu-show-all" title="展开所有">+</div>
+                <div class="button menu-hide-all" title="隐藏所有">-</div>
+                <div class="button ajax pull" url="/?a=font_goods_html/html&is_ajax=1" ajax-data="pullData" ajax-cb="pullCb" title="pull">
+                    pull
+                </div>
+            </div>
+            <div class="bbf-tabs">
+                <div class="bbf-tabs-select">
+                    <span class="bbf-tabs-item">STORE</span>
+                    <span class="bbf-tabs-item active">pull</span>
+                    <span class="bbf-tabs-item">3</span>
+                    <span class="bbf-tabs-item">4</span>
+                </div>
+                <div class="bbf-tabs-list">
+                    <div class="bbf-tabs-list-item">
+                        <div class="auto-box">
+                            <div class="button set-title">title</div>
+                            <div class="button sort">sort</div>
+
+                            <div class="ajax button"
+                                 url="/upload/get?method=menu&id=<?php echo $_GET['id']; ?>"
+                                 ajax-data="pullData()" ajax-cb="pullCb">pull
+                            </div>
+                            <div class="ajax ajax-post button"
+                                 url="/upload/json?method=menu&id=2"
+                                 ajax-data="storeData()">push
+                            </div>
+                            <span style="float: right" id="loader" title="玩命加载中......"></span>
+                        </div>
+                    </div>
+                    <div class="bbf-tabs-list-item" style="display: block;">
+                        <div class="auto-box">
+                            <p>
+                                url: <input name="pull_url" value=""/>
+                            </p>
+                            <p>
+                                extra: <input name="extra" value=""/>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="bbf-tabs-list-item">1231</div>
+                    <div class="bbf-tabs-list-item">1123</div>
+                </div>
+            </div>
         </div>
         <div class="main scroll">
             <ul class="menu-level padded">
+
                 <li class="menu-node">
                     <div class="menu-text">一级菜单top</div>
                 </li>
@@ -193,11 +236,25 @@
 
 
     <div id="right">
+        <div class="top-tip">
+            <a href="#" target="myIframe" style="color: #555;">首页</a>
+            <span> > </span>
+            <a id="menu_nav_link" href="#" target="myIframe" style="color: #565;">unkonw</a>
+
+
+            <div style="float: right;">
+                <div class="button get-title"></div>
+                <div class="progress-bar">
+                    <div class="bar"></div>
+                </div>
+                <div class="button full-window-btn">full</div>
+                <input placeholder="重命名" id="re_name" name="re_name" value=""
+                       style="float: right; border: 0; height: auto; margin-right: 10px; padding: 2px 5px; font-size: 16px;"/>
+            </div>
+        </div>
         <div class="main">
-            <!--<div style="width: 600px;">打死爱大地撒大死大所地一i31i31i31sad所大所多电视剧爱的骄傲的巨大经济安静安静安静安静骄傲骄傲积极上进十-->
-                <!--几岁开始看书看书看看书看书看看书看书看书看书看看书看书看书看看书看书看书看书看书看书看书看书看看书看书看书看看书看书看书看书看书看书看书看书看看书看书看书看看-->
-            <!--</div>-->
-            <iframe id="myIframe" name="myIframe" onload="loadFrame(this)" src="/index.html"></iframe>
+            <iframe class="full-window" id="myIframe" name="myIframe" onload="onloadFrame(this)"
+                    src="/index.html"></iframe>
         </div>
     </div>
 </div>
@@ -205,50 +262,7 @@
 <script type="text/javascript" src="/js/common.js"></script>
 <script type="text/javascript" src="/js/menu.js"></script>
 <script type="application/javascript">
-    function loadFrame(obj) {
-        try {
-            var url = obj.contentWindow.location.href;
-        } catch (e) {
-            console.log("not allow.");
-            return;
-        }
-        console.log(url)
-    }
-    //
-    // function setStorage(key, value) {
-    //     localStorage.setItem(key, JSON.stringify(value));
-    // }
-    //
-    // function getStorage(key) {
-    //     var str = localStorage.getItem(key);
-    //     return str ? JSON.parse(str) : [];
-    // }
-    //
-    // function pushStorage(key, value) {
-    //     var store = getStorage(key);
-    //     for (var i in store) {
-    //         var item = store[i];
-    //         if (item == value) {
-    //
-    //             return;
-    //         }
-    //     }
-    //     store.push(value);
-    //     setStorage(key, store);
-    // }
 
-    function menu() {
-
-        this.show = function () {
-
-        };
-
-        this.hide = function () {
-
-        };
-
-        return this;
-    }
 </script>
 <script type="application/javascript">
     // window.entryJS = "/js/menu.js";

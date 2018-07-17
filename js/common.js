@@ -18,9 +18,10 @@ $(".ajax").on('click', function (e) {
         success: (function (cb) {
             return function (res) {
                 if (res.status != 1) {
-                    alert(res.msg);
+                    showMsg(res.msg);
                     return;
                 }
+                showMsg(res.msg);
                 if (cb) {
                     eval(cb + "(res.data)");
                 }
@@ -28,7 +29,7 @@ $(".ajax").on('click', function (e) {
         })(cb),
         error: function (xhr, status, error) {
             console.log(xhr, status, error);
-            alert("请求失败.");
+            showMsg("请求失败.");
         },
         timeout: 30000
     });
@@ -96,6 +97,25 @@ $(document).keydown(function (e) {
     }
 });
 
+var progressLoadingTimeOut;
+
+function progressLoading(num) {
+    clearTimeout(progressLoadingTimeOut);
+    progressLoadingTimeOut = setTimeout(function () {
+        num = num ? num : 0;
+        num = num > 100 ? 100 : num;
+        progressBar(num);
+        if (num < 100) {
+            // num += 1;
+            num += Math.ceil(Math.random() * 5) + 1;
+            progressLoading(num);
+        }
+    }, 9);
+}
+
+function progressBar(num) {
+    $(".progress-bar .bar").width(num + "%").attr('data-afterContent', num + "%");
+}
 
 function setStore(name, key, value) {
     var store = getStore(name);
@@ -119,7 +139,7 @@ function getStore(name) {
     try {
         return JSON.parse(store);
     } catch (e) {
-        console.log("not found.");
+        showMsg("not found STORE [" + name + "]");
         return {};
     }
 }
@@ -135,7 +155,7 @@ function toggleWindow(obj) {
     var box = $(obj).attr("data-for");
     var box_obj = $(box ? "#" + box : '.full-window');
     if (box_obj.length == 0) {
-        console.log("can't found full window.", box_obj);
+        showMsg("can't found full window." + box);
         return false;
     }
     if ($(".close-window").length == 0) {
@@ -144,4 +164,19 @@ function toggleWindow(obj) {
 
     $(".close-window").toggle();
     box_obj.toggleClass("in-full");
+}
+
+$(".bbf-tabs .bbf-tabs-item").on('click', function (e) {
+    e.stopPropagation();
+    $(this).addClass("active").siblings().removeClass("active");
+    $(this).parents('.bbf-tabs').children(".bbf-tabs-list").children().eq($(this).index()).show().siblings().hide();
+});
+$(".bbf-tabs .bbf-tabs-item").mousemove(function (e) {
+    e.stopPropagation();
+    $(this).addClass("active").siblings().removeClass("active");
+    $(this).parents('.bbf-tabs').children(".bbf-tabs-list").children().eq($(this).index()).show().siblings().hide();
+});
+
+function showMsg(msg) {
+    layer.msg(msg);
 }

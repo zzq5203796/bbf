@@ -322,6 +322,7 @@ function curl_post($url, $params ){
  * @return mixed [type] [description]
  */
 function curl_get($url){
+    dump(123);
     $ch = curl_init();
     $header[] = "Accept-Charset: utf-8";
     curl_setopt($ch, CURLOPT_URL, $url);

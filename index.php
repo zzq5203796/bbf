@@ -1,4 +1,11 @@
 <?php
+
+/**
+ * a = for action
+ * id = user ID
+ * is_ajax = is return ajax
+ * extra = undo, will extra read file
+ */
 $action = $_GET['a'];
 $auto_tree = [
     'phpinfo',
@@ -16,13 +23,19 @@ $host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "/";
 $menu = json_decode(file_get_contents('../menu.json'), true);
 $tree = $menu['menu'];
 $dirs = $menu['dir'];
-if (isset($menu['dir'][$action])) {
-    $dirs = [$action => $menu['dir'][$action]];
+foreach ($menu['dir'] as $key => $value) {
+    if ($action == $key || $action == $value) {
+        $dirs = [$key => $value];
+        break;
+    }
 }
+
+$extra = $_GET['extra'];
+$extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
 foreach ($dirs as $key => $name) {
     $dir = is_numeric($key)? $name: $key;
     $dir_tree = get_dir_tree($dir, ['js', 'css']);
-    $tree[] = add_tree($key, $name . "(" . count($dir_tree) . ")", $dir_tree);
+    $tree[] = add_tree($key, $name, $dir_tree);
 }
 
 if ($_GET['is_ajax']) {
@@ -41,12 +54,12 @@ function show_tree($tree) {
         $has_child = !empty($brech['child']);
         $lable = $has_child? 'div': 'a';
         $href = $brech['url'];
-        $title = $brech['name'];
-        $class = $brech['hide']? 'hide': '';
+        $title = $brech['name'] . ($brech['length'] > 0? "(" . $brech['length'] . ")": '');
+        $class = $brech['hide'] || $brech['length'] > 8 || $brech['all_length'] > 16? 'hide': '';
         $next = $has_child? "<ul class='menu-next $class'>" . show_tree($brech['child']) . "</ul>": '';
         $icon = $has_child? "<i class='icon icon-cir' ></i>": "<i class='icon icon-link' style='position: relative;'><i style='width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;'></i></i>";
 
-        $str .= "<li class='menu-node'><$lable href='$href' target=\"myIframe\" class='menu-text' title='$title' onclick='menuToggle(this);'>$icon$title</$lable>$next</li>";
+        $str .= "<li class='menu-node'><$lable href='$href' target=\"myIframe\" class='menu-text' title='$title " . $brech['all_length'] . "' onclick='menuToggle(this);' data-length='" . $brech['length'] . "' data-alllength='" . $brech['all_length'] . "'>$icon$title</$lable>$next</li>";
     }
     return $str;
 }
@@ -141,70 +154,86 @@ function show_tree($tree) {
     </style>
 </head>
 <body>
-<table border="0" class="bbf-box-full" style="position: fixed; top: 0;left: 0;z-index: 100;">
-    <tr class="main_nav_td hide">
-        <td colspan="2" class="main_nav">
-            <div class="div">
-                <p>
-                    hello welcome to 8081
-                </p>
-                <?php
-                echo "document root.  < index.php >";
-                ?>
-                <a href="/public/index.php"> Here We Go!</a>
-            </div>
-        </td>
-    </tr>
-
-    <tr>
-        <td rowspan="2" class="main_left">
-            <div class="left-box bbf-box-full scroll">
-                <div class="menu-level padded">
-                    <?php echo $tree_str; ?>
+<div class="bbf-box-full">
+    <table border="0" class="bbf-box-full" style="position: fixed; top: 0;left: 0;z-index: 100;">
+        <tr class="main_nav_td hide">
+            <td colspan="2" class="main_nav">
+                <div class="div">
+                    <p>
+                        hello welcome to 8081
+                    </p>
+                    <?php
+                    echo "document root.  < index.php >";
+                    ?>
+                    <a href="/public/index.php"> Here We Go!</a>
                 </div>
-            </div>
-        </td>
-        <td class="main_right_nav">
-            <div class="iframe-lable">
-                <a href="#" target="myIframe" style="color: #555;">首页</a>
-                <span> > </span>
-                <a id="main_right_nav_a_2" href="<?php echo $iframe_url; ?>" target="myIframe"
-                   style="color: #565;"><?php echo $iframe_url; ?></a>
+            </td>
+        </tr>
 
-                <div style="float: right;">
-                    <div class="button set-title">title</div>
-                    <div class="button sort">sort</div>
-                    <div class="button full-window-btn">full</div>
-
-                    <div class="ajax button"
-                         url="/upload/get?method=menu&id=<?php echo $_GET['id']; ?>"
-                         ajax-data="" ajax-cb="pullCb">pull
+        <tr>
+            <td rowspan="2" class="main_left">
+                <div class="left-box bbf-box-full scroll">
+                    <div class="menu-level padded">
+                        <?php echo $tree_str; ?>
                     </div>
-                    <div class="ajax ajax-post button"
-                         url="/upload/json?method=menu&id=<?php echo $_GET['id']; ?>"
-                         ajax-data="storeData()">push
-                    </div>
-                    <span style="float: right" id="loader" title="玩命加载中......"></span>
-                    <input placeholder="重命名" id="re_name" name="re_name" value=""
-                           style="float: right; border: 0; height: auto; margin-right: 10px; padding: 2px 5px; font-size: 16px;"/>
                 </div>
-            </div>
-        </td>
-    </tr>
-    <!--  frame  -->
-    <tr>
-        <td class="main-right-iframe" valign="top">
-            <div style="height: 100%; width: 100%; display: table;" class="full-window">
-                <iframe id="myIframe" name="myIframe" src="<?php echo $iframe_url; ?>"></iframe>
-            </div>
-        </td>
-    </tr>
-</table>
+            </td>
+            <td class="main_right_nav">
+                <div class="iframe-lable">
+                    <a href="#" target="myIframe" style="color: #555;">首页</a>
+                    <span> > </span>
+                    <a id="main_right_nav_a_2" href="<?php echo $iframe_url; ?>" target="myIframe"
+                       style="color: #565;"><?php echo $iframe_url; ?></a>
+
+                    <div style="float: right;">
+                        <div class="button get-title"></div>
+                        <div class="progress-bar">
+                            <div class="bar"></div>
+                        </div>
+                        <div class="button set-title">title</div>
+                        <div class="button sort">sort</div>
+                        <div class="button full-window-btn">full</div>
+
+                        <div class="ajax button"
+                             url="/upload/get?method=menu&id=<?php echo $_GET['id']; ?>"
+                             ajax-data="" ajax-cb="pullCb">pull
+                        </div>
+                        <div class="ajax ajax-post button"
+                             url="/upload/json?method=menu&id=<?php echo $_GET['id']; ?>"
+                             ajax-data="storeData()">push
+                        </div>
+                        <span style="float: right" id="loader" title="玩命加载中......"></span>
+                        <input placeholder="重命名" id="re_name" name="re_name" value=""
+                               style="float: right; border: 0; height: auto; margin-right: 10px; padding: 2px 5px; font-size: 16px;"/>
+                    </div>
+                </div>
+            </td>
+        </tr>
+        <!--  frame  -->
+        <tr>
+            <td class="main-right-iframe" valign="top">
+                <div style="height: 100%; width: 100%; display: table;" class="full-window">
+                    <iframe id="myIframe" onload="onloadFrame()" name="myIframe" src="<?php echo $iframe_url; ?>"></iframe>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>
 <script src="/js/jquery.min.js"></script>
 <script src="/js/common.js"></script>
 </body>
 <script>
     var checkobj;
+
+    function onloadFrame() {
+        var $mainFrame = $('#myIframe');
+        $mainFrame.contents().attr("title");
+        $(".get-title").text($mainFrame.contents().attr("title"));
+    }
+
+    $(".get-title").click(function () {
+        onloadFrame();
+    });
 
     function menuToggle(obj) {
         checkobj = obj;
@@ -214,7 +243,7 @@ function show_tree($tree) {
         }
     }
 
-    $(".menu-level").on('click', '.menu-node>.menu-text',function (e) {
+    $(".menu-level").on('click', '.menu-node>.menu-text', function (e) {
         e.stopPropagation();
         if ($(this).attr('disabled') == 'disabled') {
             return false;
@@ -223,9 +252,11 @@ function show_tree($tree) {
             return false;
         }
         $("#main_right_nav_a_2").text($(this).text());
+        $(".get-title").text("loading...");
         $("#main_right_nav_a_2").attr('href', $(this).attr('href'));
         $(".menu-node>.menu-text").removeClass('active');
         $(this).addClass('active');
+        progressLoading(0);
     });
     $("#re_name").change(function () {
         var text = $(this).val();

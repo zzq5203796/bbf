@@ -36,7 +36,7 @@ function server() {
  * @return array
  */
 function get_dir_tree($dir_t, $extra = []) {
-    $dir_tree = ['name' => '.'];
+    $dir_tree = [];
     $host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "/";
     $dir = __DIR__ . DS . ".." . DS;
     $dir_t .= DS;
@@ -48,31 +48,42 @@ function get_dir_tree($dir_t, $extra = []) {
     //获取也就是扫描文件夹内的文件及文件夹名存入数组 $filesnames
     $filesnames = scandir($full_dir);
     foreach ($filesnames as $name) {
-        if (in_array($name, ['..', '.']) || in_array(array_pop(explode('.', $name)), $extra)) {
+        $ext = trim(array_pop(explode('.', $name)));
+        if (in_array($name, ['..', '.']) || in_array($ext, $extra)) {
             continue;
         }
         $filename = $dir_t . $name;
-        $child = get_dir_tree($filename);
+        $child_tree = get_dir_tree($filename, $extra);
         $url = $host . $dir_t . $name;
-        $dir_tree[] = ['url' => $url, 'name' => $name, 'child' => $child];
+        $dir_tree[] = add_tree($url, $name, $child_tree);
     }
     return $dir_tree;
 }
 
 function add_tree($url = '#', $name = '', $child = []) {
-    return ['url' => $url, 'name' => $name, 'child' => $child];
+    $count = count($child);
+
+    return ['url' => $url, 'name' => $name, 'child' => $child, 'length' => $count, 'all_length' => $count + array_sum_by_key($child, 'length')];
+}
+
+function array_sum_by_key($data, $key = "length") {
+    $count = 0;
+    foreach ($data as $vo) {
+        $count += $vo[$key];
+    }
+    return $count;
 }
 
 function write($file, $data) {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
-    $myfile = fopen($file, "w") or die("Unable to open file!");
+    $myfile = fopen($file, "w") or die("Unable to open file! $file");
     fwrite($myfile, $data);
     fclose($myfile);
 }
 
 function read($file, $data) {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
-    $myfile = fopen($file, "r") or die("Unable to open file!");
+    $myfile = fopen($file, "r") or die("Unable to open file! $file");
     $content = fread($myfile, filesize($file));
     fclose($myfile);
     return $content;
