@@ -6,6 +6,7 @@ function load_menu() {
             return false;
         }
         if ($(this).next().length > 0) {
+            $(this).children(".icon-xiajiantou").toggleClass('icon-youjiantou');
             $(this).next().toggle('fast');
             return false;
         } else {
@@ -47,9 +48,11 @@ function load_menu() {
 
     // toggle menu box
     $(".menu-show-all").click(function () {
+        $(".menu-text").children(".icon-xiajiantou").removeClass('icon-youjiantou');
         $(".menu-text").next().show();
     });
     $(".menu-hide-all").click(function () {
+        $(".menu-text").children(".icon-xiajiantou").addClass('icon-youjiantou');
         $(".menu-text").next().hide();
     });
 
@@ -58,16 +61,23 @@ function load_menu() {
         left_status = true;
     $("#left .main").width(left_width);
     $("#left .top-tip").width(left_width - 20);
-    $("#left .top-tip").height($("#left .top-tip").outerHeight() + "px");
+    $("#left .top-tip").height($("#left .top-tip").height() + "px");
     $("#left .main").css('top', $("#left .top-tip").outerHeight() + "px");
     $("#right .main").css('top', $("#right .top-tip").outerHeight() + "px");
 
     // toggle left box
     $(".toggle-box").click(function () {
-        var t = 500,
+        var t = 500, that = this,
             width = left_status > 0 ? 0 : left_width;
         left_status = !left_status;
-        $("#left").animate({width: width}, t);
+        $("#left").animate({width: width}, t, animateEnd);
+
+        function animateEnd() {
+            $(that).children('.toggle-icon')[width == 0 ? 'removeClass' : 'addClass']("icon-zuojiantou");
+        }
+    });
+    $().click(function () {
+
     });
 }
 
@@ -75,6 +85,7 @@ load_menu();
 auto();
 
 function auto() {
+    $(".pull_action").val(getStore("pull")['pull_action']);
     $(".pull").click();
     storeAuto();
 }
@@ -101,7 +112,7 @@ function has_hide() {
     var obj = $(".menu-text");
     for (var i = 0; i < obj.length; i++) {
         if (i > 300)
-            break
+            break;
         if (!is_show($(obj[i]))) {
             return true;
         }
@@ -114,7 +125,9 @@ function is_show(obj) {
 }
 
 function pullData() {
-    return {a: 'RMT0714'}
+    var a = $(".pull_action").val();
+    setStore("pull", 'pull_action', a);
+    return {a: a}
 }
 
 function pullCb(data) {
@@ -133,13 +146,17 @@ function getMenuHtml(data) {
         if (!data[i].name) {
             continue;
         }
-        // console.log(data[i].child.length > 0)
-        child = data[i].child.length == 0 ? '' : '<ul class="menu-next">' + getMenuHtml(data[i].child) + '</ul>';
-        icon = data[i].child.length == 0 ? '<i class=\'icon icon-link\' ><i style=\'width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;\'></i></i>' : '<i class=\'icon icon-cir\' ></i>';
+        // console.log(data[i]);
+        var count = getAutoData(data[i].child.length, 0);
+        var all_count = getAutoData(data[i].all_length, '');
+        var title = data[i].name + getAutoData(count, '', "(" + count + ")");
+
+        child = count == 0 ? '' : '<ul class="menu-next" style="display: none;">' + getMenuHtml(data[i].child) + '</ul>';
+        icon = count == 0 ? '<i class="icon iconfont icon-lianjie" ><i style="width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;"></i></i>' : '<i class="icon iconfont icon-xiajiantou icon-youjiantou"></i>';
 
         str += '<li class="menu-node">' +
-            '<a class="menu-text" title="' + data[i].name + '" href="' + data[i].url + '" target="myIframe">' +
-            icon + data[i].name +
+            '<a class="menu-text" title="' + title + all_count + '" href="' + data[i].url + '" target="myIframe">' +
+            icon + title +
             '</a>' +
             child +
             '</li>';
@@ -150,11 +167,18 @@ function getMenuHtml(data) {
 function onloadFrame(obj) {
     var $mainFrame = $('#myIframe');
     try {
-        $mainFrame.contents().attr("title");
-        var url = obj.contentWindow.location.href;
+        var title = $('#myIframe').contents()[0].title;
+        title = '^_^' + title;
+        // var url = obj.contentWindow.location.href;
     } catch (e) {
         showMsg("not allow.");
+        console.log(e);
         return;
     }
-    $(".get-title").text($mainFrame.contents().attr("title"));
+    $(".get-title").text(title);
+    $("title").html($("title").html().split("^_^")[0] + title);
+}
+
+function getAutoData(name, value, new_value) {
+    return name ? (new_value ? new_value : name) : value;
 }

@@ -4,8 +4,8 @@
     height: 12px;
     margin-right: 4px;
     display: inline-block;
-    background: url("/public/images/icon/loading.gif") no-repeat center;
-    background-size: contain;
+    /*background: url("/public/images/icon/loading.gif") no-repeat center;*/
+    /*background-size: contain;*/
 }
 
 .icon.icon-cir {

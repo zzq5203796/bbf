@@ -170,7 +170,7 @@
     top: 0;
 }
 
-.auto-box{
+.auto-box {
     padding: 2px 4px;
 }
 
@@ -183,7 +183,7 @@
     position: relative;
 }
 
-.bbf-tabs .bbf-tabs-item{
+.bbf-tabs .bbf-tabs-item {
     cursor: pointer;
     display: inline-block;
     min-width: 30px;
@@ -200,4 +200,20 @@
 
 .bbf-tabs .bbf-tabs-list .bbf-tabs-list-item {
     display: none;
+}
+
+.keycontent {
+    background: #0C0C0C;
+    padding: 0 8px;
+    margin: 0 -10px 0 -10px;
+    position: relative;
+    z-index: +1;
+}
+
+.keycontent p {
+    padding: 4px 0;
+    color: #ccc;
+}
+.keycontent p:last-child {
+    padding-bottom: 10px;
 }

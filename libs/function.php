@@ -28,7 +28,9 @@ function go_auto_home() {
 function server() {
     dump($_SERVER);
 }
-
+function show_now(){
+    echo date("Y-m-d H:i:s")." <br/>\r\n";
+}
 /**
  * 获取文件夹里面所有文件
  * @param $dir_t
@@ -81,7 +83,7 @@ function write($file, $data) {
     fclose($myfile);
 }
 
-function read($file, $data) {
+function read($file, $data=[]) {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
     $myfile = fopen($file, "r") or die("Unable to open file! $file");
     $content = fread($myfile, filesize($file));

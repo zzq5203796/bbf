@@ -4,11 +4,26 @@
     <meta charset="UTF-8">
     <title>menu</title>
     <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
     <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
-    <link rel="stylesheet" href="/css/menu.css?t=123" media="all">
+    <link rel="stylesheet" href="/min/css/menu.min.css?t=123" media="all">
     <script type="text/javascript" src="/js/jquery.min.js"></script>
     <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
 </head>
+<style>
+    #con {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 10;
+    }
+
+    .ball {
+        position: absolute;
+        border-radius: 50%;
+    }
+</style>
 <body>
 <div class="window">
     <div id="left">
@@ -16,15 +31,24 @@
             <div class="auto-box">
                 <div class="button menu-show-all" title="展开所有">+</div>
                 <div class="button menu-hide-all" title="隐藏所有">-</div>
-                <div class="button ajax pull" url="/?a=font_goods_html/html&is_ajax=1" ajax-data="pullData" ajax-cb="pullCb" title="pull">
+                <div class="button ajax pull" url="/?is_ajax=1" ajax-data="pullData()" ajax-cb="pullCb" title="pull">
                     pull
                 </div>
+                <div class="button reload iconfont"
+                     style="font-size: 18px; padding: 0px 6px 3px 6px; line-height: 18px;" title="刷新">&#xe722;
+                </div>
+                <!--<div class="button reload bbf-padded-0" title="刷新"><i class="icon iconfont">&#xe722;</i></div>-->
+                <!--<div class="button reload" title="刷新"><i class="icon iconfont">&#xe650;</i></div>-->
             </div>
             <div class="bbf-tabs">
+                <div>
+                    <div class="button bbf-tabs-prev" title="">&lt;</div>
+                    <div class="button bbf-tabs-next" title="">&gt;</div>
+                </div>
                 <div class="bbf-tabs-select">
-                    <span class="bbf-tabs-item">STORE</span>
+                    <span class="bbf-tabs-item over">STORE</span>
                     <span class="bbf-tabs-item active">pull</span>
-                    <span class="bbf-tabs-item">3</span>
+                    <span class="bbf-tabs-item">KEY</span>
                     <span class="bbf-tabs-item">4</span>
                 </div>
                 <div class="bbf-tabs-list">
@@ -32,10 +56,9 @@
                         <div class="auto-box">
                             <div class="button set-title">title</div>
                             <div class="button sort">sort</div>
-
                             <div class="ajax button"
-                                 url="/upload/get?method=menu&id=<?php echo $_GET['id']; ?>"
-                                 ajax-data="pullData()" ajax-cb="pullCb">pull
+                                 url="/upload/get?method=menu"
+                                 ajax-data="pullData()" ajax-cb="pullCb1">pull
                             </div>
                             <div class="ajax ajax-post button"
                                  url="/upload/json?method=menu&id=2"
@@ -46,202 +69,44 @@
                     </div>
                     <div class="bbf-tabs-list-item" style="display: block;">
                         <div class="auto-box">
-                            <p>
-                                url: <input name="pull_url" value=""/>
-                            </p>
-                            <p>
-                                extra: <input name="extra" value=""/>
-                            </p>
+                            <form id="pullForm">
+                                <p style="padding: 3px 0;">
+                                    url: <input style="width: 50%" name="pull_action" class="pull_action" placeholder="pull action" value="RMT0718"/>
+                                </p>
+                                <p style="padding: 3px 0 0 0;">
+                                    <input name="extra" value="" class="input-2" placeholder="extra"/>
+                                    <input name="username" value="" class="input-2" placeholder="name"/>
+                                </p>
+                            </form>
                         </div>
                     </div>
-                    <div class="bbf-tabs-list-item">1231</div>
-                    <div class="bbf-tabs-list-item">1123</div>
+                    <div class="bbf-tabs-list-item full">
+                        <div class="keycontent"></div>
+                    </div>
+                    <div class="bbf-tabs-list-item">
+                        <div class="button change-back" title="背景">背景</div>
+                    </div>
                 </div>
             </div>
         </div>
         <div class="main scroll">
             <ul class="menu-level padded">
-
+                <!-- menu -->
                 <li class="menu-node">
-                    <div class="menu-text">一级菜单top</div>
-                </li>
-                <li class="menu-node">
-                    <div class="menu-text">一级菜单</div>
-                    <ul class="menu-next">
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                            <ul class="menu-next">
-                                                <li class="menu-node">
-                                                    <div class="menu-text">五级菜单</div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                            <ul class="menu-next">
-                                                <li class="menu-node">
-                                                    <div class="menu-text">五级菜单</div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-node">
-                    <div class="menu-text">一级菜单一级菜单一级菜单一级菜单一级菜单一级菜单一级菜单</div>
-                    <ul class="menu-next">
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-node">
-                    <div class="menu-text">一级菜单</div>
-                    <ul class="menu-next">
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                            <ul class="menu-next">
-                                                <li class="menu-node">
-                                                    <div class="menu-text">五级菜单</div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                            <ul class="menu-next">
-                                                <li class="menu-node">
-                                                    <div class="menu-text">五级菜单</div>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </li>
-                <li class="menu-node">
-                    <div class="menu-text">一级菜单</div>
-                    <ul class="menu-next">
-                        <li class="menu-node">
-                            <div class="menu-text">二级菜单</div>
-                            <ul class="menu-next">
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li class="menu-node">
-                                    <div class="menu-text">三级菜单</div>
-                                    <ul class="menu-next">
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                        <li class="menu-node">
-                                            <div class="menu-text">四级菜单</div>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
+                    <div class="menu-text"><a href="/zip/js">一级菜单top</a></div>
                 </li>
             </ul>
         </div>
     </div>
     <div class="toggle-box point">
-        <div class="toggle-icon">》</div>
+        <div class="toggle-icon iconfont icon-youjiantou icon-zuojiantou"></div>
     </div>
-
 
     <div id="right">
         <div class="top-tip">
             <a href="#" target="myIframe" style="color: #555;">首页</a>
             <span> > </span>
             <a id="menu_nav_link" href="#" target="myIframe" style="color: #565;">unkonw</a>
-
-
             <div style="float: right;">
                 <div class="button get-title"></div>
                 <div class="progress-bar">
@@ -258,12 +123,46 @@
         </div>
     </div>
 </div>
-</body>
-<script type="text/javascript" src="/js/common.js"></script>
-<script type="text/javascript" src="/js/menu.js"></script>
-<script type="application/javascript">
-
+<div id="con"></div>
+<div style="width: 50px; height: 50px;border-radius: 50px; background: #999; display: inline-block; position: fixed; z-index: +99999;"
+     class="jump"></div>
+<script type="text/html" id="menuItem">
+    <li class="menu-node">
+        <div class="menu-text">一级菜单</div>
+        <ul class="menu-next">
+            <!-- menu child -->
+        </ul>
+    </li>
 </script>
+<script type="text/html" id="tabBox">
+    <div class="bbf-tabs">
+        <div>
+            <div class="button bbf-tabs-prev" title="">&lt;</div>
+            <div class="button bbf-tabs-next" title="">&gt;</div>
+        </div>
+        <div class="bbf-tabs-select">
+            <span class="bbf-tabs-item over">STORE</span>
+            <span class="bbf-tabs-item active">pull</span>
+            <span class="bbf-tabs-item">KEY</span>
+            <span class="bbf-tabs-item">4</span>
+        </div>
+        <div class="bbf-tabs-list">
+            <div class="bbf-tabs-list-item">
+            </div>
+            <div class="bbf-tabs-list-item" style="display: block;">
+            </div>
+            <div class="bbf-tabs-list-item full">
+            </div>
+            <div class="bbf-tabs-list-item">
+            </div>
+        </div>
+    </div>
+</script>
+</body>
+<script type="text/javascript" src="/js/string.js"></script>
+<script type="text/javascript" src="/min/js/common.min.js"></script>
+<script type="text/javascript" src="/min/js/menu.min.js"></script>
+<script type="text/javascript" src="/js/jump.js"></script>
 <script type="application/javascript">
     // window.entryJS = "/js/menu.js";
 </script>

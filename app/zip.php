@@ -15,41 +15,70 @@ class Zip
     }
 
     public function index() {
+        echo "welcome.";
+    }
+
+    public function menu() {
+        $this->js();
+        $this->css();
+//        sleep(3);
+    }
+    public function js() {
+        $data = [
+            "js/menu",
+            "js/common",
+        ];
+        foreach($data as $vo){
+            $this->parse_js($vo, ['time' => 1]);
+        }
+        echo date("Y-m-d H:i:s") . " success<br/>";
+    }
+
+    public function parse_js($file, $option=[]) {
+        $option = array_merge(['name' => '', 'time' => false, 'check' => false], $option);
+        $ext = "js";
+        $content = read("../$file.$ext");
+        $content = $this->parse_js_content($content);
+        if ($option['time']) {
+            $content = '/* ' . date("Y-m-d H:i:s") . " */\r\n" . $content;
+        }
+        write("../min/$file.min.$ext", $content);
+        return $content;
+    }
+
+    public function css() {
+        $data = [
+            "css/menu"
+        ];
+        foreach($data as $vo){
+            parse_css($vo, ['time' => 1]);
+        }
+        echo date("Y-m-d H:i:s") . " success.<br/>";
+    }
+
+    public function index_min() {
         $file = "js/menu";
-        $file = "css/menu";
-        $ext = "css";
-        $file_content = read("../$file.$ext");
-        $js = JSMin::minify($file_content);
-        //        $files = glob("js/*.js");
-        //        $js = "";
-        //        foreach($files as $file) {
-        //            $js .= JSMin::minify(file_get_contents($file));
-        //        }
-        write("../$file.min.$ext", $js);
+        $ext = "js";
+        $content = read("../$file.$ext");
+        $content = JSMin::minify($content);
+        write("../min/$file.min.$ext", $content);
         echo "success";
     }
 
-    public function index_zip() {
-        $file = "js/menu";
-        $newjs = $this->zip(read("../$file.js"));
-        write("../$file.min.js", $newjs);
-    }
-
-    public function zip($js) {
+    protected function parse_js_content($js) {
         $h1 = 'http://';
         $s1 = '【:??】';    //标识“http://”,避免将其替换成空
         $h2 = 'https://';
         $s2 = '【s:??】';    //标识“https://”
-        preg_match_all('#include\("([^"]*)"([^)]*)\);#isU', $js, $arr);
-        if (isset($arr[1])) {
-            foreach ($arr[1] as $k => $inc) {
-                $path = "http://www.xxx.com/";          //这里是你自己的域名路径
-                $temp = file_get_contents($path . $inc);
-                $js = str_replace($arr[0][$k], $temp, $js);
-            }
-        }
-
-        $js = preg_replace('#function include([^}]*)}#isU', '', $js);//include函数体
+        //        preg_match_all('#include\("([^"]*)"([^)]*)\);#isU', $js, $arr);
+        //        if (isset($arr[1])) {
+        //            foreach ($arr[1] as $k => $inc) {
+        //                $path = "http://www.xxx.com/";          //这里是你自己的域名路径
+        //                $temp = file_get_contents($path . $inc);
+        //                $js = str_replace($arr[0][$k], $temp, $js);
+        //            }
+        //        }
+        //        $js = preg_replace('#function include([^}]*)}#isU', '', $js);//include函数体
         $js = preg_replace('#\/\*.*\*\/#isU', '', $js);//块注释
         $js = str_replace($h1, $s1, $js);
         $js = str_replace($h2, $s2, $js);
@@ -57,7 +86,7 @@ class Zip
         $js = str_replace($s1, $h1, $js);
         $js = str_replace($s2, $h2, $js);
         $js = str_replace("\t", "", $js);//tab
-        $js = preg_replace('#\s?(=|>=|\?|:|==|\+|\|\||\+=|>|<|\/|\-|,|\()\s?#', '$1', $js);//字符前后多余空格
+        $js = preg_replace('#\s*(=|>=|\?|:|==|\+|\|\||\+=|>|<|\/|\-|,|{|}|;|\(|\))\s*#', '$1', $js);//字符前后多余空格
         $js = str_replace("\t", "", $js);//tab
         $js = str_replace("\r\n", "", $js);//回车
         $js = str_replace("\r", "", $js);//换行
@@ -66,6 +95,67 @@ class Zip
         return $js;
     }
 
+}
+
+/**
+ *  合并压缩css
+ * @param $files
+ * @param array $option [name|time]
+ * @return string
+ */
+function parse_css($files, $option = []) {
+    $path = '../min/';
+    $ext = "css";
+    $option = array_merge(['name' => '', 'time' => false, 'check' => false], $option);
+    $files = is_array($files)?: [$files];
+    $filename = $option['name'];
+    $filename = empty($filename)? (count($files) == 1? $files[0] . ".min": "$ext/" . md5(implode(',', $files))): "$filename.min";
+    $css_url = $path . $filename . ".$ext";
+    if ($option['check'] && file_exists($css_url)) {
+        return $css_url;
+    }
+    $content = '';
+    foreach ($files as $file) {
+        $content .= read("../$file.$ext");
+    }
+    $content = parse_css_content($content);
+    if ($option['time']) {
+        $content = '/* ' . date("Y-m-d H:i:s") . " */\r\n" . $content;
+    }
+    write($css_url, $content);
+    return $css_url;
+}
+
+function parse_css_content($content) {
+    $content = preg_replace('#\/\*.*\*\/#isU', '', $content);//清除块注释;
+    //    $content = str_replace(["\r\n", "\n", "\t"], '', $content); //清除换行符 制表符 空格
+
+    $content = preg_replace('#\s*(:|;|{|}|,)\s*#', '$1', $content);//字符前后多余空格
+    return $content;
+}
+
+/**
+ *  合并压缩js
+ */
+function parse_script($urls) {
+    $url = md5(implode(',', $urls));
+    $path = FCPATH . '/static/parse/';
+    $js_url = $path . $url . '.js';
+    if (!file_exists($js_url)) {
+        if (!file_exists($path))
+            mkdir($path, 0777);
+        load_qy_lib('JavaScriptPacker');
+        $js_content = '';
+        foreach ($urls as $url) {
+            $append_content = @file_get_contents($url) . "\r\n";
+            $packer = new JavaScriptPacker($append_content);
+            $append_content = $packer->_basicCompression($append_content);
+            $js_content .= $append_content;
+        }
+        @file_put_contents($js_url, $js_content);
+    }
+    $js_url = str_replace(FCPATH, '', $js_url);
+    return $js_url;
 }
 
 class JSMin
