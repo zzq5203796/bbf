@@ -21,28 +21,51 @@ class Zip
     public function menu() {
         $this->js();
         $this->css();
-//        sleep(3);
     }
+
     public function js() {
         $data = [
             "js/menu",
-            "js/common",
+            "js/common" => [
+                "js/common",
+
+                "js/plug/auto",
+                "js/plug/ajax",
+                "js/plug/full-window",
+                "js/plug/keydown",
+                "js/plug/message",
+                "js/plug/progress-bar",
+                "js/plug/runscroll",
+                "js/plug/store",
+                "js/plug/string",
+                "js/plug/tabs",
+            ],
         ];
-        foreach($data as $vo){
+        foreach ($data as $vo) {
             $this->parse_js($vo, ['time' => 1]);
         }
         echo date("Y-m-d H:i:s") . " success<br/>";
     }
 
-    public function parse_js($file, $option=[]) {
+    public function parse_js($file, $option = []) {
         $option = array_merge(['name' => '', 'time' => false, 'check' => false], $option);
         $ext = "js";
-        $content = read("../$file.$ext");
-        $content = $this->parse_js_content($content);
-        if ($option['time']) {
-            $content = '/* ' . date("Y-m-d H:i:s") . " */\r\n" . $content;
+        $content = '';
+        if (is_array($file)) {
+            foreach ($file as $vo) {
+                $content .= $this->parse_js($vo, ['write' => false]);
+            }
+            $file = $file[0];
+        } else {
+            $content = read("../$file.$ext");
+            $content = '/* '.$file.' */; '.$this->parse_js_content($content);
+            if ($option['time']) {
+                $content = '/* ' . date("Y-m-d H:i:s") . " */\r\n" . $content;
+            }
         }
-        write("../min/$file.min.$ext", $content);
+        if (!isset($option['write']) || $option['write']) {
+            write("../min/$file.min.$ext", $content);
+        }
         return $content;
     }
 
@@ -50,7 +73,7 @@ class Zip
         $data = [
             "css/menu"
         ];
-        foreach($data as $vo){
+        foreach ($data as $vo) {
             parse_css($vo, ['time' => 1]);
         }
         echo date("Y-m-d H:i:s") . " success.<br/>";

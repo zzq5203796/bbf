@@ -76,8 +76,10 @@ function load_menu() {
             $(that).children('.toggle-icon')[width == 0 ? 'removeClass' : 'addClass']("icon-zuojiantou");
         }
     });
-    $().click(function () {
-
+    $(".full-window-btn").click(function () {
+        var t = 500, that = this;
+        $("#left").animate({width: 0}, t);
+        $(".toggle-box").children('.toggle-icon').removeClass("icon-zuojiantou");
     });
 }
 

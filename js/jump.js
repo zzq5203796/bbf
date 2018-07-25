@@ -33,6 +33,9 @@ jump = (function () {
         jumpList = [];
     this.init = function (obj) {
         obj = Object.assign(data, obj);
+        if ($(obj.box).length == 0) {
+            $("body").append('<div style="width: 50px; height: 50px;border-radius: 50px; background: #999; display: inline-block; position: fixed; z-index: +99999;" class="jump"></div>');
+        }
         startMove(obj)
     }
 
@@ -73,6 +76,12 @@ jump = (function () {
 function RandomNum(num1, num2) {
     return Math.floor(Math.random() * (num2 - num1 + 1) + num1);
 
+}
+
+var con  =document.getElementById("con");
+if(!con){
+    $('body').append('<div id="con" class="back-body"></div>');
+    con  =document.getElementById("con");
 }
 
 //构造小球函数
@@ -139,8 +148,4 @@ function ballStart() {
 
 function ballStop() {
     clearTimeout(ballTime);
-}
-
-window.onload = function () {
-    ballStart();
 }

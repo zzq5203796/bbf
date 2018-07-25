@@ -7,18 +7,10 @@
     <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
     <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
     <link rel="stylesheet" href="/min/css/menu.min.css?t=123" media="all">
-    <script type="text/javascript" src="/js/jquery.min.js"></script>
+    <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
     <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
 </head>
 <style>
-    #con {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 10;
-    }
-
     .ball {
         position: absolute;
         border-radius: 50%;
@@ -84,7 +76,8 @@
                         <div class="keycontent"></div>
                     </div>
                     <div class="bbf-tabs-list-item">
-                        <div class="button change-back" title="背景">背景</div>
+                        <div class="button" title="背景">背景动画</div>
+                        <input type="checkbox" value="" class="bbf-switch change-back" placeholder="name"/>
                     </div>
                 </div>
             </div>
@@ -123,9 +116,19 @@
         </div>
     </div>
 </div>
-<div id="con"></div>
-<div style="width: 50px; height: 50px;border-radius: 50px; background: #999; display: inline-block; position: fixed; z-index: +99999;"
-     class="jump"></div>
+
+<div class="fix-rb">
+    <div class="win-nav">
+        <span>title</span>
+        <i class="win-min-btn fr point">*</i>
+    </div>
+    <div class="win-main run-scroll">
+        <ul class="auto">
+            <li>1</li>
+            <li>end</li>
+        </ul>
+    </div>
+</div>
 <script type="text/html" id="menuItem">
     <li class="menu-node">
         <div class="menu-text">一级菜单</div>
@@ -159,7 +162,6 @@
     </div>
 </script>
 </body>
-<script type="text/javascript" src="/js/string.js"></script>
 <script type="text/javascript" src="/min/js/common.min.js"></script>
 <script type="text/javascript" src="/min/js/menu.min.js"></script>
 <script type="text/javascript" src="/js/jump.js"></script>
