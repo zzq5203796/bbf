@@ -16,6 +16,43 @@
           "child": []
         },
         {
+          "name": "icon",
+          "url": "/font_at8tu8bzfai/demo_fontclass.html",
+          "child": []
+        },
+        {
+          "name": "jquery",
+          "url": "http://www.w3school.com.cn/jquery/index.asp",
+          "child": []
+        },
+        {
+          "name": "phpinfo",
+          "url": "/?a=phpinfo",
+          "child": []
+        },
+        {
+          "name": "server",
+          "url": "/?a=server",
+          "child": []
+        },
+        {
+          "name": "百度",
+          "url": "http://baidu.com",
+          "child": []
+        },
+        {
+          "name": "百度翻译",
+          "url": "http://fanyi.baidu.com/translate",
+          "child": []
+        }
+      ]
+    },
+    {
+      "name": "测试区",
+      "url": "#",
+      "hide": true,
+      "child": [
+        {
           "name": "RMT-RUN",
           "url": "http://rmt.cc",
           "child": [
@@ -46,37 +83,6 @@
               "child": []
             }
           ]
-        },
-
-        {
-          "name": "icon",
-          "url": "/font_at8tu8bzfai/demo_fontclass.html",
-          "child": []
-        },
-        {
-          "name": "jquery",
-          "url": "http://www.w3school.com.cn/jquery/index.asp",
-          "child": []
-        },
-        {
-          "name": "phpinfo",
-          "url": "/?a=phpinfo",
-          "child": []
-        },
-        {
-          "name": "server",
-          "url": "/?a=server",
-          "child": []
-        },
-        {
-          "name": "百度",
-          "url": "http://baidu.com",
-          "child": []
-        },
-        {
-          "name": "百度翻译",
-          "url": "http://fanyi.baidu.com/translate",
-          "child": []
         }
       ]
     }

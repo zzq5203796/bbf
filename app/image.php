@@ -27,7 +27,51 @@ class Image
                 down_file($vo['Image'], $path);
             }
         }
-//        dump($data);
+        //        dump($data);
+    }
+
+    public function logo() {
+        $data = ["竹","飞", "朱","智","青","哥","快","哒"];
+        foreach ($data as $key=>$vo){
+            $this->buildImage($vo, 'runtime/img_'.$key);
+        }
+    }
+
+    private function buildImage($text, $file) {
+        $content = $text;
+        $radius = 200;
+        $rate = 0.8;
+        $myImage = ImageCreate($radius, $radius); //参数为宽度和高度
+        $transparentclolor = ImageColorAllocate($myImage, 0, 0, 0);
+        $bgcolor = ImageColorAllocate($myImage, 93, 38, 255);
+        $textcolor = ImageColorAllocate($myImage, 255, 255, 255);
+
+        //        imagefill($myImage, 0, 0, $blue);
+        imagefilledarc($myImage, $radius / 2, $radius / 2, $radius / $rate, $radius / $rate, 0, 360, $bgcolor, IMG_ARC_PIE);
+
+        $boxrate1 = 4;
+        $boxrate = 4;
+        $allrate = 1 / 2 / $boxrate;
+        $maxrate = (1 / $allrate - 1) * $allrate;
+        $data = [
+            ['x' => $allrate, 'y' => $allrate],
+            ['x' => $maxrate, 'y' => $allrate],
+            ['x' => $allrate, 'y' => $maxrate],
+            ['x' => $maxrate, 'y' => $maxrate],
+        ];
+        foreach ($data as $vo) {
+            imagefilledarc($myImage, $radius * $vo['x'], $radius * $vo['y'], $radius / $boxrate1, $radius / $boxrate1, 0, 360, $bgcolor, IMG_ARC_PIE);
+        }
+
+        imagecolortransparent($myImage, $transparentclolor);
+
+        $fontsize = 140;
+        $offsetx = $radius / 2 - $fontsize / 4 * (8 / 3);
+        $offsety = $radius / 2 + $fontsize / 4 * (5.4 / 3);
+        imagettftext($myImage, $fontsize, 0, $offsetx, $offsety, $textcolor, "../css/regular.ttf", $content);
+        imagepng($myImage, "../$file.png");
+
+        echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />';
     }
 }
 
