@@ -14,6 +14,7 @@ define('IS_WIN', strpos(PHP_OS, 'WIN') !== false);
 require_once 'debug.php';
 require_once 'loader.php';
 require_once 'function.php';
+require_once '../app/common/request.php';
 
 $url_path = get_url_path();
 try {

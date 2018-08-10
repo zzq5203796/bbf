@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>paypal</title>
+</head>
+<body>
+<div id="paypal-button"></div>
+<script src="https://www.paypalobjects.com/api/checkout.js"></script>
+<script>
+    // ELWwIdJbdy0dDVL0UdJ77UZ4aPK_xBybMiUqm9J-MjN_t1rYOlWd0WTXoJ643bUFBDAcex_DDjb97uuC
+    paypal.Button.render({
+        env: 'sandbox',
+        client: {
+            sandbox: 'AU1isZA8rSKU1oEXaOEmRpUCzOmj51zc39sVyOHSEJABKtCiHUz0C-x9tCbUieqDWfrq0HF58EIC0B_w',
+            production: ''
+        },
+        style: {
+            size: 'medium',
+            color: 'gold',
+            shape: 'pill',
+            label: 'paypal',
+            layout: 'horizontal',
+            // fundingicons: 'true',
+            tagline: false
+        },
+
+        payment: function (data, actions) {
+            return actions.payment.create({
+                transactions: [{
+                    amount: {
+                        total: '500',
+                        currency: 'JPY'
+                    }
+                }]
+            });
+        },
+        onAuthorize: function (data, actions) {
+            return actions.payment.execute()
+                .then(function () {
+                    window.alert('Thank you for your purchase!');
+                });
+        },
+
+        onCancel: function(data, actions) {
+            window.alert('onCancel');
+        },
+        onError: function(err) {
+            window.alert('onError');
+        }
+    }, '#paypal-button');
+</script>
+</body>
+</html>

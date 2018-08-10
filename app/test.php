@@ -11,6 +11,9 @@ namespace app;
 class Test
 {
 
+    public function index() {
+        echo '["status"=>1, "msg" =>  "ok"]';
+    }
     public function wait() {
         sleep(10);
         echo '["status"=>1, "msg" =>  "ok"]';
