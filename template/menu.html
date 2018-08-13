@@ -15,6 +15,13 @@
         position: absolute;
         border-radius: 50%;
     }
+    #book{
+        background: #fafafa;
+        position: absolute;
+        top: 0;
+        /*width: 600px;*/
+        display: none;
+    }
 </style>
 <body>
 <div class="window">
@@ -118,6 +125,8 @@
         <div class="main">
             <iframe class="full-window" id="myIframe" name="myIframe" onload="onloadFrame(this)"
                     src="/index.html"></iframe>
+            <iframe class="full-window" id="book" onload="onloadFrame(this)"
+                    src="/Article/book1"></iframe>
         </div>
     </div>
 </div>

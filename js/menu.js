@@ -81,6 +81,10 @@ function load_menu() {
         $("#left").animate({width: 0}, t);
         $(".toggle-box").children('.toggle-icon').removeClass("icon-zuojiantou");
     });
+
+    $(".new-iframe").change(function () {
+        $("#book").toggle();
+    });
 }
 
 load_menu();

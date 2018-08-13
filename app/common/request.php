@@ -329,6 +329,7 @@ function curl_get($url){
     curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 30);
     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
     curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, FALSE);
+//    curl_setopt($ch, CURLOPT_ENCODING, "");
     curl_setopt($ch, CURLOPT_HEADER, FALSE);//2017-09-21
     curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (compatible; MSIE 5.01; Windows NT 5.0)');
