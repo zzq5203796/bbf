@@ -8,6 +8,35 @@ function get_host() {
     return $_SERVER['HTTP_HOST'];
 }
 
+function do_cli($argv) {
+    if (!IS_CLI) {
+        return false;
+    }
+    if (!empty($argv[1]) && ($argv[1] == "?" || $argv[1] == "--help" || $argv[1] == "-h")) {
+        show_cli_help();
+    }
+    for ($i = 1; $i < count($argv); $i = $i + 2) {
+        $_GET[$argv[$i]] = $argv[$i + 1];
+    }
+    if (!empty($_GET['params'])) {
+        parse_str($_GET['params'], $arr);
+        foreach ($arr as $key => $vo) {
+            $_GET[$key] = $vo;
+        }
+    }
+
+    return true;
+}
+
+function show_cli_help() {
+    $file = __DIR__ . "/cli_help.txt";
+    $myfile = fopen($file, "r") or die("Unable to open file! $file");
+    $content = fread($myfile, filesize($file));
+    fclose($myfile);
+    echo $content;
+    exit();
+}
+
 function get_url_path() {
     $path = $_GET['s']?: '';
 
@@ -28,9 +57,11 @@ function go_auto_home() {
 function server() {
     dump($_SERVER);
 }
-function show_now(){
-    echo date("Y-m-d H:i:s")." <br/>\r\n";
+
+function show_now() {
+    echo date("Y-m-d H:i:s") . " <br/>\r\n";
 }
+
 /**
  * 获取文件夹里面所有文件
  * @param $dir_t
@@ -83,7 +114,7 @@ function write($file, $data) {
     fclose($myfile);
 }
 
-function read($file, $data=[]) {
+function read($file, $data = []) {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
     $myfile = fopen($file, "r") or die("Unable to open file! $file");
     $content = fread($myfile, filesize($file));

@@ -1,0 +1,5 @@
+  s tomethod       路径
+  params string    总参数 请求参数 模拟get请求参数
+  <key>  <value>   自定义参数 以params优先
+
+  --help|?|-h      帮助

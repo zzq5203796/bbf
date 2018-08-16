@@ -163,7 +163,8 @@ class CPdo
         if ($having != "") {
             $sql .= "having '$having' ";
         }
-        if ($startSet != "" && $endSet != "" && is_numeric($endSet) && is_numeric($startSet)) {
+
+        if ($startSet !== "" && $endSet !== "" && is_numeric($endSet) && is_numeric($startSet)) {
             $sql .= "limit $startSet,$endSet";
         }
         $this->result = $this->getValueBySelfCreateSql($sql, $fetchAction, $params);

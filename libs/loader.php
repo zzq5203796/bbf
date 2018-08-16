@@ -17,6 +17,6 @@ spl_autoload_register(function ($class_name) {
     if (file_exists($base_path . $class_name . ".php")) {
         require_once ($base_path . $class_name . ".php");
     } else {
-        throw new Exception("Unable to load $class_name.");
+        throw new Exception("Unable to load $base_path$class_name.");
     }
 });

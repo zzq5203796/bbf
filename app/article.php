@@ -14,9 +14,11 @@ class Article
 {
 
     protected $model;
+    protected $starTime;
 
     public function __construct() {
         $this->model = new CPdo();
+        $this->starTime = time();
         //        $res = $this->model->query("user");
     }
 
@@ -31,6 +33,45 @@ class Article
         preg_match_all($pattern, $html, $matches);
         $html = $matches[1][0];
         echo($html);
+    }
+
+    public function test() {
+        set_time_limit(5);
+
+        for ($i = 0; $i < 10; $i++) {
+            echo date('Y-m-d H:i:s') . "n";
+            //            sleep(1);
+        }
+        die();
+    }
+
+    public function book() {
+        $book_id = empty($_GET['book'])? 1: $_GET['book'];
+        $info = $this->model->query("books", "*", ['id' => $book_id])[0];
+        if (empty($info)) {
+            echo "no found.\r\n";
+            return false;
+        }
+
+        $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
+        $url = $info['first_link'];
+        $data = [
+            'url'        => $url,
+            "content"    => $info['preg_content'],
+            "title"      => $info['preg_title'],
+            "next"       => $info['preg_next'],
+            "next_top"   => $info['link'],
+            "cookie_top" => "book_" . $book_id,
+            "book_id"    => $book_id,
+        ];
+        if ($last_page) {
+            $data['url'] = $last_page['next_link'];
+        }
+        $save = empty($_GET['save'])? 0: $_GET['save'];
+        $data['save'] = $save;
+        $save && set_time_limit(300);
+        $res = $this->ss($data);
+        dump(count($res) . " 条");
     }
 
     public function book1() {
@@ -61,8 +102,22 @@ class Article
     }
 
     private function ss($data) {
+        $new_time = time();
+        //        if (($new_time - $this->starTime) > 289) {
+        //            dump(date("Y-m-d H:i:s", $this->starTime));
+        //            dump(date("Y-m-d H:i:s", $new_time));
+        //            return [];
+        //        }
         $res = $this->get($data);
         if (!$data['save']) {
+            if ($res) {
+                setcookie($data['cookie_top'] . "_link", $data['url']);
+                setcookie($data['cookie_top'] . "_title", $res['title']);
+                echo "<h1>" . $res['title'] . "</h1>";
+                echo "<a href=\"?book_id=" . $data['book_id'] . "&p=" . $res['next'] . "\">" . $res['next'] . "</a>";
+                echo "<div style='margin: 10px auto; width: 600px;'>" . $res['content'] . "</div>";
+                echo "<a href=\"?book_id=" . $data['book_id'] . "p=" . $res['next'] . "\">下一章</a>";
+            }
             return $res;
         }
         if (empty($res)) {
@@ -78,7 +133,6 @@ class Article
         $link = $data['url'];
         $sql = "insert into `article` (book_id, title, content, link, next_link) value ($book_id, '$title','$content','$link', '$next');";
         dump($title);
-        ob_flush();
         $res = $this->model->exec($sql);
         $data_list[] = $title;
         if ($res) {
@@ -90,7 +144,6 @@ class Article
         } else {
             dump($res);
         }
-
         return $data_list;
     }
 
@@ -111,7 +164,8 @@ class Article
             return [];
         }
         $pattern_list = ["title", "next", "content"];
-        $matches_list = [];
+        $matches_list = [
+        ];
         foreach ($pattern_list as $item) {
             $pattern = $data[$item];
             preg_match_all($pattern, $html, $matches);
@@ -119,14 +173,54 @@ class Article
             //            $match = mb_convert_encoding($match, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
             $matches_list[$item] = $match;
         }
-        setcookie($data['cookie_top'] . "_link", $url);
-        setcookie($data['cookie_top'] . "_title", $matches_list['title']);
         $matches_list['next'] = $data['next_top'] . $matches_list['next'];
-        //        echo "<h1>" . $matches_list['title'] . "</h1>";
-        //        echo "<div>" . $matches_list['content'] . "</div>";
-        //        echo "<a href=\"?p=" . $matches_list['next'] . "\">下一章</a>";
         return $matches_list;
     }
 
+    public function dodo() {
+        $art_id = empty($_COOKIE["run_book1"])? 0: $_COOKIE["run_book"];
+        $success = 0;
+        for ($i = 0; 1; $i++) {
+            $page = $this->model->query("article", "*", [], "", "id asc", "", $i + $art_id, 1)[0];
+            if (empty($page)) {
+                echo ($art_id + $i) . " <br>\r\n.";
+                break;
+            }
+            $content = $this->doContent($page['content']);
+            $sql = "update `article` set content='$content' where id=" . $page['id'] . ";";
+            $res = $this->model->exec($sql);
+            dump((($art_id + $i) . ":" . ($res? " ok.": " fail.")));
+            if ($res) {
+                $success++;
+                setcookie("run_book", $art_id + $i);
+            }
+        }
 
+        dump($i);
+    }
+
+    private function doContent($content) {
+        $content = trim($content);
+        $content = preg_replace("/<script.*?<\/script>/", "", $content);
+        $content = preg_replace("/&nbsp;/", "", $content);
+        $arr = explode("<br/>", $content);
+        $ds = "　";
+//        $ds_1 = "&nbsp;";
+        foreach ($arr as $key => $vo) {
+            $item = trim($vo);
+            $item = trim($item, $ds);
+//            $item = trim($item, $ds_1);
+            if (empty($item)) {
+                unset($arr[$key]);
+                continue;
+            }
+            $arr[$key] = $ds . $ds . $item;
+        }
+        unset($vo);
+        //        dump($arr);
+        $content = implode("<br/>", $arr);
+        $content = trim($content, "<br/>");
+        $content = trim($content);
+        return $content;
+    }
 }
