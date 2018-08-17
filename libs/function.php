@@ -58,10 +58,6 @@ function server() {
     dump($_SERVER);
 }
 
-function show_now() {
-    echo date("Y-m-d H:i:s") . " <br/>\r\n";
-}
-
 /**
  * 获取文件夹里面所有文件
  * @param $dir_t
@@ -107,16 +103,37 @@ function array_sum_by_key($data, $key = "length") {
     return $count;
 }
 
-function write($file, $data) {
+function write($file, $data, $mode = "w") {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
-    $myfile = fopen($file, "w") or die("Unable to open file! $file");
+    $myfile = fopen($file, $mode) or die("Unable to open file! $file");
     fwrite($myfile, $data);
     fclose($myfile);
 }
 
-function read($file, $data = []) {
+function logs($log, $type = "log", $mode = "a+") {
+    $_type = ($type == "log" || empty($type))? "": ".$type";
+    $now = date("H:i:s");
+    $log = "[$now] $log\n\n";
+    $file = "log/" . date("Ymd") . "$_type.txt";
+    write($file, $log, $mode);
+}
+
+function locks($file, $data = null) {
+    $file = "lock/$file.lock";
+    if ($data === null) {
+        return read($file);
+    } else {
+        write($file, $data);
+        return true;
+    }
+}
+
+function read($file, $mode = "r") {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
-    $myfile = fopen($file, "r") or die("Unable to open file! $file");
+    $myfile = fopen($file, $mode);
+    if($myfile===false){
+        return false;
+    }
     $content = fread($myfile, filesize($file));
     fclose($myfile);
     return $content;

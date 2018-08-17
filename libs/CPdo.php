@@ -29,6 +29,7 @@ class CPdo
     protected $rollback;
     protected $commit;
     protected $char;
+    protected $error;
     private
     static $get_mode;
     private
@@ -183,8 +184,16 @@ class CPdo
         if ($this->result) {
             return $this->successful($substr);
         } else {
+            $error = $this->pdo->errorInfo();
+            $error['sql'] = $sql;
+            $error['sub'] = $substr;
+            $this->error = $error;
             return $this->fail($substr);
         }
+    }
+
+    public function errorInfo() {
+        return $this->error;
     }
 
     /**

@@ -227,3 +227,111 @@ function inject(Response $response, &$content) {
 function echo_line($var, $lable = '') {
     echo ($lable? $lable . ': ': '') . (is_array($var)? dump($var, false): $var) . '<br>';
 }
+
+/**
+ * 换行符
+ * @param int $num
+ * @return string
+ */
+function get_br($num = 1) {
+    $br = IS_CLI? "\n": "<br/>";
+    $brs = "";
+    for ($i = 0; $i < $num; $i++) {
+        $brs .= $br;
+    }
+    return $brs;
+}
+
+/**
+ * 空格
+ * @param int $num
+ * @return string
+ */
+function get_space($num = 1) {
+    $br = IS_CLI? " ": "&nbsp;";
+    $brs = "";
+    for ($i = 0; $i < $num; $i++) {
+        $brs .= $br;
+    }
+    return $brs;
+}
+
+/**
+ * 输出当前时间
+ * @param bool $echo 是否打印
+ * @return false|string
+ */
+function show_now($echo = true) {
+    $str = date("Y-m-d H:i:s");
+    if ($echo) {
+        echo "北京时间:" . get_space(2) . $str . get_br();
+    }
+    return $str;
+}
+
+/**
+ * 打印字符串
+ * @param $msg
+ * @param bool $echo 是否打印
+ * @param bool $time 是否打印时间
+ * @param bool $num 空格数
+ * @return string
+ */
+function show_msg($msg, $echo = true, $time = true, $num = 0) {
+    $str = show_now(0);
+    $top = $time? "[$str]" . get_space(2): "";
+    $body = $top . get_space($num) . $msg . get_br();
+    if ($echo) {
+        echo $body;
+    }
+    return $body;
+}
+
+function show_msgs($data, $type = "array", $num = 0, $opt = []) {
+    $opt = array_merge(["key" => ""], $opt);
+    $temp = $num * (IS_CLI? 4: 1);
+    $echo = true;
+    if ($type == "dump") {
+        dump($data);
+        return true;
+    }
+    $mark = [
+        "dump"  => ["{", "}", " => ", "[", "]"],
+        "array" => ["[", "],", " => ", "'", "'"],
+        "json"  => ["{", "},", ": ", "", "'"],
+        "help"  => ["", "", "", "", ""],
+    ];
+
+    empty($mark[$type]) && $type = "array";
+    $top = $opt['key'];
+
+    $mark = $mark[$type];
+    $mark_start = $mark[0];
+    $mark_end = $mark[1];
+    $mark_tmp = $mark[2];
+    $mark_key_str = is_numeric($top)? "": $mark[3];
+    $mark_value_str_end = $mark_value_str = is_numeric($data)? "": $mark[4];
+    $mark_value_str_end = $mark_value_str_end . ",";
+
+    $top = ($top !== "")? ($mark_key_str . $top . $mark_key_str . $mark_tmp): "";
+    $body = "";
+    if (is_array($data)) {
+        if (!IS_CLI && $num == 0 && $echo)
+            echo("<pre>");
+        $body .= show_msg($top . $mark_start, $echo, 0, $temp);
+        foreach ($data as $key => $vo) {
+            $opt["key"] = $type == "help"? "": $key;
+            $body .= show_msgs($vo, $type, $num + 1, $opt);
+        }
+        $body .= show_msg($mark_end, $echo, 0, $temp);
+        if (!IS_CLI && $num == 0 && $echo)
+            echo("</pre>");
+    } else {
+        $top !== "" && ($data = $top . $mark_value_str . $data . $mark_value_str_end);
+        $body .= show_msg($data, $echo, ($top === "" && $num == 0), $temp);
+    }
+    if (!$echo && $num == 0) {
+        echo "<pre>$body</pre>";
+    }
+    return $body;
+}

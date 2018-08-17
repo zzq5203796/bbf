@@ -202,7 +202,7 @@
     display: none;
 }
 
-.keycontent {
+.keycontent, .keycontent1{
     background: #0C0C0C;
     padding: 0 8px;
     margin: 0 -10px 0 -10px;
@@ -214,6 +214,9 @@
     padding: 4px 0;
     color: #ccc;
 }
-.keycontent p:last-child {
+.keycontent1 p{
+    padding: 4px 0;
+}
+.keycontent p:last-child,.keycontent1 p:last-child {
     padding-bottom: 10px;
 }
