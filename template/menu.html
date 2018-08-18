@@ -22,6 +22,9 @@
         /*width: 600px;*/
         display: none;
     }
+    .bg-fa{
+        background: #fafafa;
+    }
 </style>
 <body>
 <div class="window">
@@ -39,6 +42,7 @@
                 <!--<div class="button reload bbf-padded-0" title="刷新"><i class="icon iconfont">&#xe722;</i></div>-->
                 <!--<div class="button reload" title="刷新"><i class="icon iconfont">&#xe650;</i></div>-->
             </div>
+            <!-- tabs -->
             <div class="bbf-tabs">
                 <div>
                     <div class="button bbf-tabs-prev" title="">&lt;</div>
@@ -84,9 +88,19 @@
                         <div class="keycontent"></div>
                     </div>
                     <div class="bbf-tabs-list-item">
-                        <div class="button" title="背景">背景动画</div>
-                        <input type="checkbox" value="" class="bbf-switch change-back" placeholder="name"/>
-                        <p>other iframe:<input type="checkbox" value="" class="bbf-switch new-iframe" placeholder="name"/></p>
+                        <div class="keycontent1 bg-fa">
+                            <div class="button" title="背景">背景动画</div>
+                            <input type="checkbox" value="" class="bbf-switch change-back" placeholder="name"/>
+                            <p>
+                                other iframe:<input type="checkbox" value="" class="bbf-switch new-iframe" placeholder="name"/>
+                                save:<input type="checkbox" value="" class="bbf-switch book_save" placeholder="name"/>
+                            </p>
+                            <p>
+                                <input type="text" value="" class="input-2 book_id" placeholder="book"/>
+                                <input type="text" value="" class="input-2 page_link" placeholder="page"/>
+                                <sapn class="button getbook" title="获取">GET</sapn>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -126,7 +140,7 @@
             <iframe class="full-window" id="myIframe" name="myIframe" onload="onloadFrame(this)"
                     src="/index.html"></iframe>
             <iframe class="full-window" id="book" onload="onloadFrame(this)"
-                    src="/Article/book1"></iframe>
+                    src="/article/book?"></iframe>
         </div>
     </div>
 </div>

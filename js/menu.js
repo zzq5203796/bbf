@@ -85,6 +85,11 @@ function load_menu() {
     $(".new-iframe").change(function () {
         $("#book").toggle();
     });
+    $(".getbook").click(function () {
+        $("#book").attr("src", "/article/book?book="+$(".book_id").val()+"&save="+($(".book_save").is(":checked")?1:0)+"&p="+$(".page_link").val());
+        $(".new-iframe").prop('checked', true);
+        $("#book").show();
+    });
 }
 
 load_menu();

@@ -15,24 +15,40 @@ class Article
 
     protected $model;
     protected $starTime;
+    protected $temp;
+    protected $setting;
 
     public function __construct() {
         $this->model = new CPdo();
         $this->starTime = time();
+        $this->temp = 0;
+        $this->setting = [
+            "checklock" => true
+        ];
         //        $res = $this->model->query("user");
     }
 
     public function index() {
-        $url = "https://www.qu.la/book/34892/2494615.html";
-        //        header("Content-Type:text/html;charset=gb2312");
-        $html = curl_get($url);
-        //        $html = mb_convert_encoding($html, "gb2312", "utf-8");
+        if (!IS_CLI) {
+            show_now();
+            return;
+        }
+        $num = 4;
+        $html = <<<EOD
+    article/book  爬虫书本
+        book  int     书本
+        save  0|1     记录
+        p     string  路径 save 1生效
+        
+    article/down  生成文档 
+        book :id  书本
+        
+    article/redo  重新格式化content
 
-        //        $pattern = "/<div id=\"nr1\">(.*?)<\/div>/is";
-        $pattern = "/<div id=\"content\">(.*?)<\/div>/is";
-        preg_match_all($pattern, $html, $matches);
-        $html = $matches[1][0];
-        echo($html);
+
+EOD;
+
+        echo $html;
     }
 
     public function test() {
@@ -49,12 +65,16 @@ class Article
         $book_id = empty($_GET['book'])? 1: $_GET['book'];
         $info = $this->model->query("books", "*", ['id' => $book_id])[0];
         if (empty($info)) {
-            echo "no found.\r\n";
+            echo "[book|save|p],no found.\r\n";
             return false;
         }
 
+        $save = empty($_GET['save'])? 0: $_GET['save'];
         $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
-        $url = $info['first_link'];
+        $url = $last_page? $last_page['next_link']: $info['first_link'];
+        if (!$save && !empty($_GET['p'])) {
+            $url = $_GET['p'];
+        }
         $data = [
             'url'        => $url,
             "content"    => $info['preg_content'],
@@ -63,51 +83,42 @@ class Article
             "next_top"   => $info['link'],
             "cookie_top" => "book_" . $book_id,
             "book_id"    => $book_id,
+            "save"       => $save,
         ];
-        if ($last_page) {
-            $data['url'] = $last_page['next_link'];
-        }
-        $save = empty($_GET['save'])? 0: $_GET['save'];
-        $data['save'] = $save;
-        $save && set_time_limit(300);
-        $res = $this->ss($data);
-        dump(count($res) . " 条");
-    }
 
-    public function book1() {
-        $url = "https://www.qu.la/book/34892/2494615.html";
-        $url = empty($_GET['p'])? $url: $_GET['p'];
-        $data = [
-            'url'        => $url,
-            "content"    => "/<div id=\"content\">(.*?)<\/div>/is",
-            "title"      => "/<div class=\"bookname\">.*?<h1>(.*?)<\/h1>.*?<\/div>/is",
-            "next"       => "/<a id=\"pager_next\" href=\"(.*?)\" target=\"_top\" class=\"next\">下一章<\/a>/is",
-            "next_top"   => "https://www.qu.la/book/34892/",
-            "cookie_top" => "book1",
-            "book_id"    => 1,
-        ];
-        if (empty($_GET['p'])) {
-            if (!empty($_COOKIE[$data['cookie_top'] . "_link"])) {
-                echo "last read: <a href=\"?p=" . $url . "\">" . $_COOKIE[$data['cookie_top'] . "_title"] . "</a>";
+        if (!$save && !empty($_COOKIE[$data['cookie_top'] . "_link"])) {
+            echo "last read: <a href=\"?p=" . $url . "\">" . $_COOKIE[$data['cookie_top'] . "_title"] . "</a>";
+        }
+        $lock = $data["cookie_top"];
+        if ($save) {
+            if (!empty(locks($lock))) {
+                echo "[INRUN] Book is running elsewhere. [$lock]\r\n";
+                return false;
             }
+            set_time_limit(120);
+            locks($lock, json_encode($data));
         }
-
-        $save = empty($_GET['save'])? 0: $_GET['save'];
-        $data['save'] = $save;
-        set_time_limit(30);
-        ob_start();
-        $res = $this->ss($data);
-        ob_end_flush();
-        dump("===============");
+        $res = $this->runGet($data);
+        if ($save) {
+            locks($lock, 0);
+        }
+        $save && dump(count($res) . " 条");
     }
 
-    private function ss($data) {
+    private function runGet($data) {
         $new_time = time();
         //        if (($new_time - $this->starTime) > 289) {
         //            dump(date("Y-m-d H:i:s", $this->starTime));
         //            dump(date("Y-m-d H:i:s", $new_time));
         //            return [];
         //        }
+        $this->temp++;
+        if ($this->temp % 50 == 0) {
+            $lock = $data["cookie_top"];
+            if (empty(locks($lock))) {
+                return [];
+            }
+        }
         $res = $this->get($data);
         if (!$data['save']) {
             if ($res) {
@@ -123,7 +134,7 @@ class Article
         if (empty($res)) {
             return $res;
         }
-        if ($res['next'] == $data['url']) {
+        if ($res['next'] == $data['url'] || empty($res['content'])) {
             return [];
         }
         $title = $res['title'];
@@ -132,17 +143,18 @@ class Article
         $book_id = $data['book_id'];
         $link = $data['url'];
         $sql = "insert into `article` (book_id, title, content, link, next_link) value ($book_id, '$title','$content','$link', '$next');";
-        dump($title);
         $res = $this->model->exec($sql);
-        $data_list[] = $title;
         if ($res) {
+            $data_list[] = $title;
+            logs($title . " \n[info] $book_id | $link | $next", "book");
             $data['url'] = $next;
-            $res = $this->ss($data);
+            $res = $this->runGet($data);
             if (!empty($res)) {
                 $data_list = array_merge($data_list, $res);
             }
         } else {
-            dump($res);
+            dump(date("Y-m-d H:i:s"));
+            dump($this->model->errorInfo());
         }
         return $data_list;
     }
@@ -174,42 +186,43 @@ class Article
             $matches_list[$item] = $match;
         }
         $matches_list['next'] = $data['next_top'] . $matches_list['next'];
+        $matches_list['content'] = $this->doContent($matches_list['content']);
         return $matches_list;
     }
 
-    public function dodo() {
+    public function redo() {
         $art_id = empty($_COOKIE["run_book1"])? 0: $_COOKIE["run_book"];
         $success = 0;
         for ($i = 0; 1; $i++) {
-            $page = $this->model->query("article", "*", [], "", "id asc", "", $i + $art_id, 1)[0];
+            $page = $this->model->query("article", "*", [], "", "id asc", "", $i + $art_id, 1);
             if (empty($page)) {
-                echo ($art_id + $i) . " <br>\r\n.";
+                show_msg(($art_id + $i) . get_br() . ".");
                 break;
             }
+            $page = $page[0];
             $content = $this->doContent($page['content']);
             $sql = "update `article` set content='$content' where id=" . $page['id'] . ";";
             $res = $this->model->exec($sql);
-            dump((($art_id + $i) . ":" . ($res? " ok.": " fail.")));
+            show_msg((($art_id + $i) . ":" . ($res? " ok.": " fail.")));
             if ($res) {
                 $success++;
                 setcookie("run_book", $art_id + $i);
             }
         }
 
-        dump($i);
+        show_msg($i);
     }
 
     private function doContent($content) {
+        $ds = "　";
+
         $content = trim($content);
         $content = preg_replace("/<script.*?<\/script>/", "", $content);
-        $content = preg_replace("/&nbsp;/", "", $content);
+        $content = str_replace(["\n", "\r", "&nbsp;", $ds], "", $content);
+
         $arr = explode("<br/>", $content);
-        $ds = "　";
-//        $ds_1 = "&nbsp;";
         foreach ($arr as $key => $vo) {
             $item = trim($vo);
-            $item = trim($item, $ds);
-//            $item = trim($item, $ds_1);
             if (empty($item)) {
                 unset($arr[$key]);
                 continue;
@@ -217,10 +230,29 @@ class Article
             $arr[$key] = $ds . $ds . $item;
         }
         unset($vo);
-        //        dump($arr);
         $content = implode("<br/>", $arr);
         $content = trim($content, "<br/>");
         $content = trim($content);
         return $content;
     }
+
+    public function down() {
+        $book_id = empty($_GET['book'])? 3: $_GET['book'];
+        $info = $this->model->query("books", "*", ['id' => $book_id])[0];
+        $list = $this->model->query("article", "*", ['book_id' => $book_id], "", "id asc");
+        $name = $info['title'];
+        $br = "\n\n";
+        $str = "声明：本书为 $br $name $br 作者：**** $br 简介: ****** $br";
+        foreach ($list as $vo) {
+            $title = $vo["title"];
+            $content = $vo["content"];
+            $content = str_replace(["<br/>", "</br></br>"], $br, $content);
+            //            $content = str_replace(["<br/>"], $br, $content);
+            $str .= "$title$br$content$br";
+        }
+        show_now();
+        write("book/$name.txt", $str);
+        show_msg("end");
+    }
+
 }
