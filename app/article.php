@@ -14,12 +14,14 @@ class Article
 {
 
     protected $model;
+    protected $bookId;
     protected $starTime;
     protected $temp;
     protected $setting;
 
     public function __construct() {
         $this->model = new CPdo();
+        $this->bookId = empty($_GET['book'])? 1: $_GET['book'];;
         $this->starTime = time();
         $this->temp = 0;
         $this->setting = [
@@ -30,10 +32,14 @@ class Article
 
     public function index() {
         if (!IS_CLI) {
-            show_now();
-            return;
+            $this->helpWin();
         }
-        $num = 4;
+        if (IS_CLI) {
+            $this->helpCli();
+        }
+    }
+
+    private function helpCli() {
         $html = <<<EOD
     article/book  爬虫书本
         book  int     书本
@@ -47,8 +53,22 @@ class Article
 
 
 EOD;
-
         echo $html;
+
+    }
+
+    private function helpWin() {
+        $fastlink = [
+            ["book", "爬虫", "book=1&save=0|1&p=url"],
+            ["down", "TXT", "book=1"],
+        ];
+
+        $str = "";
+        foreach($fastlink as $vo){
+            list($method, $tite, $param) = $vo;
+            $str .= "<div class='fast-link'><a href='/?s=articel/$method'>$tite</a><span>$param</span></div>";
+        }
+        echo  $str;
     }
 
     public function test() {
@@ -245,10 +265,11 @@ EOD;
         $str = "声明：本书为 $br $name $br 作者：**** $br 简介: ****** $br";
         foreach ($list as $vo) {
             $title = $vo["title"];
+            $title = str_replace(["〇"], "零", $title);
             $content = $vo["content"];
             $content = str_replace(["<br/>", "</br></br>"], $br, $content);
             //            $content = str_replace(["<br/>"], $br, $content);
-            $str .= "$title$br$content$br";
+            $str .= "$title$br\n$content$br";
         }
         show_now();
         write("book/$name.txt", $str);

@@ -103,8 +103,27 @@ function array_sum_by_key($data, $key = "length") {
     return $count;
 }
 
+function root_dir() {
+    $dir = $_SERVER['DOCUMENT_ROOT']."/";
+    return $dir;
+}
+
+function create_dir($file, $num = 0) {
+    if ($num > 10)
+        return true;
+    $dirname = dirname($file);
+    if (!file_exists($dirname)) {
+        create_dir($dirname, ++$num);
+        if (!in_array(substr($dirname, -2), [".", ".."])) {
+            mkdir($dirname, 0777, true);
+        }
+    }
+    return true;
+}
+
 function write($file, $data, $mode = "w") {
-    $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
+    $file = root_dir() . "runtime/" . $file;
+    create_dir($file);
     $myfile = fopen($file, $mode) or die("Unable to open file! $file");
     fwrite($myfile, $data);
     fclose($myfile);
@@ -131,7 +150,7 @@ function locks($file, $data = null) {
 function read($file, $mode = "r") {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
     $myfile = fopen($file, $mode);
-    if($myfile===false){
+    if ($myfile === false) {
         return false;
     }
     $content = fread($myfile, filesize($file));

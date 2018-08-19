@@ -12,7 +12,7 @@ namespace app;
 class Image
 {
     public function __construct() {
-        echo_line('welcome to class ' . get_class());
+        show_msg('welcome to class ' . get_class());
     }
 
     public function index() {
@@ -31,9 +31,12 @@ class Image
     }
 
     public function logo() {
-        $data = ["竹","飞", "朱","智","青","哥","快","哒"];
-        foreach ($data as $key=>$vo){
-            $this->buildImage($vo, 'runtime/img_'.$key);
+        $data = ["竹", "飞", "朱", "智", "青", "哥", "快", "哒"];
+        $file = "runtime/img/img_";
+        create_dir(root_dir() . $file);
+        foreach ($data as $key => $vo) {
+            $this->buildImage($vo, $file . $key);
+            show_msg("create $vo.");
         }
     }
 
@@ -71,7 +74,7 @@ class Image
         imagettftext($myImage, $fontsize, 0, $offsetx, $offsety, $textcolor, "../css/regular.ttf", $content);
         imagepng($myImage, "../$file.png");
 
-        echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />';
+        echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />'.get_br() ;
     }
 }
 
