@@ -95,6 +95,37 @@ function add_tree($url = '#', $name = '', $child = []) {
     return ['url' => $url, 'name' => $name, 'child' => $child, 'length' => $count, 'all_length' => $count + array_sum_by_key($child, 'length')];
 }
 
+/**
+* 获取文件详情 大小 类型
+*/
+function get_dir_info($dir_t, $extra = []) {
+    $dir_tree = [];
+    $dir = __DIR__ . DS . ".." . DS;
+    $dir_t .= DS;
+
+    $full_dir = $dir . $dir_t;
+    if (!is_dir($full_dir)) {
+        return [];
+    }
+    //获取也就是扫描文件夹内的文件及文件夹名存入数组 $filesnames
+    $filesnames = scandir($full_dir);
+    foreach ($filesnames as $name) {
+        $ext = trim(array_pop(explode('.', $name)));
+        if (in_array($name, ['..', '.']) || in_array($ext, $extra)) {
+            continue;
+        }
+        $filename = $dir_t . $name;
+        $child_tree = get_dir_info($filename, $extra);
+        $dir_tree[] = [
+            "name" => $name,
+            "filename" => $filename,
+            "size" => filesize(__DIR__."/../".$filename),
+        ];
+        add_tree($url, $name, $child_tree);
+    }
+    return $dir_tree;
+}
+
 function array_sum_by_key($data, $key = "length") {
     $count = 0;
     foreach ($data as $vo) {

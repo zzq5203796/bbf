@@ -31,6 +31,8 @@ foreach ($menu['dir'] as $key => $value) {
 }
 
 $extra = $_GET['extra'];
+$extra = $extra?$extra:[];
+
 $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
 foreach ($dirs as $key => $name) {
     $dir = is_numeric($key)? $name: $key;
