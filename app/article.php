@@ -64,11 +64,11 @@ EOD;
         ];
 
         $str = "";
-        foreach($fastlink as $vo){
+        foreach ($fastlink as $vo) {
             list($method, $tite, $param) = $vo;
             $str .= "<div class='fast-link'><a href='/?s=articel/$method'>$tite</a><span>$param</span></div>";
         }
-        echo  $str;
+        echo $str;
     }
 
     public function test() {
@@ -133,6 +133,7 @@ EOD;
         //            return [];
         //        }
         $this->temp++;
+        $data_list = [];
         if ($this->temp % 50 == 0) {
             $lock = $data["cookie_top"];
             if (empty(locks($lock))) {
@@ -257,23 +258,47 @@ EOD;
     }
 
     public function down() {
-        $book_id = empty($_GET['book'])? 3: $_GET['book'];
+        $book_id = $this->bookId;
+        $book = $this->txtPack($book_id, 0);
+        down_file($book["file"], $book['name'] . ".txt");
+    }
+
+    /**
+     * 打包TXT
+     * @param $book_id
+     * @return mixed
+     */
+    private function txtPack($book_id, $reTxt = false) {
+        $lock = "book_down_$book_id";
+        $lock_info = locks($lock);
+        if (!empty($lock_info)) {
+            $lock_info = json_decode($lock_info, true);
+            if ($lock_info['end'] == 0 || !$reTxt) {
+                return $lock_info;
+            }
+        }
         $info = $this->model->query("books", "*", ['id' => $book_id])[0];
-        $list = $this->model->query("article", "*", ['book_id' => $book_id], "", "id asc");
         $name = $info['title'];
-        $br = "\n\n";
+        $file = "book/$name.txt";
+        $book = ["file" => $file, "name" => $name, "id" => $book_id, "count" => 0, "end" => 0];
+        locks($lock, json_encode($book, JSON_UNESCAPED_UNICODE));
+
+        $list = $this->model->query("article", "*", ['book_id' => $book_id], "", "id asc");
+        $onebr = "\r\n";
+        $br = $onebr . $onebr;
         $str = "声明：本书为 $br $name $br 作者：**** $br 简介: ****** $br";
         foreach ($list as $vo) {
             $title = $vo["title"];
             $title = str_replace(["〇"], "零", $title);
             $content = $vo["content"];
             $content = str_replace(["<br/>", "</br></br>"], $br, $content);
-            //            $content = str_replace(["<br/>"], $br, $content);
-            $str .= "$title$br\n$content$br";
+            $str .= "$title$br$onebr$content$br";
         }
-        show_now();
-        write("book/$name.txt", $str);
-        show_msg("end");
+        write($file, $str);
+        $book["count"] = count($list);
+        $book["end"] = 1;
+        locks($lock, json_encode($book, JSON_UNESCAPED_UNICODE));
+        return $book;
     }
 
 }

@@ -96,8 +96,8 @@ function add_tree($url = '#', $name = '', $child = []) {
 }
 
 /**
-* 获取文件详情 大小 类型
-*/
+ * 获取文件详情 大小 类型
+ */
 function get_dir_info($dir_t, $extra = []) {
     $dir_tree = [];
     $dir = __DIR__ . DS . ".." . DS;
@@ -117,9 +117,9 @@ function get_dir_info($dir_t, $extra = []) {
         $filename = $dir_t . $name;
         $child_tree = get_dir_info($filename, $extra);
         $dir_tree[] = [
-            "name" => $name,
+            "name"     => $name,
             "filename" => $filename,
-            "size" => filesize(__DIR__."/../".$filename),
+            "size"     => filesize(__DIR__ . "/../" . $filename),
         ];
         add_tree($url, $name, $child_tree);
     }
@@ -135,7 +135,7 @@ function array_sum_by_key($data, $key = "length") {
 }
 
 function root_dir() {
-    $dir = $_SERVER['DOCUMENT_ROOT']."/";
+    $dir = $_SERVER['DOCUMENT_ROOT'] . "/";
     return $dir;
 }
 
@@ -160,7 +160,7 @@ function write($file, $data, $mode = "w") {
     fclose($myfile);
 }
 
-function logs($log, $type = "log", $mode = "a+") {
+function logs($log, $type = "log", $mode = "a+", $opt = []) {
     $_type = ($type == "log" || empty($type))? "": ".$type";
     $now = date("H:i:s");
     $log = "[$now] $log\n\n";
@@ -178,14 +178,40 @@ function locks($file, $data = null) {
     }
 }
 
-function read($file, $mode = "r") {
+function read($file, $mode = "r", $opt = []) {
     $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
     $myfile = fopen($file, $mode);
     if ($myfile === false) {
         return false;
     }
-    $content = fread($myfile, filesize($file));
+    $size = filesize($file);
+    $content = fread($myfile, $size);
     fclose($myfile);
-    return $content;
+    if (!empty($opt['info'])) {
+        $data = [$content, $size, pathinfo($file)];
+    } else {
+        $data = $content;
+    }
+    return $data;
+}
 
+function down_file($file, $file_name = "") {
+    //    $file_name = $file;
+    $data = read($file, "r", ['info' => 1]);
+    if ($data === false) {
+        show_msg($file_name . "文件找不到");
+        exit ();
+    }
+    list($content, $size, $base) = $data;
+    $file_name = empty($file_name)? $base['basename']: $file_name;
+    //打开文件
+    //输入文件标签
+    Header("Content-type: application/octet-stream");
+    Header("Accept-Ranges: bytes");
+    Header("Accept-Length: " . $size);
+    Header("Content-Disposition: attachment; filename=" . $file_name);
+    //输出文件内容
+    //读取文件内容并直接输出到浏览器
+    echo $content;
+    exit ();
 }
