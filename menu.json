@@ -88,17 +88,17 @@
     }
   ],
   "dir": {
-    "html": "静态页",
-    "demo": "案例",
+    "font_goods_html/html": "字谷网",
+    "html/rmt0711/html": "RMT0711",
+    "html/rmt0718/html": "RMT0718",
+    "html/rmt0721/html": "RMT0721",
+    "html/rmt0729/html": "RMT0729",
+    "html/rmt0810/html": "RMT0810",
+    "html/rmt0816/html": "RMT0816",
+    "rmt0714/html": "RMT0714",
+    "html/RMT/html": "RMT",
     "template": "模板",
-    "UI/font_goods_html/html": "字谷网",
-    "UI/rmt0711/html": "RMT0711",
-    "UI/rmt0714/html": "RMT0714",
-    "UI/rmt0718/html": "RMT0718",
-    "UI/rmt0721/html": "RMT0721",
-    "UI/rmt0729/html": "RMT0729",
-    "UI/rmt0810/html": "RMT0810",
-    "UI/rmt0816/html": "RMT0816",
-    "UI/RMT/html": "RMT"
+    "drop": "drop",
+    "json": "json"
   }
 }
