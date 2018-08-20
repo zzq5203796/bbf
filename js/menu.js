@@ -86,7 +86,7 @@ function load_menu() {
         $("#book").toggle();
     });
     $(".getbook").click(function () {
-        $("#book").attr("src", "/article/book?book="+$(".book_id").val()+"&save="+($(".book_save").is(":checked")?1:0)+"&p="+$(".page_link").val());
+        $("#book").attr("src", "/article/book?book=" + $(".book_id").val() + "&save=" + ($(".book_save").is(":checked") ? 1 : 0) + "&p=" + $(".page_link").val());
         $(".new-iframe").prop('checked', true);
         $("#book").show();
     });
@@ -160,13 +160,14 @@ function getMenuHtml(data) {
         // console.log(data[i]);
         var count = getAutoData(data[i].child.length, 0);
         var all_count = getAutoData(data[i].all_length, '');
-        var title = data[i].name + getAutoData(count, '', "(" + count + ")");
+        var title = data[i].name + getAutoData(count, '', "(" + count + (all_count > 0 ? " / " + all_count : '') + ")");
+        var html = {};
 
         child = count == 0 ? '' : '<ul class="menu-next" style="display: none;">' + getMenuHtml(data[i].child) + '</ul>';
         icon = count == 0 ? '<i class="icon iconfont icon-lianjie" ><i style="width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;"></i></i>' : '<i class="icon iconfont icon-xiajiantou icon-youjiantou"></i>';
 
         str += '<li class="menu-node">' +
-            '<a class="menu-text" title="' + title + all_count + '" href="' + data[i].url + '" target="myIframe">' +
+            '<a class="menu-text" title="' + title + '" href="' + data[i].url + '" target="myIframe">' +
             icon + title +
             '</a>' +
             child +
