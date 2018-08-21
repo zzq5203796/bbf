@@ -294,6 +294,9 @@ function show_msgs($data, $type = "array", $num = 0, $opt = []) {
     if ($type == "dump") {
         dump($data);
         return true;
+    } elseif ($type == "table") {
+        show_table($data);
+        return true;
     }
     $mark = [
         "dump"  => ["{", "}", " => ", "[", "]"],
@@ -333,5 +336,32 @@ function show_msgs($data, $type = "array", $num = 0, $opt = []) {
     if (!$echo && $num == 0) {
         echo "<pre>$body</pre>";
     }
+    return $body;
+}
+
+function show_table($data, $keys = []) {
+    $temp_keys = empty($keys)? array_keys($data[0]): $keys;
+    list($tr, $td) = ["tr", "td"];
+    $body = "";
+    $line = "";
+    $keys = [];
+    foreach ($temp_keys as $key => $vo) {
+        $vo = is_array($vo)? $vo: (is_numeric($key)? ['key' => $vo, 'name' => $vo]: ['key' => $key, 'name' => $vo]);
+        $keys[] = $vo;
+        $name = $vo['name'];
+        $line .= "<$td>$name</$td>";
+    }
+    $body .= "<$tr>$line</$tr>";
+    foreach ($data as $item) {
+        $line = "";
+        foreach ($keys as $key_value) {
+            $key = $key_value['key'];
+            $vo = isset($item[$key])? $item[$key]: "";
+            $line .= "<$td>$vo</$td>";
+        }
+        $body .= "<$tr>$line</$tr>";
+    }
+    $body = "<table class='show-msg'>$body</table>";
+    echo $body;
     return $body;
 }

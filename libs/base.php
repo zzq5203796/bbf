@@ -31,5 +31,7 @@ try {
     $res = $object->$method();
 } catch (\Exception $e) {
     echo $e->getMessage(), "\n";
+    $lines = $e->getTrace();
+    show_table($lines, ["file" => "文件", "line" => "行数"]);
     dump($e);
 }

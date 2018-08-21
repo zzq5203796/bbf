@@ -9,9 +9,9 @@ System.config({
 	},
 	map: {
 		"jquery": "static/jquery",
-		"common": "js",
+		"common": "js/ko",
 		"ko": "static",
-		"kob": "js/ko-base",
+		"kob": "js/ko/ko-base",
 	}
 });
 function importM(module, callback) {
