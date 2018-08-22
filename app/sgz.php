@@ -87,4 +87,55 @@ class Sgz
         }
         show_msg($str);
     }
+    public function test(){
+        show_now();
+        $data = $this->getSave(1);
+
+        $key_string = "Persons.GameObjects";
+        $set="";
+
+        $keys = explode(".", $key_string);
+        foreach ($keys as $key) {
+            $data = $data[$key];
+        }
+        $map = [
+            'CalledName'=>"子龙"
+        ];
+        foreach ($data as $key => &$value) {
+            if($this->isEq($map, $value)){
+                show_msgs([$value],"json");
+            }
+        }
+
+    }
+    public function getSave($num){
+
+        $file = "C:/Users/Administrator/Documents/WorldOfTheThreeKingdoms/Save/Save0$num.json";
+        $myfile = fopen($file, "r");
+        if ($myfile === false) {
+            show_msg("open fail.");
+            return 0;
+        }
+        $size = filesize($file);
+        $content = fread($myfile, $size);
+        fclose($myfile);
+        return json_decode($content, true);
+    }
+
+    public function save($num, $data){
+        $content = json_encode($data);
+        $file = "C:/Users/Administrator/Documents/WorldOfTheThreeKingdoms/Save/Save0$num.json";
+    }
+
+    public function isEq($map, $data){
+        $res = false;
+        foreach ($map as $key => $vo) {
+            $res = true;
+            if(!isset($data[$key]) || $vo!=$data[$key]){
+                $res = false;
+                break;
+            }
+        }
+        return $res;
+    }
 }
