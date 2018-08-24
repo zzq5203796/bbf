@@ -122,16 +122,10 @@ EOD;
         if ($save) {
             locks($lock, 0);
         }
-        $save && dump(count($res) . " 条");
+        $save && show_msg(count($res) . " 条");
     }
 
     private function runGet($data) {
-        $new_time = time();
-        //        if (($new_time - $this->starTime) > 289) {
-        //            dump(date("Y-m-d H:i:s", $this->starTime));
-        //            dump(date("Y-m-d H:i:s", $new_time));
-        //            return [];
-        //        }
         $this->temp++;
         $data_list = [];
         if ($this->temp % 50 == 0) {
@@ -168,6 +162,9 @@ EOD;
         if ($res) {
             $data_list[] = $title;
             logs($title . " \n[info] $book_id | $link | $next", "book");
+            if(IS_CLI){
+                show_msg($title);
+            }
             $data['url'] = $next;
             $res = $this->runGet($data);
             if (!empty($res)) {

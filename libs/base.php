@@ -9,6 +9,7 @@ define('BBF_START_MEM', memory_get_usage());
 define('DS', "/");
 
 $DR = IS_CLI? __DIR__ . DS . ".." . DS: $_SERVER['DOCUMENT_ROOT'];
+
 define('DOCUMENT_ROOT', $DR);
 
 require_once 'debug.php';

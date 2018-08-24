@@ -135,7 +135,7 @@ function array_sum_by_key($data, $key = "length") {
 }
 
 function root_dir() {
-    $dir = $_SERVER['DOCUMENT_ROOT'] . "/";
+    $dir = DOCUMENT_ROOT;
     return $dir;
 }
 
@@ -179,7 +179,10 @@ function locks($file, $data = null) {
 }
 
 function read($file, $mode = "r", $opt = []) {
-    $file = $_SERVER['DOCUMENT_ROOT'] . "/runtime/" . $file;
+    $file = DOCUMENT_ROOT . "runtime/" . $file;
+    if(!file_exists($file)){
+        return false;
+    }
     $myfile = fopen($file, $mode);
     if ($myfile === false) {
         return false;
