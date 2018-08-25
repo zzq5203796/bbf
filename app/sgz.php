@@ -103,7 +103,7 @@ class Sgz
         ];
         foreach ($data as $key => &$value) {
             if($this->isEq($map, $value)){
-                show_msgs([$value],"json");
+                show_msgs([$value],"table");
             }
         }
 

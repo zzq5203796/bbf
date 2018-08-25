@@ -21,6 +21,19 @@ class Article
 
     public function __construct() {
         $this->model = new CPdo();
+        if(IS_CLI && empty($_GET['book'])){
+            while (1) {
+                 $book = cli_input("Book");
+                 if(is_numeric($book)) 
+                    break;
+                 else{
+                    show_msg("book must be a int.", 1, 0);
+                 }
+            }
+            $_GET['book'] = $book;
+            show_now();
+        }
+
         $this->bookId = empty($_GET['book'])? 1: $_GET['book'];;
         $this->starTime = time();
         $this->temp = 0;
@@ -71,15 +84,6 @@ EOD;
         echo $str;
     }
 
-    public function test() {
-        set_time_limit(5);
-
-        for ($i = 0; $i < 10; $i++) {
-            echo date('Y-m-d H:i:s') . "n";
-            //            sleep(1);
-        }
-        die();
-    }
 
     public function book() {
         $book_id = empty($_GET['book'])? 1: $_GET['book'];
@@ -115,14 +119,14 @@ EOD;
                 echo "[INRUN] Book is running elsewhere. [$lock]\r\n";
                 return false;
             }
-            set_time_limit(120);
+            IS_CLI || set_time_limit(120);
             locks($lock, json_encode($data));
         }
         $res = $this->runGet($data);
         if ($save) {
             locks($lock, 0);
         }
-        $save && show_msg(count($res) . " 条");
+        $save && show_msg("total:" . count($res) );
     }
 
     private function runGet($data) {
@@ -193,6 +197,8 @@ EOD;
         if (!$html) {
             return [];
         }
+        $html= mb_convert_encoding($html, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
+
         $pattern_list = ["title", "next", "content"];
         $matches_list = [
         ];
@@ -200,7 +206,7 @@ EOD;
             $pattern = $data[$item];
             preg_match_all($pattern, $html, $matches);
             $match = $matches[1][0];
-            //            $match = mb_convert_encoding($match, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
+            // $match = mb_convert_encoding($match, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
             $matches_list[$item] = $match;
         }
         $matches_list['next'] = $data['next_top'] . $matches_list['next'];
@@ -237,6 +243,7 @@ EOD;
         $content = trim($content);
         $content = preg_replace("/<script.*?<\/script>/", "", $content);
         $content = str_replace(["\n", "\r", "&nbsp;", $ds], "", $content);
+        $content = str_replace(["<br />", "</br>", "</ br>"], "<br/>", $content);
 
         $arr = explode("<br/>", $content);
         foreach ($arr as $key => $vo) {
@@ -257,7 +264,7 @@ EOD;
     public function down() {
         $book_id = $this->bookId;
         $book = $this->txtPack($book_id, 0);
-        down_file($book["file"], $book['name'] . ".txt");
+        IS_CLI || down_file($book["file"], $book['name'] . ".txt");
     }
 
     /**

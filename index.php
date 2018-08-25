@@ -18,9 +18,11 @@ foreach ($auto_tree as $key => $vo) {
     }
 }
 $iframe_url = empty($_GET['a'])? '/?a=phpinfo': $_GET['a'];
-$host = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . "/";
+$host = get_url_info("name") . "/";
 
-$menu = json_decode(file_get_contents('../menu.json'), true);
+$menu = json_decode(file_get_contents('../data/menu.json'), true);
+$menu_t = file_get_contents('../menu.json');
+$menu_t = empty($menu_t)?[]:json_decode($menu_t, true);
 $tree = $menu['menu'];
 $dirs = $menu['dir'];
 foreach ($menu['dir'] as $key => $value) {
@@ -37,7 +39,7 @@ $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
 foreach ($dirs as $key => $name) {
     $dir = is_numeric($key)? $name: $key;
     $dir_tree = get_dir_tree($dir, ['js', 'css']);
-    $tree[] = add_tree($key, $name, $dir_tree);
+    $tree[] = dir_tree_item($key, $name, $dir_tree);
 }
 
 if ($_GET['is_ajax']) {

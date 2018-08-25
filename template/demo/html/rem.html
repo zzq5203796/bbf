@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>rem 计算器</title>
+    <script type="text/javascript" src="/js/base.js"></script>
+    <style>
+        .code {
+            padding-right: 1rem;
+            word-break: break-word;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+<div style="padding: 30px; border: 1px solid #0f0;">
+
+    <form class="layui-form layui-form-pane" action="">
+        <div class="layui-form-item">
+            <!-- ko template:{name: 'inputInlineTemplate', data: {title: '根像素', value: root_size}} --><!-- /ko -->
+            <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: getrem(root_size())}}"></span>
+        </div>
+        <div class="layui-form-item">
+            <!-- ko template:{name: 'inputInlineTemplate', data: {title: 'rem计算', value: rem}} --><!-- /ko -->
+            <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: getrem(rem())}}"></span>
+        </div>
+
+        <div class="layui-form-item">
+            <span data-bind="template:{name: 'inputTwoInlineTemplate', data:
+                {title: '上BOX', name1: '字体', value1: font_1, name2: '行高', value2: line_1}}"></span>
+            <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: getfont(font_1(),line_1())}}"></span>
+        </div>
+        <div class="layui-form-item">
+            <span data-bind="template:{name: 'inputTwoInlineTemplate', data:
+                {title: '下BOX', name1: '字体', value1: font_2, name2: '行高', value2: line_2}}"></span>
+            <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: getfont(font_2(),line_2())}}"></span>
+        </div>
+
+        <div class="layui-form-item">
+            <span data-bind="template:{name: 'inputInlineTemplate', data: {title: '间 距', value: step}}"></span>
+            <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: '间距: ' + getStep()}}"></span>
+        </div>
+        <div class="bbf-padded-t-5 bbf-center-flex">
+            <span class="bbf-left">&lt;</span>
+            <div class="bbf-left border-b-1 bbf-center-node" style="height: 1px;width: 100%;text-align: center;">
+                <span style="position: relative;top:-8px;background: white;padding: 0 4px;">
+                    step:
+                    <input data-bind="value: step" placeholder="step: num rem|px" type="text" class="bbf-input" maxlength="9" style="width: 80px; padding: 2px 4px; box-sizing: border-box;border: 0;" />
+                    <!-- ko text: getEvalRem(step()) --><!-- /ko -->
+                    count:
+                    <!-- ko text: getRems() --><!-- /ko -->
+                </span>
+            </div>
+            <span class="bbf-left">&gt;</span>
+            <div style="cursor: wait;" data-bind="click: addItem.bind($data, 'step')">+</div>
+            <div style="clear: both"></div>
+        </div>
+        <div class="bbf-padded-t-5 table" style="width: 100%;" data-bind="foreach: steps">
+            <div>
+                <div data-bind="template: {name: 'bbfStepTemplate', data: {value: $parent.getEvalRem(value()), close: function(){ $parent.steps.remove(this);}.bind($data) }}"></div>
+                <div style="padding: 0 1px;"><input data-bind="value: value" placeholder="a +-*/ b rem|px" type="text" class="bbf-input" style="width: 100%; padding: 2px 4px; box-sizing: border-box;border: 0;" /></div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="none">
+    <input name="test" value="" onkeyup="var t_v = value;
+t_v = t_v.replace(/[^\d.]/g,''); t_v = t_v.replace(/\.{2,}/g,'.'); t_v = t_v.replace('.','$#$').replace(/\./g,'').replace('$#$','.'); t_v = t_v.replace(/^(\-)*(\d+)\.(\d\d).*$/,'$1$2.$3');
+if(t_v.indexOf('.')< 0 && t_v !=''){t_v= parseFloat(t_v);}t_v = t_v=='.'?'0.':t_v;if(t_v != value){value = t_v;}
+"
+           onKeyPress="if((event.keyCode<48 || event.keyCode>57) && event.keyCode!=46 && event.keyCode!=45 || /\.\d{2}$/.test(value)){event.returnValue=false}"
+    />
+</div>
+<div class="none">
+    <div>
+        <!-- ko template: {name: 'bbfBoxTemplate', data: box} -->
+        <!-- /ko -->
+        <div style="display: inline-block; width: 50px;    height: 200px; position: relative;">
+            <div style="position: absolute;">
+                <div>间距</div>
+                <input type="text" maxlength="4"
+                       style="width: 36px; height: 36px; line-height: 1.3rem; padding: 0 5px;"/>
+                <div data-bind="html:  getStep()"></div>
+                <p>2</p>
+                <p>rem</p>
+            </div>
+        </div>
+        <!-- ko template: {name: 'bbfBoxTemplate', data: box1} -->
+        <!-- /ko -->
+    </div>
+    <div class="layui-form-item bbf-margin-b-5">
+        <span data-bind="template:{name: 'inputInlineTemplate', data: {title: '间 距', value: step}}"></span>
+        <span data-bind="template:{name: 'textInlineTemplate', data: {title: 'rem:', value: '间距: ' + getStep()}}"></span>
+    </div>
+    <!-- ko template: {name: 'bbfBoxTemplate', data: box2} -->
+    <!-- /ko -->
+</div>
+
+<script type="text/html" id="inputInlineTemplate">
+    <div class="layui-inline bbf-margin-0" data-bind="css: typeof(css)=='string'?css:''">
+        <label class="layui-form-label" data-bind="text: title">验证手机</label>
+        <div class="layui-input-inline">
+            <input type="text" autocomplete="off" class="layui-input" data-bind="value: value"/>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="inputTwoInlineTemplate">
+    <div class="layui-inline bbf-margin-0">
+        <label class="layui-form-label" data-bind="text: title">范围</label>
+        <div class="layui-input-inline" style="width: 83px;">
+            <input type="text" autocomplete="off" class="layui-input" maxlength="4"
+                   data-bind="value: value1, attr:{placeholder: name1, name: value1()+'_min'}"/>
+        </div>
+        <div class="layui-form-mid">-</div>
+        <div class="layui-input-inline" style="width: 83px;">
+            <input type="text" autocomplete="off" class="layui-input" maxlength="4"
+                   data-bind="value: value2, attr:{placeholder: name2, name: value1()+'_max'}"/>
+        </div>
+    </div>
+</script>
+
+<script type="text/html" id="textInlineTemplate">
+    <div class="layui-inline bbf-margin-0" data-bind="css: typeof(css)=='string'?css:''">
+        <div class="layui-input-inline">
+            <div class="layui-form-mid layui-word-aux bbf-padded-0" data-bind="html: value">请填写6到12位密码</div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="bbfBoxTemplate">
+    <div class="bbf-div-box border-1" data-bind="css: css">
+        <div data-bind="template: {name: 'bbfInputTemplate', data: {title: 'margin', value: margin, tips: 'margin'}}"></div>
+        <div class="bbf-div-box-item border-1 border-1">
+            <div data-bind="template: {name: 'bbfInputTemplate', data: {title: 'border', value: border, tips: 'border'}}"></div>
+            <div class="bbf-div-box-item border-1 border-1">
+                <div data-bind="template: {name: 'bbfInputTemplate', data: {title: 'padding', value: padding, tips: 'padding'}}"></div>
+                <div class="bbf-div-box-item border-1 border-1">
+                    <div data-bind="template: {name: 'bbfInputTemplate', data: {title: '字体', value: size, tips: '字体'}}"></div>
+                    <div class="next"
+                         data-bind="template: {name: 'bbfInputTemplate', data: {title: '行高', value: line, tips: '行高'}}"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</script>
+<script type="text/html" id="bbfInputTemplate">
+    <div class="bbf-div-name">
+        <span class="bbf-input-title" data-bind="text: title">margin</span>
+        <input type="text" class="bbf-input" placeholder="请输入标题" data-bind="value: value, attr: {placeholder: tips}"
+               maxlength="8"/>
+        <span class="bbf-input-text" data-bind="html: $root.getrem(value())"></span>
+    </div>
+</script>
+<script type="text/html" id="bbfStepTemplate">
+    <div class="bbf-center-flex border-l-1 border-r-1">
+        <span class="bbf-left">&lt;</span>
+        <div class="bbf-left border-b-1 bbf-center-node" style="height: 1px;width: 99%; text-align: center;">
+            <span style="position: relative;top:-7px;padding: 0 4px;" data-bind="text: value"></span>
+        </div>
+        <span class="bbf-left">&gt;</span>
+        <div style="cursor: wait;" data-bind="click: close">x</div>
+        <div style="clear: both"></div>
+    </div>
+</script>
+</body>
+<script type="application/javascript">
+</script>
+<script type="application/javascript">
+    window.entryJS = "/js/rem.js";
+</script>
+</html>

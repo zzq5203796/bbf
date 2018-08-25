@@ -1,0 +1,93 @@
+{
+  "menu": [
+    {
+      "name": "快速链接",
+      "url": "#",
+      "hide": true,
+      "child": [
+        {
+          "name": "tp5.0手册",
+          "url": "https://www.kancloud.cn/manual/thinkphp5/125019",
+          "child": []
+        },
+        {
+          "name": "layer",
+          "url": "http://layer.layui.com/",
+          "child": []
+        },
+        {
+          "name": "icon",
+          "url": "/font_at8tu8bzfai/demo_fontclass.html",
+          "child": []
+        },
+        {
+          "name": "jquery",
+          "url": "http://www.w3school.com.cn/jquery/index.asp",
+          "child": []
+        },
+        {
+          "name": "phpinfo",
+          "url": "/?a=phpinfo",
+          "child": []
+        },
+        {
+          "name": "server",
+          "url": "/?a=server",
+          "child": []
+        },
+        {
+          "name": "百度",
+          "url": "http://baidu.com",
+          "child": []
+        },
+        {
+          "name": "百度翻译",
+          "url": "http://fanyi.baidu.com/translate",
+          "child": []
+        }
+      ]
+    },
+    {
+      "name": "测试区",
+      "url": "#",
+      "hide": true,
+      "child": [
+        {
+          "name": "RMT-RUN",
+          "url": "http://rmt.cc",
+          "child": [
+            {
+              "name": "GAME",
+              "url": "http://rmt.cc/home/test/game",
+              "child": []
+            },
+            {
+              "name": "GOODS",
+              "url": "http://rmt.cc/home/test/goods",
+              "child": []
+            }
+          ]
+        },
+        {
+          "name": "ZIP",
+          "url": "http://www.w3school.com.cn/jquery/index.asp",
+          "child": [
+            {
+              "name": "CSS",
+              "url": "/zip/css",
+              "child": []
+            },
+            {
+              "name": "JS",
+              "url": "/zip/js",
+              "child": []
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "dir": {
+    "template": "模板"
+  }
+}

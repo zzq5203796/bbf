@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>canvas</title>
+    <script src="/public/static/jquery/jquery-3.1.1.min.js"></script>
+    <!--<script src="/js/libs/jquery.min.js"></script>-->
+    <script src="/js/libs/iscroll-zoom.js"></script>
+    <script src="/js/libs/hammer.js"></script>
+    <script src="/js/libs/jquery.photoClip.js"></script>
+    <link rel="stylesheet" href="/css/clip.css" media="all">
+</head>
+<body>
+<canvas id="canvas" width="600" height="500"></canvas>
+
+<script type="text/javascript">
+
+    function barChart(opt) {
+        var data = [];
+        var _opt = {
+            id: 'canvas',
+            title: 'xxx公司年度盈利',   // 标题
+            titleColor: '#000000',      // 标题颜色
+            titlePosition: 'top',       // 标题位置
+            bgColor: '#ffffff',         // 背景色
+
+            fillColor: ['#0f0', '#f0f', '#0ff', '#00f'],  // 柱状填充色 array | string | null
+            axisColor: '#555',       // 坐标轴颜色
+            contentColor: '#555',     // 内容颜色
+
+            padding: 50,
+            color: "#000",
+            yNumber: 5,
+        };
+        opt = Object.assign(_opt, opt);
+
+        var canvas = document.getElementById(opt.id);
+        var ctx = canvas.getContext('2d');
+        var width = canvas.width;
+        var height = canvas.height;
+
+        function drawAxis() {
+            ctx.lineWidth = 1;
+            ctx.strokeStyle = opt.axisColor;
+            ctx.fillStyle = opt.axisColor;
+            // y轴线
+            ctx.moveTo(opt.padding + 0.5, height - opt.padding + 0.5);
+            ctx.lineTo(opt.padding + 0.5, opt.padding - 0.5);
+            ctx.stroke();
+            // x轴线
+            ctx.moveTo(opt.padding + 0.5, height - opt.padding + 0.5);
+            ctx.lineTo(width - opt.padding + 0.5, height - opt.padding + 0.5);
+            ctx.stroke();
+        }
+        ctx.beginPath();
+        ctx.textAlign = 'center';
+
+        var xLength = 0;
+
+        // x轴刻度和值
+        function drawXAxis() {
+            xLength = Math.floor((width - opt.padding * 2) / data.length);  // x轴每段的真实长度
+            for (var i = 0; i < data.length; i++) {
+                var xAxis = data[i].xAxis;
+                var xlen = xLength * (i + 1);
+                ctx.moveTo(opt.padding + xlen, height - opt.padding);
+                ctx.lineTo(opt.padding + xlen, height - opt.padding + 5);
+                ctx.stroke();
+                ctx.fillStyle = opt.contentColor; // 画轴线上的刻度 颜色
+                ctx.fillText(xAxis, opt.padding + xlen - xLength / 2, height - opt.padding + 15);   // 填充文字
+            }
+        }
+
+
+        // y轴刻度和值
+        function drawYAxis() {
+            var yLength = Math.floor((height - opt.padding * 2) / opt.yNumber);     // y轴每段的真实长度
+            var yFictitious = getMax() / opt.yNumber;
+
+            for (var i = 0; i < opt.yNumber; i++) {
+                var y = yFictitious * (i + 1);
+                var ylen = yLength * (i + 1);
+                ctx.moveTo(opt.padding, height - opt.padding - ylen);
+                ctx.lineTo(opt.padding - 5, height - opt.padding - ylen);
+                ctx.stroke();
+                ctx.fillStyle = opt.contentColor;
+                ctx.fillText(y, opt.padding - 7 - y.toString().length*3, height - opt.padding - ylen + 5);
+            }
+        }
+
+        var current = 0, yRatio = 1;
+        function looping() {
+            looped = requestAnimationFrame(looping);
+            if (current < 100) {
+                // current 用来计算当前柱状的高度占最终高度的百分之几，通过不断循环实现柱状上升的动画
+                current = (current + 3) > 100 ? 100 : (current + 3);
+                drawAnimation();
+            } else {
+                window.cancelAnimationFrame(looped);
+                looped = null;
+            }
+        }
+
+        function drawAnimation() {
+            for (var i = 0; i < data.length; i++) {
+                var x = Math.ceil(data[i].value * current / 100 * yRatio);
+                var y = height - opt.padding - x;
+                ctx.fillStyle = typeof(opt.fillColor) == 'Aarray' || typeof(opt.fillColor) == 'object'? (opt.fillColor[i]?opt.fillColor[i]: opt.color): (opt.fillColor? opt.fillColor: opt.color);
+                ctx.fillRect(opt.padding + xLength * (i + 0.25), y, xLength / 2, x);
+                // 保存每个柱状的信息
+                data[i].left = opt.padding + xLength / 4 + xLength * i;
+                data[i].top = y;
+                data[i].right = opt.padding + 3 * xLength / 4 + xLength * i;
+                data[i].bottom = height - opt.padding;
+            }
+        }
+
+        function getMax() {
+            var max = 10;
+            for (var i = 0; i < data.length; i++) {
+                var value = parseFloat(data[i].value);
+                if (value > max) {
+                    max = value;
+                }
+            }
+            return Math.ceil(max / 10) * 10;
+        }
+
+        function setData(datas) {
+            ctx.clearRect(0, 0, width, height);
+            current = 0;
+            data = datas;
+            yRatio = (height - opt.padding * 2) / getMax();
+            drawAxis();
+            drawXAxis();
+            drawYAxis();
+            looping();
+        }
+
+        this.setData = setData;
+        return this;
+    }
+
+    var chart = new barChart({});
+    chart.setData([
+        {xAxis: 1, value: 123},
+        {xAxis: 11, value: 13},
+        {xAxis: 12, value: 23},
+        {xAxis: 13, value: 3},
+    ]);
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,8 @@
+Usage: php index.php s [toMethod] [params] [args...] [key]  <value>
+
+  -s tomethod      路径
+                        article 文章
+  -p string        总参数 请求参数 模拟get请求参数
+  <key>  <value>   自定义参数 以params优先
+
+  --help|?|-h      帮助
