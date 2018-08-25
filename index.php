@@ -223,7 +223,7 @@ function show_tree($tree) {
         </tr>
     </table>
 </div>
-<script src="/js/jquery.min.js"></script>
+<script src="/js/libs/jquery.min.js"></script>
 <script src="/js/common.js"></script>
 </body>
 <script>
