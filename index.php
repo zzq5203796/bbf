@@ -179,6 +179,12 @@ function show_tree($tree) {
                 <div class="left-box bbf-box-full scroll">
                     <div class="menu-level padded">
                         <?php echo $tree_str; ?>
+                        <li class="menu-node">
+                            <a href="/template/menu.html" target="_blank" class="menu-text" title="menu.html" data-length="0" data-alllength="0">
+                                <i class="icon icon-link" style="position: relative;"><i style="width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;"></i></i>
+                                完整版
+                            </a>
+                        </li>
                     </div>
                 </div>
             </td>
