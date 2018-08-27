@@ -23,6 +23,7 @@ class Zip
     public function menu() {
         $this->js();
         $this->css();
+        show_msg("end.");
     }
 
     public function js() {
@@ -46,7 +47,7 @@ class Zip
         foreach ($data as $vo) {
             $this->parse_js($vo, ['time' => 1]);
         }
-        echo date("Y-m-d H:i:s") . " success<br/>";
+        show_msg("run js success.");
     }
 
     public function parse_js($file, $option = []) {
@@ -78,7 +79,7 @@ class Zip
         foreach ($data as $vo) {
             parse_css($vo, ['time' => 1]);
         }
-        echo date("Y-m-d H:i:s") . " success.<br/>";
+        show_msg("run css success.");
     }
 
     protected function parse_js_content($js) {

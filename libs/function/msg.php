@@ -278,13 +278,22 @@ function show_now($echo = true) {
  * @return string
  */
 function show_msg($msg, $echo = true, $time = true, $num = 0) {
+    $call_line = debug_backtrace()[0];
     $str = show_now(0);
-    $top = $time? "[$str]" . get_space(2): "";
+
+    $top = $time? "[$str] " . setlength(array_pop(explode("/", $call_line['file'])), 10) . get_space(1) . $call_line['line'] . get_space(2): "";
     $body = $top . get_space($num) . $msg . get_br();
     if ($echo) {
         echo $body;
     }
     return $body;
+}
+
+function setlength($str, $num = 10) {
+    $len = $num - strlen($str)+1;
+    $len = $len > 0? $len: 0;
+
+    return $str . get_space($len);
 }
 
 function show_msgs($data, $type = "array", $num = 0, $opt = []) {
@@ -341,7 +350,7 @@ function show_msgs($data, $type = "array", $num = 0, $opt = []) {
 
 function show_table($data, $keys = []) {
     $temp_keys = empty($keys)? array_keys($data[0]): $keys;
-    list($tr, $td) = IS_CLI? [get_br(),get_space(2)]: ["tr", "td"];
+    list($tr, $td) = IS_CLI? [get_br(), get_space(2)]: ["tr", "td"];
     $body = "";
     $line = "";
     $keys = [];
@@ -356,13 +365,13 @@ function show_table($data, $keys = []) {
     }
     IS_CLI && $body .= "$tr$line$tr";
     IS_CLI || $body .= "<$tr>$line</$tr>";
-    foreach ($data as $key_data=>$item) {
+    foreach ($data as $key_data => $item) {
         $line = "";
         foreach ($keys as $key_value) {
             $key = $key_value['key'];
             $vo = isset($item[$key])? $item[$key]: "";
 
-            $tables[$key_data+1][] = $vo;
+            $tables[$key_data + 1][] = $vo;
             IS_CLI && $line .= "$td$vo";
             IS_CLI || $line .= "<$td><div>$vo</div></$td>";
         }
@@ -370,20 +379,20 @@ function show_table($data, $keys = []) {
         IS_CLI && $body .= "$tr$line$tr";
         IS_CLI || $body .= "<$tr>$line</$tr>";
     }
-    $style="<style>table.show-msg tr td > div{padding:2px 4px; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3; overflow: hidden;}</style>";
+    $style = "<style>table.show-msg tr td > div{padding:2px 4px; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3; overflow: hidden;}</style>";
 
     // IS_CLI || $body = 
-    IS_CLI && $body = $style."<table class='show-msg'>$body</table>";
+    IS_CLI && $body = $style . "<table class='show-msg'>$body</table>";
     echo $body;
     return $body;
 }
 
-function cli_input($title){
-    if(IS_CLI){
-        $str=  "Please input $title:";
-        fwrite(STDOUT,$str);
+function cli_input($title) {
+    if (IS_CLI) {
+        $str = "Please input $title:";
+        fwrite(STDOUT, $str);
         $value = fgets(STDIN);
-        $str = "you input $title:".$value;
+        $str = "you input $title:" . $value;
         echo $str;
     }
     return trim($value);
