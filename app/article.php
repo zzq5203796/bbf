@@ -52,6 +52,9 @@ class Article
         }
     }
 
+    public function list(){
+    }
+
     private function helpCli() {
         $html = <<<EOD
     article/book  爬虫书本
@@ -76,17 +79,42 @@ EOD;
             ["down", "TXT", "book=1"],
         ];
 
+        $list = $this->model->query("books", "*", [], "", "id asc");
         $str = "";
+
+        foreach ($list as $vo) {
+            $title = $vo['title'];
+            $link = $vo['link'];
+            $link = $vo['link'];
+            $id = $vo['id'];
+            $first_link = $vo['first_link'];
+            $str .= "<div class='fast-link' style='padding: 4px 0;'>
+            <div style='width:100px;text-align:right;display: inline-block;'>$title: </div>
+            <a href='/article/book?is_check=1&book=$id' target='_blank'>检查</a> |
+            <a href='/article/book?save=1&book=$id' target='_blank'>爬他</a> |
+            <a href='/article/down?book=$id'>下载</a> |
+            <a href='/article/book?book=$id' target='_blank'>阅读</a> |
+            <a href='$link' target='_blank'>源文</a> |
+            <a href='$first_link' target='_blank'>源首页</a> |
+            <a href='$link' target='_blank'>$link</a>
+            <span></span>
+            </div>";
+        }
+
         foreach ($fastlink as $vo) {
             list($method, $tite, $param) = $vo;
-            $str .= "<div class='fast-link'><a href='/?s=articel/$method'>$tite</a><span>$param</span></div>";
+            $str .= "<div class='fast-link'><a href='/?s=articel/$method' target='_blank'>$tite</a><span>$param</span></div>";
         }
         echo $str;
     }
 
+    public function read(){
+
+    }
 
     public function book() {
         $book_id = empty($_GET['book'])? 1: $_GET['book'];
+        $is_check = empty($_GET['is_check'])? 0: $_GET['is_check'];
         $info = $this->model->query("books", "*", ['id' => $book_id])[0];
         if (empty($info)) {
             echo "[book|save|p],no found.\r\n";
@@ -95,7 +123,7 @@ EOD;
 
         $save = empty($_GET['save'])? 0: $_GET['save'];
         $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
-        $url = $last_page? $last_page['next_link']: $info['first_link'];
+        $url = $last_page&&!$is_check? $last_page['next_link']: $info['first_link'];
         if (!$save && !empty($_GET['p'])) {
             $url = $_GET['p'];
         }
@@ -144,9 +172,9 @@ EOD;
                 setcookie($data['cookie_top'] . "_link", $data['url']);
                 setcookie($data['cookie_top'] . "_title", $res['title']);
                 echo "<h1>" . $res['title'] . "</h1>";
-                echo "<a href=\"?book_id=" . $data['book_id'] . "&p=" . $res['next'] . "\">" . $res['next'] . "</a>";
+                echo "<a href=\"?book=" . $data['book_id'] . "&p=" . $res['next'] . "\">" . $res['next'] . "</a>";
                 echo "<div style='margin: 10px auto; width: 600px;'>" . $res['content'] . "</div>";
-                echo "<a href=\"?book_id=" . $data['book_id'] . "p=" . $res['next'] . "\">下一章</a>";
+                echo "<a href=\"?book=" . $data['book_id'] . "&p=" . $res['next'] . "\">下一章</a>";
             }
             return $res;
         }
