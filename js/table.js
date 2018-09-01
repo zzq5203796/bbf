@@ -10,6 +10,7 @@ function tableView(opts){
     opts = Object.assign({
         url: '',
         box: 'table.table-box',
+        itemBox: 'tableViewItem',
         data: [
             {key: 'id', title: 'ID'},
             {key: 'title', title: '标题'},
@@ -25,11 +26,9 @@ function tableView(opts){
         total_page: 0,
     }, opts);
 
-    var html = template('tableViewItem', {obj: opts, list: opts.data});
+    var html = template('tableView', {obj: opts, list: opts.data});
     $(opts.box).append(html);
-    log(html);
-    log($(opts.box));
-    log(opts);
+
     first();
 
 
@@ -64,7 +63,7 @@ function tableView(opts){
         page = page < 0? 0: (page < opts.total_page? page: opts.total_page-1);
         params.page = page;
         _ajax.get(opts.url, params, function(data){
-            setPageHtml(page);
+            setHtml(data);
             opt.paged = parseInt(page);
         });
     }
@@ -75,8 +74,8 @@ function tableView(opts){
 
     function setHtml(data){
         var box = $(opts.box+" tbody");
+        var html = template(opts.itemBox, {obj: opts, list: data});
 
-        var html = template('tableViewItem', {obj: opts, list: data});
         if(opts.page_type == 1){
             box.html(html);
         }else{

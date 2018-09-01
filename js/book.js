@@ -49,6 +49,6 @@ var book = {
 }
 book.init();
 bookv = tableView({
-    box: "book-table",
+    box: ".book-table",
     url: "/article/index",
 });
