@@ -333,4 +333,10 @@ EOD;
         return $book;
     }
 
+    /**
+    * 清除锁
+    */ 
+    public function unlocks(){
+        $type = input('type', 'down');
+    }
 }
