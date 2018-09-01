@@ -10,7 +10,7 @@ function tableView(opts){
     opts = Object.assign({
         url: '',
         box: 'table.table-box',
-        itemBox: 'tableViewItem',
+        tmpl: 'tableViewItem',
         data: [
             {key: 'id', title: 'ID'},
             {key: 'title', title: '标题'},
@@ -74,7 +74,7 @@ function tableView(opts){
 
     function setHtml(data){
         var box = $(opts.box+" tbody");
-        var html = template(opts.itemBox, {obj: opts, list: data});
+        var html = template(opts.tmpl, {obj: opts, list: data});
 
         if(opts.page_type == 1){
             box.html(html);

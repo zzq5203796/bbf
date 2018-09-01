@@ -1,10 +1,3 @@
-var data = {
-    title: '基本例子',
-    isAdmin: true,
-    list: ['文艺', '博客', '摄影', '电影', '民谣', '旅行', '吉他']
-};
-// var html = template('test', data);
-
 var book = {
     url: {
         book: "/article/index",
@@ -47,8 +40,17 @@ var book = {
 
     }
 }
-book.init();
+// book.init();
 bookv = tableView({
     box: ".book-table",
+    tmpl: "bookItem",
+    data: [
+        {key: 'id', title: 'ID'},
+        {key: 'id', title: '标题'},
+        {key: 'id', title: '本地'},
+        {key: 'id', title: '来源'},
+        {key: 'id', title: '其他'},
+        {key: 'id', title: '<div class="btn" onclick="bookv.goPage(0);">刷新</div>'},
+    ],
     url: "/article/index",
 });

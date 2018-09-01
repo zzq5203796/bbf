@@ -15,8 +15,9 @@
 <script type="text/html" id="tableViewItem">
     <% for (var i = 0; i < list.length; i ++) { %>
     <tr>
-        <% for (var i = 0; i < obj.data.length; i ++) { %>
-            <td class=""><%= list[i][obj.data.key] %></td>
+        <%= list[i] %>
+        <% for (var k = 0; k < obj.data.length; k ++) { %>
+            <td class=""><%= list[i][obj.data[k].key] %></td>
         <% } %>
     </tr>
     <% } %>
