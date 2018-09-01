@@ -1,0 +1,9 @@
+article/book  爬虫书本
+        book  int     书本
+        save  0|1     记录
+        p     string  路径 save 1生效
+        
+article/down  生成文档 
+        book :id  书本
+        
+article/redo  重新格式化content
