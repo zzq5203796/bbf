@@ -49,11 +49,12 @@ store = (function () {
 
         set(name, store);
     }
-
-    this.set = set;
-    this.setKey = setKey;
-    this.push = push;
-    this.merge = merge;
-    this.get = get;
-    return this;
+    
+    var that = {};
+    that.set = set;
+    that.setKey = setKey;
+    that.push = push;
+    that.merge = merge;
+    that.get = get;
+    return that;
 })();

@@ -292,7 +292,7 @@ td {
     -o-transition: all 2s;
 }
 
-.button {
+.button, .btn {
     display: inline-block;
     padding: 4px 6px 3px 6px;
     margin-right: 6px;

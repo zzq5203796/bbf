@@ -1,0 +1,23 @@
+
+<script type="text/html" id="tableView">
+    <table class=" book-box">
+        <thead> 
+            <tr>
+                <% for (var i = 0; i < list.length; i ++) { %>
+                <td class=""><%= list[i].title %></td>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</script>
+
+<script type="text/html" id="tableViewItem">
+    <% for (var i = 0; i < list.length; i ++) { %>
+    <tr>
+        <% for (var i = 0; i < obj.data.length; i ++) { %>
+            <td class=""><%= list[i][obj.data.key] %></td>
+        <% } %>
+    </tr>
+    <% } %>
+</script>

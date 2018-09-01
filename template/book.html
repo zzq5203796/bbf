@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>menu</title>
+    <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
+    <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
+    <link rel="stylesheet" href="/css/book.css?t=123" media="all">
+
+    <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
+    <script type="text/javascript" src="/js/libs/art-template/template-web.js"></script>
+</head>
+<style>
+</style>
+<body>
+<div class="window">
+    <div class="search-box">
+        
+    </div>
+    <table class=" book-box">
+        <thead> 
+            <tr>
+                <td>ID</td>
+                <td>书本</td>
+                <td>本地</td>
+                <td>来源</td>
+                <td>其他</td>
+                <td>
+                    <div class="btn" onclick="book.clear(); book.get();">刷新</div>
+                </td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+    <div class="book-table">
+        <div> new </div>
+    </div>
+</div>
+
+<script type="text/html" id="bookItem">
+    <% for (var i = 0; i < list.length; i ++) { %>
+    <tr>
+        <td><%= list[i].id %></td>
+        <td><%= list[i].title %></td>
+        <td>
+            <a href="<%= obj.url.check %><%= list[i].id %>" target="_blank">检查</a>
+            | <a href="<%= obj.url.run %><%= list[i].id %>" target="_blank">蜘蛛</a>
+            | <a href="<%= obj.url.down %><%= list[i].id %>" target="_blank">下载</a>
+            | <a href="<%= obj.url.read %><%= list[i].id %>" target="_blank">阅读</a>
+        </td>
+        <td>
+            <a href="<%= list[i].link %>" target="_blank">目录</a>
+            | <a href="<%= list[i].first_link %>" target="_blank">首页</a>
+        </td>
+        <td><%= list[i].title %></td>
+    </tr>
+    <% } %>
+</script>
+
+
+<script type="text/html" id="tableView">
+    <table class=" book-box">
+        <thead> 
+            <tr>
+                <% for (var i = 0; i < list.length; i ++) { %>
+                <td class=""><%= list[i].title %></td>
+                <% } %>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</script>
+
+<script type="text/html" id="tableViewItem">
+    <% for (var i = 0; i < list.length; i ++) { %>
+    <tr>
+        <% for (var i = 0; i < obj.data.length; i ++) { %>
+            <td class=""><%= list[i][obj.data.key] %></td>
+        <% } %>
+    </tr>
+    <% } %>
+</script>
+
+</body>
+
+<script type="text/javascript" src="/public/min/js/common.min.js"></script>
+<script type="text/javascript" src="/js/table.js"></script>
+<script type="text/javascript" src="/js/book.js"></script>
+<script type="application/javascript">
+
+</script>
+</html>

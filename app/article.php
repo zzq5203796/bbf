@@ -82,6 +82,10 @@ EOD;
         $list = $this->model->query("books", "*", [], "", "id asc");
         $str = "";
 
+
+        if(IS_AJAX){
+            ajax_success('', $list);
+        }
         foreach ($list as $vo) {
             $title = $vo['title'];
             $link = $vo['link'];
