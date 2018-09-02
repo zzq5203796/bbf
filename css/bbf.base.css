@@ -403,3 +403,9 @@ ul.auto li{
     background: #ddd;
     margin-bottom: 1px;
 }
+.disable{
+    cursor: not-allowed !important;
+}
+.wait{
+    cursor: wait !important;
+}

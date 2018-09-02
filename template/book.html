@@ -44,31 +44,6 @@
     <% } %>
 </script>
 
-
-<script type="text/html" id="tableView">
-    <table class=" book-box">
-        <thead> 
-            <tr>
-                <% for (var i = 0; i < list.length; i ++) { %>
-                <td class=""><%= list[i].title %></td>
-                <% } %>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</script>
-
-<script type="text/html" id="tableViewItem">
-    <% for (var i = 0; i < list.length; i ++) { %>
-    <tr>
-        <%= list[i] %>
-        <% for (var k = 0; k < obj.data.length; k ++) { %>
-            <td class=""><%= list[i][obj.data[k].key] %></td>
-        <% } %>
-    </tr>
-    <% } %>
-</script>
-
 </body>
 
 <script type="text/javascript" src="/public/min/js/common.min.js"></script>

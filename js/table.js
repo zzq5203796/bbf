@@ -1,8 +1,13 @@
 
-var tableWait = {
-    table: 0,
-    data: null,
-};
+template_load("/template/tableView.html", "table", function(){
+    for(var i in tableWait){
+        if(tableWait[i].cb != 0){
+            tableWait[i].cb();
+        }
+    }
+});
+
+var tableWait = [];
 
 function tableView(opts){
     var that = {}, opt = {};
@@ -26,11 +31,21 @@ function tableView(opts){
         total_page: 0,
     }, opts);
 
-    var html = template('tableView', {obj: opts, list: opts.data});
-    $(opts.box).append(html);
+   if($("#tableView").length==0){
+        tableWait.push({cb:init, name: opts.box});
+    }else{
+        init();
+    }
+    first(); 
 
-    first();
+    function init(){
+        var html = template('tableView', {obj: opts, list: opts.data});
+        if($(opts.box).length==0){
+            tableWait[opts.box] = html;
+        }
+        $(opts.box).append(html);
 
+    }
 
     function search(){
         goPage(0);
@@ -74,6 +89,10 @@ function tableView(opts){
 
     function setHtml(data){
         var box = $(opts.box+" tbody");
+        if(box.length==0){
+            tableWait.push({cb: function(){setHtml(data);}, name: opts.box+" tbody"});
+            return false;
+        }
         var html = template(opts.tmpl, {obj: opts, list: data});
 
         if(opts.page_type == 1){

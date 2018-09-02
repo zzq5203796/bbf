@@ -1,15 +1,58 @@
-
+<style>
+.page{
+    padding-top: 10px;
+    text-align: center;
+}
+.page > div{
+    display: inline-block;
+    padding: 0px 3px;
+    text-align: center;
+    min-width: 24px;
+    border-radius: 4px;
+    background: #ffffff;
+    border: 1px solid #f0f0f0;
+    cursor: pointer;
+    height: 30px;
+    line-height: 30px;
+}
+.page > div:hover{
+    background: #aaa;
+    color: #fff;
+}
+.page  input{
+    width: 50px; 
+    padding: 0 2px;
+    height: 30px;
+    border: 1px solid #f0f0f0;
+    border-radius: 3px;
+    line-height:  30px
+}
+</style>
 <script type="text/html" id="tableView">
     <table class=" book-box">
         <thead> 
             <tr>
                 <% for (var i = 0; i < list.length; i ++) { %>
-                <td class=""><%= list[i].title %></td>
+                <td class="">{{#list[i].title}} </td>
                 <% } %>
             </tr>
         </thead>
         <tbody></tbody>
+        <tfoot class="page">
+        </tfoot>
     </table>
+    <div class="page">
+            <div>上一页</div>
+            <div>...</div>
+            <div>5</div>
+            <div>6</div>
+            <div>7</div>
+            <div>...</div>
+            <div>下一页</div>
+            <div>共**条</div>
+            <input type="number" />
+            <div>GO</div>
+    </div>
 </script>
 
 <script type="text/html" id="tableViewItem">

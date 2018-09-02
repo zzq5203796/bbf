@@ -42,6 +42,10 @@ _ajax = (function () {
         };
         option = typeof (option) == 'function' ? {success: option} : option;
         option = Object.assign(opt, option);
+        if(option._obj){
+            option._obj.addClass("wait disable");
+        }
+
         $.ajax({
             url: url,
             async: false,
