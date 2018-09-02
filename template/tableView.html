@@ -41,16 +41,29 @@
         <tfoot class="page">
         </tfoot>
     </table>
+    <div class="table-footer">
+        <div class="tpage"></div>
+    </div>
+</script>
+
+<script type="text/html" id="tableViewPage">
     <div class="page">
-            <div>上一页</div>
-            <div>...</div>
-            <div>5</div>
-            <div>6</div>
-            <div>7</div>
-            <div>...</div>
+            <div >首页</div>
+            <div >上一页</div>{{$page}}
+            <% for (var i = page.start; i <= page.end; i ++) { %>
+            <div onclick="bookv.goPage({{i}})" >{{i}}</div>
+            <% } %>
+            <!-- <div>...</div> -->
+            <!-- <div>5</div> -->
+            <!-- <div>6</div> -->
+            <!-- <div>7</div> -->
+            <!-- <div>...</div> -->
             <div>下一页</div>
-            <div>共**条</div>
-            <input type="number" />
+            <div>尾页</div>
+            <div>共{{obj.total}}条</div>
+            <div>第{{obj.paged+1}}页</div>
+            <div>共{{obj.total_page}}页</div>
+            <input placeholder="页码" type="number" />
             <div>GO</div>
     </div>
 </script>

@@ -3,6 +3,7 @@ template_load("/template/tableView.html", "table", function(){
     for(var i in tableWait){
         if(tableWait[i].cb != 0){
             tableWait[i].cb();
+            tableWait[i].cb = 0;
         }
     }
 });
@@ -26,8 +27,8 @@ function tableView(opts){
         paged: 0,
         page_type: '1',
 
-        total: 0,
-        size: 0,
+        total: 101,
+        size: 10,
         total_page: 0,
     }, opts);
 
@@ -78,13 +79,10 @@ function tableView(opts){
         page = page < 0? 0: (page < opts.total_page? page: opts.total_page-1);
         params.page = page;
         _ajax.get(opts.url, params, function(data){
+            opts.total_page = Math.ceil(opts.total/opts.size);
             setHtml(data);
-            opt.paged = parseInt(page);
+            opts.paged = parseInt(page);
         });
-    }
-
-    function setPageHtml(){
-
     }
 
     function setHtml(data){
@@ -100,6 +98,42 @@ function tableView(opts){
         }else{
             box.append(html);
         }
+        setPageHtml();
+    }
+
+    function setPageHtml(){
+        console.log(getPage());
+        var html = template("tableViewPage", {obj: opts, page: getPage()});
+        $(opts.box+" .tpage").html(html);
+    }
+
+    function getPage(){
+        var total_page = opts.total_page;
+        var show_page = 7, 
+            page = opts.paged + 1, 
+            show_page_temp = 3, 
+            start_page = page - show_page_temp, 
+            end_page = page + show_page_temp; 
+
+        start_page = start_page>0? start_page: 1; 
+        end_page = opts.total_page < end_page? opts.total_page: end_page;
+
+        if(end_page - start_page < show_page-1){
+            if(start_page==1){
+                end_page = show_page;
+            }else{
+                start_page = end_page-show_page;
+            }
+        }
+
+        start_page = start_page>0? start_page: 0; 
+        end_page = opts.total_page < end_page? opts.total_page: end_page;
+
+        return {
+            start: start_page,
+            end: end_page,
+            paged: page
+        };
     }
     that.goPage = goPage;
     that.opts = opts;
