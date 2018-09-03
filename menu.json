@@ -1,28 +1,5 @@
 {
-  "menu": [
-    {
-      "name": "快速链接",
-      "url": "#",
-      "hide": true,
-      "child": [
-        {
-          "name": "git up",
-          "url": "http://10.0.0.88/git-update-for-rmt.php",
-          "hide": true,
-          "child": []
-        }
-      ]
-    }
-  ],
+  "menu": [],
   "dir": {
-    "UI/font_goods_html/html": "字谷网",
-    "UI/rmt0711/html": "RMT0711",
-    "UI/rmt0718/html": "RMT0718",
-    "UI/rmt0721/html": "RMT0721",
-    "UI/rmt0729/html": "RMT0729",
-    "UI/rmt0810/html": "RMT0810",
-    "UI/rmt0816/html": "RMT0816",
-    "UI/rmt0714/html": "RMT0714",
-    "UI/RMT/html": "RMT"
   }
 }
