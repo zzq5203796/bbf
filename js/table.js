@@ -16,6 +16,7 @@ function tableView(opts){
     opts = Object.assign({
         url: '',
         box: 'table.table-box',
+        name: 'tablev',
         tmpl: 'tableViewItem',
         data: [
             {key: 'id', title: 'ID'},
@@ -57,10 +58,57 @@ function tableView(opts){
                 }
             }
         });
-        $(opts.box).on('click', 'tbody tr td', function (e) {
-            $(this).parent().toggleClass("select");
-        });
+        select.init();
     }
+    select = {
+        mode: 0, // 0 all , other NUM is max num 
+        bodybox: " tbody tr",
+        allbox: opts.box + " thead id",
+        init: function(){
+
+            $(opts.box).on('click', select.bodybox, function (e) {
+                select.choose($(this));
+            });
+        },
+        choose: function(obj){
+            select.change(obj, !obj.hasClass("select"));
+            select.change($(select.allbox), select.is_all());
+        },
+        change: function(obj, value){
+            if(value){
+                obj.addClass("select");
+            }else{
+                obj.removeClass("select");
+            }
+        },
+        is_all: function(){
+            var obj = $(opts.box + select.bodybox),
+                is_all = true;
+            for(var i=0; i < obj.length; i++){
+                if(obj.eq(i)){
+                    is_all = false;
+                    break;
+                }
+            }
+            return is_all;
+        },
+        chooseAll: function(){
+            var obj = $(opts.box + select.bodybox), is_all = select.is_all();
+
+            for(var i=0; i < obj.length; i++){
+                select.change(obj.eq(i), !is_all);
+            }
+        },
+        data: function(){
+            var obj = $(opts.box + select.bodybox),data = [];
+            for(var i=0; i < obj.length; i++){
+                if(obj.eq(i).hasClass("select"))
+                data.push(obj.eq(i).todo("get id or obj todo"));
+            }
+            return data;
+        }
+    };
+
 
     function search(){
         goPage(0);

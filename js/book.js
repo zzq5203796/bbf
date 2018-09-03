@@ -43,6 +43,7 @@ var book = {
 // book.init();
 bookv = tableView({
     box: ".book-table",
+    name: "bookv",
     tmpl: "bookItem",
     data: [
         {key: 'id', title: 'ID'},
