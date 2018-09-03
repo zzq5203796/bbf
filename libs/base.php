@@ -3,6 +3,11 @@
 // 环境常量
 define('IS_CLI', PHP_SAPI == 'cli'? true: false);
 define('IS_WIN', strpos(PHP_OS, 'WIN') !== false);
+
+define('IS_POST', $_SERVER['REQUEST_METHOD'] == "POST");
+define('IS_AJAX', !empty($_SERVER['HTTP_X_REQUESTED_WITH']));
+
+
 define("IS_CLEAR", false); 
 
 define('BBF_START_TIME', microtime(true));
@@ -14,6 +19,7 @@ rtrim($DR, DS);
 define('DOCUMENT_ROOT', $DR.DS);
 
 require_once 'function/sys.php';
+require_once 'function/json.php';
 require_once 'function/file.php';
 require_once 'function/msg.php';
 require_once 'function/cli.php';

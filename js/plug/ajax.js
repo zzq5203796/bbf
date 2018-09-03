@@ -1,3 +1,9 @@
+/**
+ *  
+ *  attr ajax-data|data  ajax-post|method  tips|tips ajax-cb|cb
+ *  
+ *  
+ */
 $(".ajax").on('click', function (e) {
     var url = $(this).attr("url"),
         data = {A: 1},
@@ -11,18 +17,20 @@ $(".ajax").on('click', function (e) {
     url = url ? url : '/upload/index';
 
     var opt = {tips: tips, success: cb ? eval(cb) : {}};
-    ajax.request(url, method, data, opt);
+    _ajax.request(url, method, data, opt);
     return false;
 });
-ajax = (function () {
-    var that = this;
-    this.get = function (url, params, option) {
-        request(url, 'get', params, option);
+
+
+_ajax = (function () {
+    var that = {};
+    that.get = function (url, params, option) {
+        that.request(url, 'get', params, option);
     };
-    this.post = function (url, params, option) {
-        request(url, 'post', params, option);
+    that.post = function (url, params, option) {
+       that.request(url, 'post', params, option);
     };
-    this.request = function (url, method, data, option) {
+    that.request = function (url, method, data, option) {
         var opt = {
             success: function () {
             },
@@ -34,6 +42,10 @@ ajax = (function () {
         };
         option = typeof (option) == 'function' ? {success: option} : option;
         option = Object.assign(opt, option);
+        if(option._obj){
+            option._obj.addClass("wait disable");
+        }
+
         $.ajax({
             url: url,
             async: false,
@@ -69,5 +81,5 @@ ajax = (function () {
             showMsg(msg);
         }
     };
-    return this;
+    return that;
 })();

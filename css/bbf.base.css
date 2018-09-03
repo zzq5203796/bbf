@@ -292,7 +292,7 @@ td {
     -o-transition: all 2s;
 }
 
-.button {
+.button, .btn {
     display: inline-block;
     padding: 4px 6px 3px 6px;
     margin-right: 6px;
@@ -402,4 +402,10 @@ ul.auto li{
     padding: 3px 6px;
     background: #ddd;
     margin-bottom: 1px;
+}
+.disable{
+    cursor: not-allowed !important;
+}
+.wait{
+    cursor: wait !important;
 }

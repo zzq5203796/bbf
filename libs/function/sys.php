@@ -85,3 +85,20 @@ function server() {
     die();
 }
 
+function default_key_value($data, $key, $value=null){    
+    return isset($data[$key])? $value: $data[$key];
+}
+
+function default_empty_value($data, $key='', $value=null){
+    if($key===''){
+        return empty($data)? $value: $data;
+    }else{ 
+        return empty($data[$key])? $value: $data[$key];
+    }
+}
+
+if(!function_exists('input')){
+    function input($key, $value=null){
+        return default_key_value($_GET, $key, $value);
+    }   
+}

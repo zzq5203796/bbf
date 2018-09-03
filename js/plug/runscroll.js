@@ -6,9 +6,12 @@ function runscroll() {
     var max = obj[0].scrollHeight/2, scrollto = obj.scrollTop();
     obj.scrollTop((scrollto >= max ? 0 : scrollto) + 2);
 }
-var str = '';
-for (var i = 1; i < 20; i++) {
-    str += '<li>好消息! 好消息' + i + '...</li>';
+if($(".run-scroll").length>0){
+	var str = '';
+	for (var i = 1; i < 20; i++) {
+	    str += '<li>好消息! 好消息' + i + '...</li>';
+	}
+	$(".run-scroll .auto").html(str+str);
+	var scrolltimeout = setInterval(runscroll, 30);
+
 }
-$(".run-scroll .auto").html(str+str);
-var scrolltimeout = setInterval(runscroll, 30);

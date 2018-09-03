@@ -60,3 +60,18 @@ function log(data, level) {
 function autorequires() {
     require('plug/*');
 }
+function template_load(url, box, cb){
+    if($("#loadScript").length==0){
+        $("body").append("<div id='loadScripts'></div>");
+    }
+    if($("#loadScript-"+box).length==0){
+        $("#loadScripts").append("<div id='loadScript-" +box+"'></div>");
+    }
+    $("#loadScript-"+box).load(url, function(responseTxt,statusTxt,xhr){
+        if(statusTxt=="success")
+            cb();
+        if(statusTxt=="error")
+        alert("Error: "+xhr.status+": "+xhr.statusText);
+
+    });
+}
