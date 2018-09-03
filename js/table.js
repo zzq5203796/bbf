@@ -57,6 +57,9 @@ function tableView(opts){
                 }
             }
         });
+        $(opts.box).on('click', 'tbody tr td', function (e) {
+            $(this).parent().toggleClass("select");
+        });
     }
 
     function search(){

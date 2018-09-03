@@ -1,13 +1,11 @@
-<style>
-</style>
 <script type="text/html" id="tableView">
     <div class="table-search">
     </div>
-    <table class=" book-box">
+    <table class="book-box">
         <thead>
         <tr>
             <% for (var i = 0; i < list.length; i ++) { %>
-            <td class="">{{#list[i].title}}</td>
+            <td class="">{{@list[i].title}}</td>
             <% } %>
         </tr>
         </thead>

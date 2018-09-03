@@ -1,5 +1,6 @@
 @import "bbf.base.css";
 @import "icon.css";
+@import "page.css";
 
 .scale-8 {
     transform: scale(0.8, 0.8);
@@ -220,41 +221,3 @@
 .keycontent p:last-child,.keycontent1 p:last-child {
     padding-bottom: 10px;
 }
-
-
-    .page {
-        padding-top: 10px;
-        text-align: center;
-    }
-
-    .page > div {
-        display: inline-block;
-        padding: 0px 3px;
-        text-align: center;
-        min-width: 24px;
-        border-radius: 4px;
-        background: #ffffff;
-        border: 1px solid #f0f0f0;
-        cursor: pointer;
-        height: 30px;
-        line-height: 30px;
-    }
-
-    .page > div:hover {
-        background: #aaa;
-        color: #fff;
-    }
-
-    .page > div.on {
-        background: #aaa;
-        color: #fff;
-    }
-
-    .page input {
-        width: 50px;
-        padding: 0 2px;
-        height: 30px;
-        border: 1px solid #f0f0f0;
-        border-radius: 3px;
-        line-height: 30px
-    }
