@@ -1,42 +1,8 @@
 <style>
-    .page {
-        padding-top: 10px;
-        text-align: center;
-    }
-
-    .page > div {
-        display: inline-block;
-        padding: 0px 3px;
-        text-align: center;
-        min-width: 24px;
-        border-radius: 4px;
-        background: #ffffff;
-        border: 1px solid #f0f0f0;
-        cursor: pointer;
-        height: 30px;
-        line-height: 30px;
-    }
-
-    .page > div:hover {
-        background: #aaa;
-        color: #fff;
-    }
-
-    .page > div.on {
-        background: #aaa;
-        color: #fff;
-    }
-
-    .page input {
-        width: 50px;
-        padding: 0 2px;
-        height: 30px;
-        border: 1px solid #f0f0f0;
-        border-radius: 3px;
-        line-height: 30px
-    }
 </style>
 <script type="text/html" id="tableView">
+    <div class="table-search">
+    </div>
     <table class=" book-box">
         <thead>
         <tr>
@@ -54,6 +20,8 @@
     </div>
 </script>
 
+<script type="text/html" id="tableViewSearch">
+</script>
 <script type="text/html" id="tableViewPage">
     <div class="page">
         <div class="first">首页</div>
@@ -67,11 +35,6 @@
         {{if page.end < page.total}}
         <div>...</div>
         {{/if}}
-        <!-- <div>...</div> -->
-        <!-- <div>5</div> -->
-        <!-- <div>6</div> -->
-        <!-- <div>7</div> -->
-        <!-- <div>...</div> -->
         <div class="next">下一页</div>
         <div class="last">尾页</div>
         <div>共{{obj.total}}条</div>
@@ -83,12 +46,9 @@
 </script>
 
 <script type="text/html" id="tableViewItem">
-    <% for (var i = 0; i < list.length; i ++) { %>
     <tr>
-        <%= list[i] %>
         <% for (var k = 0; k < obj.data.length; k ++) { %>
-        <td class=""><%= list[i][obj.data[k].key] %></td>
+        <td class=""><%= item[obj.data[k].key] %></td>
         <% } %>
     </tr>
-    <% } %>
 </script>

@@ -49,7 +49,6 @@ function tableView(opts){
     }
 
     function event() {
-        console.log(opts.box);
         $(opts.box).on('click', '.tpage div', function (e) {
             var types = ['next', 'prev', 'first', 'last'];
             for(var i in types){
@@ -103,7 +102,10 @@ function tableView(opts){
             tableWait.push({cb: function(){setHtml(data);}, name: opts.box+" tbody"});
             return false;
         }
-        var html = template(opts.tmpl, {obj: opts, list: data});
+        var html = '';
+        for(var i in data){
+            html += template(opts.tmpl, {obj: opts, i: i, item: data[i]});
+        }
 
         if(opts.page_type == 1){
             box.html(html);

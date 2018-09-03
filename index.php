@@ -27,7 +27,7 @@ $tree = $menu['menu'];
 $dirs = $menu['dir'];
 
 foreach ($menu_t['menu'] as $vo) {
-    //todo
+    $tree[]=$vo;
 }
 
 foreach ($menu_t['dir'] as $key => $vo) {

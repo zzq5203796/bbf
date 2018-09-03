@@ -1,5 +1,11 @@
 {
-  "menu": [],
-  "dir": {
-  }
+  "menu": [
+  	{
+  		"name": "多读书",
+      	"url": "/template/book.html",
+      	"hide": true,
+      	"child": []
+  	}
+  ],
+  "dir": []
 }
