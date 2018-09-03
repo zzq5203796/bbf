@@ -49,6 +49,13 @@ class Article
         }
         if (IS_CLI) {
             $this->helpCli();
+            $total = 20;
+            for ($i = 1; $i <= $total; $i++) {
+                printf("进度条: [%-50s] %d%%.%s\r", str_repeat('=',$i/$total*50), $i/$total*100, "【第 $i 章】");
+                sleep(1);
+            }
+            echo "\n";
+            echo "Done!\n";
         }
     }
 
