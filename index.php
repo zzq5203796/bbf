@@ -22,9 +22,24 @@ $host = get_url_info("name") . "/";
 
 $menu = json_decode(file_get_contents('../data/menu.json'), true);
 $menu_t = file_get_contents('../menu.json');
-$menu_t = empty($menu_t)?[]:json_decode($menu_t, true);
+$menu_t = empty($menu_t)? ['menu' => [], 'dir' => []]: json_decode($menu_t, true);
 $tree = $menu['menu'];
 $dirs = $menu['dir'];
+
+foreach ($menu_t['menu'] as $vo) {
+    //todo
+}
+
+foreach ($menu_t['dir'] as $key => $vo) {
+    $name = is_numeric($key)? $vo: $key;
+    foreach ($dirs as $k1 => $v1) {
+        $name1 = is_numeric($k1)? $v1: $k1;
+        if(empty($dirs[$name])){
+            $dirs[$name] = $vo;
+        }
+    }
+}
+
 foreach ($menu['dir'] as $key => $value) {
     if ($action == $key || $action == $value) {
         $dirs = [$key => $value];
@@ -33,7 +48,7 @@ foreach ($menu['dir'] as $key => $value) {
 }
 
 $extra = $_GET['extra'];
-$extra = $extra?$extra:[];
+$extra = $extra? $extra: [];
 
 $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
 foreach ($dirs as $key => $name) {
@@ -180,8 +195,10 @@ function show_tree($tree) {
                     <div class="menu-level padded">
                         <?php echo $tree_str; ?>
                         <li class="menu-node">
-                            <a href="/template/menu.html" target="_blank" class="menu-text" title="menu.html" data-length="0" data-alllength="0">
-                                <i class="icon icon-link" style="position: relative;"><i style="width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;"></i></i>
+                            <a href="/template/menu.html" target="_blank" class="menu-text" title="menu.html"
+                               data-length="0" data-alllength="0">
+                                <i class="icon icon-link" style="position: relative;"><i
+                                            style="width: 22px;height: 29px;display: block;position: absolute;top: -8px;left: -5px;"></i></i>
                                 完整版
                             </a>
                         </li>
@@ -223,7 +240,8 @@ function show_tree($tree) {
         <tr>
             <td class="main-right-iframe" valign="top">
                 <div style="height: 100%; width: 100%; display: table;" class="full-window">
-                    <iframe id="myIframe" onload="onloadFrame()" name="myIframe" src="<?php echo $iframe_url; ?>"></iframe>
+                    <iframe id="myIframe" onload="onloadFrame()" name="myIframe"
+                            src="<?php echo $iframe_url; ?>"></iframe>
                 </div>
             </td>
         </tr>

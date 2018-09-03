@@ -45,7 +45,19 @@ function tableView(opts){
             tableWait[opts.box] = html;
         }
         $(opts.box).append(html);
+        event();
+    }
 
+    function event() {
+        console.log(opts.box);
+        $(opts.box).on('click', '.tpage div', function (e) {
+            var types = ['next', 'prev', 'first', 'last'];
+            for(var i in types){
+                if($(this).hasClass(types[i])){
+                    goPage(types[i]);
+                }
+            }
+        });
     }
 
     function search(){
@@ -76,12 +88,12 @@ function tableView(opts){
             default:
                 break;
         }
-        page = page < 0? 0: (page < opts.total_page? page: opts.total_page-1);
+        page = page > 0? (page < opts.total_page? page: opts.total_page-1): 0;
         params.page = page;
         _ajax.get(opts.url, params, function(data){
+            opts.paged = parseInt(page);
             opts.total_page = Math.ceil(opts.total/opts.size);
             setHtml(data);
-            opts.paged = parseInt(page);
         });
     }
 
@@ -102,7 +114,6 @@ function tableView(opts){
     }
 
     function setPageHtml(){
-        console.log(getPage());
         var html = template("tableViewPage", {obj: opts, page: getPage()});
         $(opts.box+" .tpage").html(html);
     }
@@ -115,7 +126,7 @@ function tableView(opts){
             start_page = page - show_page_temp, 
             end_page = page + show_page_temp; 
 
-        start_page = start_page>0? start_page: 1; 
+        start_page = start_page>0? start_page: 1;
         end_page = opts.total_page < end_page? opts.total_page: end_page;
 
         if(end_page - start_page < show_page-1){
@@ -132,7 +143,8 @@ function tableView(opts){
         return {
             start: start_page,
             end: end_page,
-            paged: page
+            paged: page,
+            total: total_page,
         };
     }
     that.goPage = goPage;

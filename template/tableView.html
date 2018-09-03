@@ -1,41 +1,49 @@
 <style>
-.page{
-    padding-top: 10px;
-    text-align: center;
-}
-.page > div{
-    display: inline-block;
-    padding: 0px 3px;
-    text-align: center;
-    min-width: 24px;
-    border-radius: 4px;
-    background: #ffffff;
-    border: 1px solid #f0f0f0;
-    cursor: pointer;
-    height: 30px;
-    line-height: 30px;
-}
-.page > div:hover{
-    background: #aaa;
-    color: #fff;
-}
-.page  input{
-    width: 50px; 
-    padding: 0 2px;
-    height: 30px;
-    border: 1px solid #f0f0f0;
-    border-radius: 3px;
-    line-height:  30px
-}
+    .page {
+        padding-top: 10px;
+        text-align: center;
+    }
+
+    .page > div {
+        display: inline-block;
+        padding: 0px 3px;
+        text-align: center;
+        min-width: 24px;
+        border-radius: 4px;
+        background: #ffffff;
+        border: 1px solid #f0f0f0;
+        cursor: pointer;
+        height: 30px;
+        line-height: 30px;
+    }
+
+    .page > div:hover {
+        background: #aaa;
+        color: #fff;
+    }
+
+    .page > div.on {
+        background: #aaa;
+        color: #fff;
+    }
+
+    .page input {
+        width: 50px;
+        padding: 0 2px;
+        height: 30px;
+        border: 1px solid #f0f0f0;
+        border-radius: 3px;
+        line-height: 30px
+    }
 </style>
 <script type="text/html" id="tableView">
     <table class=" book-box">
-        <thead> 
-            <tr>
-                <% for (var i = 0; i < list.length; i ++) { %>
-                <td class="">{{#list[i].title}} </td>
-                <% } %>
-            </tr>
+        <thead>
+        <tr>
+            <% for (var i = 0; i < list.length; i ++) { %>
+            <td class="">{{#list[i].title}}</td>
+            <% } %>
+        </tr>
         </thead>
         <tbody></tbody>
         <tfoot class="page">
@@ -48,23 +56,29 @@
 
 <script type="text/html" id="tableViewPage">
     <div class="page">
-            <div >首页</div>
-            <div >上一页</div>{{$page}}
-            <% for (var i = page.start; i <= page.end; i ++) { %>
-            <div onclick="bookv.goPage({{i}})" >{{i}}</div>
-            <% } %>
-            <!-- <div>...</div> -->
-            <!-- <div>5</div> -->
-            <!-- <div>6</div> -->
-            <!-- <div>7</div> -->
-            <!-- <div>...</div> -->
-            <div>下一页</div>
-            <div>尾页</div>
-            <div>共{{obj.total}}条</div>
-            <div>第{{obj.paged+1}}页</div>
-            <div>共{{obj.total_page}}页</div>
-            <input placeholder="页码" type="number" />
-            <div>GO</div>
+        <div class="first">首页</div>
+        <div class="prev">上一页</div>
+        {{if page.start>1}}
+        <div>...</div>
+        {{/if}}
+        <% for (var i = page.start; i <= page.end; i ++) { %>
+        <div onclick="bookv.goPage({{i-1}})" class="<% if(page.paged == i){ %>on<% } %>">{{i}}</div>
+        <% } %>
+        {{if page.end < page.total}}
+        <div>...</div>
+        {{/if}}
+        <!-- <div>...</div> -->
+        <!-- <div>5</div> -->
+        <!-- <div>6</div> -->
+        <!-- <div>7</div> -->
+        <!-- <div>...</div> -->
+        <div class="next">下一页</div>
+        <div class="last">尾页</div>
+        <div>共{{obj.total}}条</div>
+        <div>第{{obj.paged+1}}页</div>
+        <div>共{{obj.total_page}}页</div>
+        <input placeholder="页码" type="number"/>
+        <div>GO</div>
     </div>
 </script>
 
@@ -73,7 +87,7 @@
     <tr>
         <%= list[i] %>
         <% for (var k = 0; k < obj.data.length; k ++) { %>
-            <td class=""><%= list[i][obj.data[k].key] %></td>
+        <td class=""><%= list[i][obj.data[k].key] %></td>
         <% } %>
     </tr>
     <% } %>
