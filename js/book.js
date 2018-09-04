@@ -55,3 +55,11 @@ bookv = tableView({
     ],
     url: "/article/index",
 });
+$(document).on("click", ".btn", function () {
+    _ajax.get("/article/test", {}, {
+        success: function () {
+            console.log(123);
+        },
+        timeout: 600
+    });
+});

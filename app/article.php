@@ -21,14 +21,14 @@ class Article
 
     public function __construct() {
         $this->model = new CPdo();
-        if(IS_CLI && empty($_GET['book'])){
+        if (IS_CLI && empty($_GET['book'])) {
             while (1) {
-                 $book = cli_input("Book");
-                 if(is_numeric($book)) 
+                $book = cli_input("Book");
+                if (is_numeric($book))
                     break;
-                 else{
+                else {
                     show_msg("book must be a int.", 1, 0);
-                 }
+                }
             }
             $_GET['book'] = $book;
             show_now();
@@ -51,7 +51,7 @@ class Article
             $this->helpCli();
             $total = 20;
             for ($i = 1; $i <= $total; $i++) {
-                printf("进度条: [%-50s] %d%%.%s\r", str_repeat('=',$i/$total*50), $i/$total*100, "【第 $i 章】");
+                printf("进度条: [%-50s] %d%%.%s\r", str_repeat('=', $i / $total * 50), $i / $total * 100, "【第 $i 章】");
                 sleep(1);
             }
             echo "\n";
@@ -59,7 +59,7 @@ class Article
         }
     }
 
-    public function list(){
+    public function list() {
     }
 
     private function helpCli() {
@@ -90,7 +90,7 @@ EOD;
         $str = "";
 
 
-        if(IS_AJAX){
+        if (IS_AJAX) {
             ajax_success('', $list);
         }
         foreach ($list as $vo) {
@@ -119,7 +119,7 @@ EOD;
         echo $str;
     }
 
-    public function read(){
+    public function read() {
 
     }
 
@@ -134,7 +134,7 @@ EOD;
 
         $save = empty($_GET['save'])? 0: $_GET['save'];
         $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
-        $url = $last_page&&!$is_check? $last_page['next_link']: $info['first_link'];
+        $url = $last_page && !$is_check? $last_page['next_link']: $info['first_link'];
         if (!$save && !empty($_GET['p'])) {
             $url = $_GET['p'];
         }
@@ -165,7 +165,7 @@ EOD;
         if ($save) {
             locks($lock, 0);
         }
-        $save && show_msg("total:" . count($res) );
+        $save && show_msg("total:" . count($res));
     }
 
     private function runGet($data) {
@@ -205,7 +205,7 @@ EOD;
         if ($res) {
             $data_list[] = $title;
             logs($title . " \n[info] $book_id | $link | $next", "book");
-            if(IS_CLI){
+            if (IS_CLI) {
                 show_msg($title);
             }
             $data['url'] = $next;
@@ -236,7 +236,7 @@ EOD;
         if (!$html) {
             return [];
         }
-        $html= mb_convert_encoding($html, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
+        $html = mb_convert_encoding($html, 'UTF-8', 'UTF-8,GBK,GB2312,BIG5');
 
         $pattern_list = ["title", "next", "content"];
         $matches_list = [
@@ -345,9 +345,73 @@ EOD;
     }
 
     /**
-    * 清除锁
-    */ 
-    public function unlocks(){
+     * 清除锁
+     */
+    public function unlocks() {
         $type = input('type', 'down');
     }
+
+    public function test() {
+        header("Content-Encoding: none\r\n");
+        ob_start();//打开缓冲区
+        OutLing();
+        $max = 500;
+        $num = 0;
+        for ($i = 0; $i < $max && $num < $max; $i++) {
+            echo str_repeat(" ", 1024 * 64);
+            $num += rand(1, 100);
+            $num = $num > $max? $max: $num;
+            SetLingData($num);
+            ob_flush();
+            flush();
+            sleep(1);
+        }
+        ob_end_flush();//输出并关闭缓冲
+        die;
+    }
+
+    public function allrun() {
+
+        $lock = "allrun";
+        locks($lock, 1);
+        ignore_user_abort(); //即使Client断开(如关掉浏览器)，PHP脚本也可以继续执行.
+        set_time_limit(0); // 执行时间为无限制，php默认执行时间是30秒，可以让程序无限制的执行下去
+        $interval = 5; // 每隔30秒运行一次
+        $status = 1;
+        $i = 0;
+        while ($status) {
+
+            if (empty(locks($lock))) {
+                break;
+            }
+
+            logs($i, $lock);
+            sleep($interval);
+            $i++;
+            echo "123";
+            ob_flush();//把数据从PHP的缓冲（buffer）中释放出来。
+            flush(); //把不在缓（buffer）中的或者说是被释放出来的数据发送到浏览器。
+        }
+        locks($lock, 0);
+        exit();
+    }
+}
+
+function OutLing() {
+    echo "完成度。。。<br /><div style=\"width:500px;height:30px;margin:0 auto;border:#000000 solid 1px;\">";
+    echo "<div id=\"login\" style=\"background:#0000FF;width:1px;height:30px; transition: width 2s;\"></div>";
+    echo "<span id='value'></span></div>";
+    echo "<script type=\"text/jscript\">";
+    echo "function show_ob(value){";
+    echo "document.getElementById(\"login\").style.width =value + \"px\";";
+    echo "document.getElementById(\"value\").innerHTML = value;";
+    echo "}";
+    echo "show_ob(0);";
+    echo "</script>";
+}
+
+function SetLingData($I) {
+    echo "<script>show_ob(" . $I . ");</script>";
+    ob_flush();
+    flush();
 }

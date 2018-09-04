@@ -1,0 +1,19 @@
+.bbf-checkbox{
+    display: inline-block;
+    position: relative;
+    width: 18px;
+    height: 18px;
+    background: #fff0 url('/public/images/select/blue-3.png') no-repeat 0px 0px;
+    background-size: cover;
+    cursor: pointer;
+}
+.bbf-checkbox:hover{
+    background-position: -18px 0;
+}
+.bbf-checkbox.checked{
+    background-position: -36px 0;
+}
+.bbf-checkbox input{
+    opacity: 0;
+    display: none;
+}

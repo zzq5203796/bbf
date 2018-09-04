@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ch-zn">
 <head>
     <meta charset="UTF-8">
-    <title>menu</title>
+    <title>小流氓科研中心</title>
+    <link rel="shortcut icon" href="/public/images/ico/spider2.png">
+
     <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
     <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
     <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
@@ -17,22 +19,23 @@
 <body>
 <div class="window">
     <div class="search-box">
-        
+
     </div>
     <div class="book-table">
-        <div> table </div>
+        <div> books </div>
     </div>
 </div>
 
 <script type="text/html" id="bookItem">
     <tr>
+        {{include 'tableViewItemCheckId'}}
         <td><%= item.id %></td>
         <td><%= item.title %></td>
         <td>
-            <a href="<%= obj.url.check %><%= item.id %>" target="_blank">检查</a>
-            | <a href="<%= obj.url.run %><%= item.id %>" target="_blank">蜘蛛</a>
-            | <a href="<%= obj.url.down %><%= item.id %>" target="_blank">下载</a>
-            | <a href="<%= obj.url.read %><%= item.id %>" target="_blank">阅读</a>
+            <a href="<%= opts.url.check %><%= item.id %>" target="_blank">检查</a>
+            | <a href="<%= opts.url.run %><%= item.id %>" target="_blank">蜘蛛</a>
+            | <a href="<%= opts.url.down %><%= item.id %>" target="_blank">下载</a>
+            | <a href="<%= opts.url.read %><%= item.id %>" target="_blank">阅读</a>
         </td>
         <td>
             <a href="<%= item.link %>" target="_blank">目录</a>

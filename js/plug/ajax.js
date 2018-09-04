@@ -38,7 +38,7 @@ _ajax = (function () {
             msg: '',
             show_msg: false,
             type: 'json',
-            timeout: 30000
+            timeout: 30
         };
         option = typeof (option) == 'function' ? {success: option} : option;
         option = Object.assign(opt, option);
@@ -48,7 +48,7 @@ _ajax = (function () {
 
         $.ajax({
             url: url,
-            async: false,
+            async: true, // default true
             type: method,
             data: data,
             dataType: option.type,
@@ -59,7 +59,7 @@ _ajax = (function () {
                     option.error("require error.");
                 }
             })(option),
-            timeout: option.timeout
+            timeout: option.timeout*1000
         });
 
         function success(res) {

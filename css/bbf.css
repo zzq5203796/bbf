@@ -1,6 +1,7 @@
 @import "bbf.base.css";
 @import "icon.css";
 @import "page.css";
+@import "input.css";
 
 .scale-8 {
     transform: scale(0.8, 0.8);
