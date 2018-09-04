@@ -55,11 +55,30 @@ bookv = tableView({
     ],
     url: "/article/index",
 });
-$(document).on("click", ".btn", function () {
-    _ajax.get("/article/test", {}, {
-        success: function () {
-            console.log(123);
-        },
-        timeout: 600
-    });
+// $(document).on("click", ".btn", function () {
+//     _ajax.get("/article/test", {}, {
+//         success: function () {
+//             console.log(123);
+//         },
+//         timeout: 600
+//     });
+// });
+$(document).on("click", ".do-pro", function () {
+    show_progress('/article/test');
 });
+
+function show_progress(url, id, msg){
+    if(typeof(id)=='undefined' || id == '' || id == null){
+        id = "t"+parseInt(Math.random(0,1)*100000);
+    }
+    var html = template('progressItem', {url: url, id: id, msg: msg});
+    $(".progress").append(html);
+}
+
+function close_progress(id){
+    console.log(id);
+    setTimeout(function(){
+        $("#"+id).parent().remove();
+    }, 3000);
+}
+var sss;

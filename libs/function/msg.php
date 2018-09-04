@@ -397,3 +397,64 @@ function cli_input($title) {
     }
     return trim($value);
 }
+
+function progress_bar($num, $max = 500){
+    if(empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR'){
+        define(PROGRESS_BAR, true);
+        ob_start();
+        progress_bar_box();
+    }
+    $num = $num > $max? $max: $num;
+    echo "<script>show_ob('" . $num/$max * 100 . "%');</script>";
+    echo str_repeat(" ", 1024 * 64);
+
+    ob_flush();
+    flush();
+
+    if($num==$max){
+        echo "<script>parent.close_progress(this.frameElement.id)</script>";
+        ob_end_flush();//输出并关闭缓冲
+    }
+}
+function progress_bar_box() {
+    echo '<style>
+    .progress-bar-box{
+        width: 99%;
+        max-width: 780px;
+    }
+    .progress-bar-box > div{
+        float: left;
+        height: 30px;
+        line-height: 30px;
+    }
+    .progress-bar-box #progress-lable{
+        max-width: 48px;
+        padding: 0 4px 0 0;
+    }
+    .progress-bar-box .progress-bar{
+        width: 100%;
+        max-width: 500px;
+        border: #000000 solid 1px;
+    }
+    .progress-bar-box #progress-num{
+        width: 45px;
+    }
+    .progress-bar-box .progress-bar #progress-jump {
+        background:#0000FF;width:1px;height:100%; transition: width 1.5s;
+    }
+    </style>
+    <div class="progress-bar-box">
+        <div id="progress-lable">进度</div>
+        <div class="progress-bar">
+            <div id="progress-jump"></div>
+        </div>
+        <div id="progress-num"></span>
+    </div>
+    <script type="text/jscript">
+        function show_ob(value){
+            document.getElementById("progress-jump").style.width =value;
+            document.getElementById("progress-num").innerHTML = value;
+        }
+        show_ob(0);
+    </script>';
+}

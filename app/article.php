@@ -352,22 +352,13 @@ EOD;
     }
 
     public function test() {
-        header("Content-Encoding: none\r\n");
-        ob_start();//打开缓冲区
-        OutLing();
         $max = 500;
         $num = 0;
         for ($i = 0; $i < $max && $num < $max; $i++) {
-            echo str_repeat(" ", 1024 * 64);
-            $num += rand(1, 100);
-            $num = $num > $max? $max: $num;
-            SetLingData($num);
-            ob_flush();
-            flush();
+            $num += rand(1, 20);
+            progress_bar($num, $max);
             sleep(1);
         }
-        ob_end_flush();//输出并关闭缓冲
-        die;
     }
 
     public function allrun() {
@@ -395,23 +386,4 @@ EOD;
         locks($lock, 0);
         exit();
     }
-}
-
-function OutLing() {
-    echo "完成度。。。<br /><div style=\"width:500px;height:30px;margin:0 auto;border:#000000 solid 1px;\">";
-    echo "<div id=\"login\" style=\"background:#0000FF;width:1px;height:30px; transition: width 2s;\"></div>";
-    echo "<span id='value'></span></div>";
-    echo "<script type=\"text/jscript\">";
-    echo "function show_ob(value){";
-    echo "document.getElementById(\"login\").style.width =value + \"px\";";
-    echo "document.getElementById(\"value\").innerHTML = value;";
-    echo "}";
-    echo "show_ob(0);";
-    echo "</script>";
-}
-
-function SetLingData($I) {
-    echo "<script>show_ob(" . $I . ");</script>";
-    ob_flush();
-    flush();
 }

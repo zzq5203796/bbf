@@ -24,6 +24,8 @@
     <div class="book-table">
         <div> books </div>
     </div>
+    <div class="progress">
+    </div>
 </div>
 
 <script type="text/html" id="bookItem">
@@ -40,9 +42,15 @@
         <td>
             <a href="<%= item.link %>" target="_blank">目录</a>
             | <a href="<%= item.first_link %>" target="_blank">首页</a>
+            | <a href="javascript:void(0);" class="do-pro">进度条</a>
         </td>
         <td><%= item.title %></td>
     </tr>
+</script>
+<script type="text/html" id="progressItem">
+    <div style="height:45px;overflow:hidden;">
+        <iframe id="{{id}}" src="{{url}}" name="t2"></iframe>
+    </div>
 </script>
 
 </body>
