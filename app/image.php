@@ -76,6 +76,78 @@ class Image
 
         echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />'.get_br() ;
     }
+    public function see(){
+        $num = 1103093;
+        $url = "http://resources.tongyinet.com/img2/p_";
+        for ($i=0; $i < 100; $i++) { 
+            $uri = $url.$num;
+            echo "<img src='".$uri."' />";
+            $num++;
+        }
+    }
+
+    public function mahua(){
+        $this->mahua666(125001, 5);
+    }
+
+    public function mahua1(){
+        $this->mahua66(1085000, 10);
+    }
+    public function mahua2(){
+        $this->mahua66(1097011, 7);
+    }
+
+
+    public function mahua666($num, $tem){
+        $key = "mahua_num" . $tem;
+        $numo = $_COOKIE[$key];
+        $start = $tem*5000 + 100001;
+        $max = $start + 5000;
+
+        dump($num);
+
+        set_time_limit(1600);
+        $url = "http://resources.tongyinet.com/img2/p_1";
+        $uri = '';
+        $path = "upload/m".$tem."/";
+
+        for ($i=0; $num < $max; $num++) { 
+            $uri = $url.$num;
+            // echo "<img src='".$uri."' />";
+                setcookie($key,  $num);
+                $res = down_file($uri, $path);
+                if(!$res){
+                    show_msg($uri);
+                }
+        }
+        show_msg($uri);
+    }
+
+    public function mahua66($num, $tem){
+        $key = "mahua_num" . $tem;
+        $numo = $_COOKIE[$key];
+        $start = -($tem-7)*5000 + 1100000;
+        $min = $start - 5000;
+
+        dump($num);
+        dump($min);
+
+        set_time_limit(16000);
+        $url = "http://resources.tongyinet.com/img2/p_";
+        $uri = '';
+        $path = "upload/m".$tem."/";
+
+        for ($i=0; $num > $min; $num--) { 
+            $uri = $url.$num;
+            // echo "<img src='".$uri."' />";
+                setcookie($key,  $num);
+                $res = down_file($uri, $path);
+                if(!$res){
+                    show_msg($uri);
+                }
+        }
+        show_msg($uri);
+    }
 }
 
 
@@ -90,8 +162,14 @@ function down_file($file_url, $save_to) {
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     $file_content = curl_exec($ch);
     curl_close($ch);
+    if(trim($file_content)=="File not found."){
+        return false;
+    }
     $filename = pathinfo($file_url, PATHINFO_BASENAME);
-    $downloaded_file = fopen($save_to . $filename, 'w');
+
+    $downloaded_file = fopen($save_to . $filename.".jpg", 'w');
     fwrite($downloaded_file, $file_content);
     fclose($downloaded_file);
+    return true;
+
 }
