@@ -86,7 +86,7 @@ function server() {
 }
 
 function default_key_value($data, $key, $value=null){    
-    return isset($data[$key])? $value: $data[$key];
+    return isset($data[$key])? $data[$key]: $value;
 }
 
 function default_empty_value($data, $key='', $value=null){

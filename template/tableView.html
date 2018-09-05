@@ -59,9 +59,11 @@
     </tr>
 </script>
 <script type="text/html" id="tableViewItemCheckId">
+    {{if opts.select.show }}
     <td class="" style="text-align: center;">
         <div class="bbf-checkbox">
             <input name="checkIds[]" class="checkIds" type="checkbox" value="{{item[opts.id]}}" />
         </div>
     </td>
+    {{/if}}
 </script>

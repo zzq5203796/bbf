@@ -1,4 +1,4 @@
-.bbf-checkbox{
+.bbf-checkbox {
     display: inline-block;
     position: relative;
     width: 18px;
@@ -7,13 +7,48 @@
     background-size: cover;
     cursor: pointer;
 }
-.bbf-checkbox:hover{
+
+.bbf-checkbox:hover {
     background-position: -18px 0;
 }
-.bbf-checkbox.checked{
+
+.bbf-checkbox.checked {
     background-position: -36px 0;
 }
-.bbf-checkbox input{
+
+.bbf-checkbox input {
     opacity: 0;
     display: none;
+}
+
+.search-keyword-box, .search-keyword-box * {
+    display: inline-block;
+    height: 30px;
+    line-height: 30px;
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.search-keyword-box {
+    position: relative;
+    width: 220px;
+    height: 32px;
+    padding-right: 50px;
+    border: 1px solid #eee;
+}
+
+.search-keyword-box input {
+    width: 100%;
+    padding: 0 4px;
+}
+
+.search-keyword-box .btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    text-align: center;
 }

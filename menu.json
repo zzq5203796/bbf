@@ -1,11 +1,17 @@
 {
   "menu": [
-  	{
-  		"name": "多读书",
-      	"url": "/template/book.html",
-      	"hide": true,
-      	"child": []
-  	}
+	  {
+		  "name": "多读书",
+		  "url": "/template/book.html",
+		  "hide": true,
+		  "child": []
+	  },
+	  {
+		  "name": "rmt git",
+		  "url": "http://10.0.0.88/git-update-for-rmt.php",
+		  "hide": true,
+		  "child": []
+	  }
   ],
   "dir": {
 	  "UI/font_goods_html/html": "字谷网",

@@ -55,14 +55,35 @@ bookv = tableView({
     ],
     url: "/article/index",
 });
-// $(document).on("click", ".btn", function () {
-//     _ajax.get("/article/test", {}, {
-//         success: function () {
-//             console.log(123);
-//         },
-//         timeout: 600
-//     });
-// });
+searchv = tableView({
+    box: ".search-table",
+    name: "searchv",
+    tmpl: "searchItem",
+    first: false,
+    select: {
+        show: false,
+    },
+    data: [
+        {key: 'id', title: 'ID'},
+        {key: 'id', title: '作品分类'},
+        {key: 'id', title: '作品名称'},
+        {key: 'id', title: '最新章节'},
+        {key: 'id', title: '作者'},
+        {key: 'id', title: '点击'},
+        {key: 'id', title: '更新时间'},
+        {key: 'id', title: '状态'},
+        {key: 'id', title: '<div class="btn">刷新</div>'},
+    ],
+    show_page: false,
+    url: "/article/search",
+});
+
+$(document).on("click", ".search-keyword-box .btn", function () {
+    _ajax.get("/article/search", {keyword: $(this).prev().val()}, function (data) {
+        console.log(data);
+        searchv.push(data.list);
+    });
+});
 $(document).on("click", ".do-pro", function () {
     show_progress('/article/test');
 });

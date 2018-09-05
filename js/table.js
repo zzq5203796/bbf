@@ -18,6 +18,7 @@ function tableView(opts) {
         box: 'table.table-box',
         name: 'tablev',
         tmpl: 'tableViewItem',
+        first: true,
         data: [
             {key: 'id', title: 'ID'},
             {key: 'title', title: '标题'},
@@ -35,6 +36,7 @@ function tableView(opts) {
         total: 101,
         size: 10,
         total_page: 0,
+        show_page: true,
     }, opts);
 
     if ($("#tableView").length == 0) {
@@ -42,7 +44,7 @@ function tableView(opts) {
     } else {
         init();
     }
-    first();
+    opts.first && first();
 
     function init() {
         var html = template('tableView', {opts: opts, list: opts.data});
@@ -122,7 +124,6 @@ function tableView(opts) {
         }
     };
 
-
     function search() {
         goPage(0);
     }
@@ -199,8 +200,10 @@ function tableView(opts) {
     }
 
     function setPageHtml() {
-        var html = template("tableViewPage", {opts: opts, page: getPage()});
-        $(opts.box + " .tpage").html(html);
+        if(opts.show_page){
+            var html = template("tableViewPage", {opts: opts, page: getPage()});
+            $(opts.box + " .tpage").html(html);
+        }
     }
 
     function getPage() {
@@ -234,6 +237,7 @@ function tableView(opts) {
     }
 
     that.goPage = goPage;
+    that.push = setHtml;
     that.select = select;
     that.opts = opts;
     return that;

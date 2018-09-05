@@ -22,9 +22,19 @@
 
     </div>
     <div class="book-table">
+        <div style="padding: 4px 6px;"> books
+
+            <div class="search-keyword-box fr">
+                <input name="keyword" value="" placeholder="你输入书本" />
+                <div class="btn">搜索</div>
+            </div>
+            <div style="clear: both; height: 0px;"></div>
+        </div>
+    </div>
+    <div class="search-table">
         <div> books </div>
     </div>
-    <div class="progress">
+    <div class="progress" style="position: fixed; top:0; width: 660px;">
     </div>
 </div>
 
@@ -47,8 +57,29 @@
         <td><%= item.title %></td>
     </tr>
 </script>
+<script type="text/html" id="searchItem">
+    <tr>
+        {{include 'tableViewItemCheckId'}}
+        <td>{{i+1}}</td>
+        <td>{{item.type}}</td>
+        <td><a href="{{item.title_link}}" target="_blank">{{item.title}}</a></td>
+        <td><a href="{{item.title_link}}" target="_blank">{{item.new}}</a></td>
+        <td>{{item.author}}</td>
+        <td>{{item.click}}</td>
+        <td>{{item.update}}</td>
+        <td>{{item.status}}</td>
+        <td>
+            <a href="<%= opts.url.check %><%= item.id %>" target="_blank">检查</a>
+            | <a href="<%= opts.url.run %><%= item.id %>" target="_blank">蜘蛛</a>
+            | <a href="<%= opts.url.down %><%= item.id %>" target="_blank">下载</a>
+            | <a href="<%= opts.url.read %><%= item.id %>" target="_blank">阅读</a>
+            | <a href="<%= opts.url.read %><%= item.id %>" target="_blank">未完成</a>
+        </td>
+    </tr>
+</script>
 <script type="text/html" id="progressItem">
     <div style="height:45px;overflow:hidden;">
+        <div style="position: relative; height: 0; top:15px; left: 50px;"> 等待加载</div>
         <iframe id="{{id}}" src="{{url}}" name="t2"></iframe>
     </div>
 </script>

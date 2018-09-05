@@ -365,6 +365,7 @@ function show_table($data, $keys = []) {
     }
     IS_CLI && $body .= "$tr$line$tr";
     IS_CLI || $body .= "<$tr>$line</$tr>";
+
     foreach ($data as $key_data => $item) {
         $line = "";
         foreach ($keys as $key_value) {
@@ -381,8 +382,7 @@ function show_table($data, $keys = []) {
     }
     $style = "<style>table.show-msg tr td > div{padding:2px 4px; display: -webkit-box;-webkit-box-orient: vertical;-webkit-line-clamp: 3; overflow: hidden;}</style>";
 
-    // IS_CLI || $body = 
-    IS_CLI && $body = $style . "<table class='show-msg'>$body</table>";
+    IS_CLI || $body = $style . "<table class='show-msg'>$body</table>";
     echo $body;
     return $body;
 }
@@ -404,8 +404,10 @@ function progress_bar($num, $max = 500){
         ob_start();
         progress_bar_box();
     }
+    $maxLen = 10000;
     $num = $num > $max? $max: $num;
-    echo "<script>show_ob('" . $num/$max * 100 . "%');</script>";
+    $num = ceil($num/$max * $maxLen);
+    echo "<script>show_ob('" . $num/$maxLen * 100 . "%');</script>";
     echo str_repeat(" ", 1024 * 64);
 
     ob_flush();
@@ -417,7 +419,11 @@ function progress_bar($num, $max = 500){
     }
 }
 function progress_bar_box() {
+    header("Content-Encoding: none\r\n");
     echo '<style>
+    body{
+        background: #fff;
+    }
     .progress-bar-box{
         width: 99%;
         max-width: 780px;
@@ -438,6 +444,7 @@ function progress_bar_box() {
     }
     .progress-bar-box #progress-num{
         width: 45px;
+        padding-left: 5px;
     }
     .progress-bar-box .progress-bar #progress-jump {
         background:#0000FF;width:1px;height:100%; transition: width 1.5s;

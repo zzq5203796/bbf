@@ -59,9 +59,6 @@ class Article
         }
     }
 
-    public function list() {
-    }
-
     private function helpCli() {
         $html = <<<EOD
     article/book  爬虫书本
@@ -121,6 +118,51 @@ EOD;
 
     public function read() {
 
+    }
+
+    public function search() {
+        $keyword = input("keyword", "图书馆");
+        $url = "https://sou.xanbhx.com/search?siteid=qula&q=$keyword";
+        $html = curl_get($url);
+        $pattern = "/<li>.*?(<span.*?>.*?<\/span>)+.*?<\/li>/is";
+
+        $html = m_get_body($html);
+        preg_match_all($pattern, $html, $matches);
+
+        $data = [];
+        $keys = ['type', 'title', 'new', 'author', 'click', 'update', "status"];
+        $mlist = $matches[0];
+        $more = [];
+        foreach ($mlist as $k => $matche) {
+            $span = m_get_tag_dom($matche, "span");
+            $item = [];
+            foreach ($span as $key => $mvo) {
+                $tk = default_key_value($keys, $key, $key);
+
+                $link = m_get_link($mvo);
+
+                $item[$tk] = $mvo;
+                if (!empty($link)) {
+                    IS_AJAX && $item[$tk] = $link[0]['title'];
+                    $item[$tk . "_link"] = $link[0]['link'];
+                    $more[$tk . "_link"] = 1;
+                }
+            }
+            $data[] = $item;
+        }
+        foreach ($data as &$vo) {
+            foreach ($more as $k => $v) {
+                if(!isset($vo[$k])){
+                    $vo[$k] = "";
+                }
+            }
+        }
+
+        if(IS_AJAX){
+            return ajax_success("查询成功", ['html' => $html, 'list' => $data]);
+        }else{
+            show_table($data);
+        }
     }
 
     public function book() {
@@ -352,7 +394,7 @@ EOD;
     }
 
     public function test() {
-        $max = 500;
+        $max = 333;
         $num = 0;
         for ($i = 0; $i < $max && $num < $max; $i++) {
             $num += rand(1, 20);

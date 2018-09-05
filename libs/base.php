@@ -23,6 +23,7 @@ require_once 'function/json.php';
 require_once 'function/file.php';
 require_once 'function/msg.php';
 require_once 'function/cli.php';
+require_once 'function/matches.php';
 
 require_once 'loader.php';
 require_once '../app/common/request.php';
