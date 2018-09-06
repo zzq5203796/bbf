@@ -76,6 +76,18 @@
           "url": "/image/manhua",
           "hide": true,
           "child": []
+        },
+        {
+          "name": "jia",
+          "url": "/crypt/encrypt",
+          "hide": true,
+          "child": []
+        },
+        {
+          "name": " jie",
+          "url": "/crypt/decrypt",
+          "hide": true,
+          "child": []
         }
       ]
     }

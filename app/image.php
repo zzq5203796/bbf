@@ -76,15 +76,49 @@ class Image
 
         echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />' . get_br();
     }
+    public function t(){
+        $encrypt = "http://resources.tongyinet.com/img2/p_";
+        $key = "zzq5203796";
+        $str = base64_encode(openssl_encrypt($encrypt, "DES-ECB", $key, OPENSSL_RAW_DATA));
+        echo $str;
+    }
+    public function t1(){
+        $encrypt = "thaFqsfrEsz9Rp7Ld0cf0HkvZAXcd/CxZWv33T2fWUTF4XZNllMmwg==";
+        $key = "zzq520379";
+        $str = des_decrypt($encrypt);
+        echo $str;
 
-    public function see() {
-        $num = 1000000;
-        $url = "http://resources.tongyinet.com/img2/p_";
-        for ($i = 0; $i < 2500; $i++) {
-            $uri = $url . $num;
-            echo "<img style='height: 50px' src='" . $uri . "' />";
-            $num = $num + 20;
+    }
+    private function get_xuange_url(){
+        $encrypt = "thaFqsfrEsz9Rp7Ld0cf0HkvZAXcd/CxZWv33T2fWUTF4XZNllMmwg==";
+        $str = des_decrypt($encrypt);
+        if(empty($str)){
+            show_msg("please input key.");
+            die();
         }
+        return $str;
+    }
+    public function see() {
+        $page = input("page");
+        $temp = input("temp", 1);
+        $temp = $temp>0? $temp: 1;
+        form([
+            ['page', '页码', 'text', '', []],
+            ['temp', '间隔', 'text', $temp, []],
+        ]);
+        if (!is_numeric($page) || $page < 0 || $page > 999999) {
+            show_msg("页码必须为 0-999999 的 整数");
+            return;
+        }
+        $num = 1000000 + $page;
+        $url = $this->get_xuange_url();
+        $data = [];
+        for ($i = 0; $i < 50; $i++) {
+            $uri = $url . $num;
+            $data[] = ['url' => $uri];
+            $num += $temp;
+        }
+        view('imgbox', $data);
     }
 
     public function manhua() {
@@ -98,24 +132,15 @@ class Image
             return;
         }
         show_msg("请在 upload/manhua/dongxuange/m$page 查看结果.");
-        $this->manhua_xuange_inc(0, $page);
-        //        $this->manhua_xuange_dec(1000000, 1, 0);
+        $this->manhua_xuange(0, $page, false);
     }
 
-    private function manhua_xuange_inc($num, $tem, $must = false) {
-        $url = "http://resources.tongyinet.com/img2/p_";
+    private function manhua_xuange($num, $tem, $is_inc=true, $must = false) {
+        $url = $this->get_xuange_url();
         $web = "dongxuange";
         $base_num = 1000000;
         $space = 5000;
-        $this->manhua_inc($num, $tem, $must, $url, $web, $base_num, $space);
-    }
-
-    private function manhua_xuange_dec($num, $tem, $must = false) {
-        $url = "http://resources.tongyinet.com/img2/p_";
-        $web = "dongxuange";
-        $base_num = 1000000;
-        $space = 5000;
-        $this->manhua_dec($num, $tem, $must, $url, $web, $base_num, $space);
+        $this->manhua_run($num, $tem, $must, $url, $web, $base_num, $space, $is_inc);
     }
 
     /**
@@ -126,46 +151,13 @@ class Image
      * @param $web string 站名 用于区分
      * @param $base_name  int 基本位置
      * @param $space  int  页间隔  一页多少数量
+     * @param $is_inc  boolen  递增？
      */
-    private function manhua_inc($num = 0, $tem, $must = false, $url, $web, $base_num, $space) {
-        $key = "run_" . $tem;
-        $mode = "manhua/$web";
-        $num1 = mode_locks($key, $mode);
-        $start = $tem * $space + $base_num;
-        $max = $start + $space;
-
-        if ($num1 && !$must) {
-            $num = $num1;
-        }
-
-        if (empty($num)) {
-            $num = empty($num1)? $start: $num1;
-        }
-
-        $total = $max - $num;
-        set_time_limit(1800);
-        $path = "upload/manhua/$web/m" . $tem . "/";
-        $success = 0;
-        for ($i = 0; $num < $max; $num++) {
-            mode_locks($key, $mode, $num);
-            $uri = $url . $num;
-            $res = curl_file($uri, $path, "File not found.", "jpg");
-            $i++;
-            progress_bar($i, $total);
-            if (!$res) {
-                mode_logs($uri, $mode, $key);
-            }
-            $success++;
-        }
-        show_msg("<br/>success: $success | total: $total, run: $i");
-
-    }
-
-    private function manhua_dec($num = 0, $tem, $must = false, $url, $web, $base_num, $space) {
+    private function manhua_run($num = 0, $tem, $must = false, $url, $web, $base_num, $space, $is_inc = true) {
         $key = "dec_" . $tem;
         $mode = "manhua/$web";
         $num1 = mode_locks($key, $mode);
-        $rate = -1;
+        $rate = $is_inc? 1: -1;
         $start = $rate * $tem * $space + $base_num;
         $max = $start + $rate * $space;
 
@@ -193,7 +185,6 @@ class Image
             $success++;
         }
         show_msg("<br/>success: $success | total: $total | run: $i | start: $num | end: $max | " . ($num - $i * $rate));
-
     }
 }
 
