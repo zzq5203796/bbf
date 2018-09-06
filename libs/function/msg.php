@@ -400,83 +400,27 @@ function cli_input($title) {
 
 function progress_bar($num, $max = 500, $type = 0) {
     global $progressNum;
-    if (empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR') {
+    $is_new = empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR';
+    if ($is_new) {
         ob_start();
-        progress_bar_box();
-        echo '<div id="scriptBox">';
+        define(PROGRESS_BAR, true);
+        header("Content-Encoding: none\r\n");
+        view("progress", ['is_new' => $is_new, 'type' => "create"]);
     }
     $progressNum++;
     $maxLen = 10000;
     $num = $num > $max? $max: $num;
     $num = ceil($num / $max * $maxLen);
-    echo "<script>show_ob('" . $num / $maxLen * 100 . "%');" . $progressNum . ";</script>";
-    $tem = 50;
-    if ($progressNum % $tem == 0) {
-        echo '</div><div id="scriptBox"><script>var child = document.getElementById("scriptBox");child.parentNode.removeChild(child);</script>';
-    }
-    echo str_repeat(" ", 1024 * 64);
 
+    $tem = 50;
+    $is_end = $num == $max;
+
+    view("progress", ['is_new' => $is_new, 'type' => "push", 'value' => ($num / $maxLen * 100 . "%"), 'clear' => ($progressNum % $tem == 0), 'end' => $is_end]);
+    echo str_repeat(" ", 1024 * 64);
     ob_flush();
     flush();
-    if ($num == $max) {
-        echo "<script>parent.close_progress && parent.close_progress(this.frameElement.id)</script></div>";
+    if ($is_end) {
         ob_end_flush();//输出并关闭缓冲
     }
 }
 
-function progress_bar_box($type = 0) {
-    $type = empty($type)? '': $type;
-    $css = $html = $js = '';;
-    if (empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR') {
-        define(PROGRESS_BAR, true);
-        header("Content-Encoding: none\r\n");
-
-        $css = '<style>
-    body{
-        background: #fff;
-    }
-    .progress-bar-box{
-        width: 99%;
-        height: 32px;
-        max-width: 780px;
-    }
-    .progress-bar-box > div{
-        float: left;
-        height: 30px;
-        line-height: 30px;
-    }
-    .progress-bar-box .progress-lable{
-        max-width: 48px;
-        padding: 0 4px 0 0;
-    }
-    .progress-bar-box .progress-bar{
-        width: 100%;
-        max-width: 500px;
-        border: #000000 solid 1px;
-    }
-    .progress-bar-box .progress-num{
-        width: 45px;
-        padding-left: 5px;
-    }
-    .progress-bar-box .progress-bar #progress-jump {
-        background:#0000FF;width:1px;height:100%; transition: width 1.5s;
-    }
-    </style>';
-
-    }
-    $html = '<div class="progress-bar-box">
-        <div id="progress-lable" class="progress-lable">进度</div>
-        <div class="progress-bar">
-            <div id="progress-jump" class="progress-jump"></div>
-        </div>
-        <div id="progress-num" class="progress-num"></div></div>';
-    $js = '<script type="text/jscript">
-        function show_ob(value){
-            document.getElementById("progress-jump").style.width =value;
-            document.getElementById("progress-num").innerHTML = value;
-        }
-        show_ob(0);
-    </script>';
-
-    echo $css . $html . $js;
-}

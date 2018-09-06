@@ -1,3 +1,5 @@
+<?php if($fields['type'] == 'create'){ ?>
+<?php if($fields['is_new']){ ?>
 <style>
     body {
         background: #fff;
@@ -37,9 +39,9 @@
         transition: width 1.5s;
     }
 </style>
-
+<?php }else{ echo '</div>';} ?>
 <div class="progress-bar-box">
-    <div id="progress-lable" class="progress-lable">进度</div>
+    <div id="progress-lable" class="progress-lable">进度1</div>
     <div class="progress-bar">
         <div id="progress-jump" class="progress-jump"></div>
     </div>
@@ -52,4 +54,17 @@
             document.getElementById("progress-num").innerHTML = value;
         }
         show_ob(0);
+
 </script>
+<div id="scriptBox">
+<?php } ?>
+<?php if($fields['type'] == 'push'){ ?>
+    <script>show_ob("<?php echo $fields['value']; ?>");</script>
+
+    <?php if($fields['clear']){ ?>
+    </div><div id="scriptBox"><script>var child = document.getElementById("scriptBox");child.parentNode.removeChild(child);</script>
+    <?php } ?>
+    <?php if($fields['end']){ ?>
+    <script>parent.close_progress && parent.close_progress(this.frameElement.id)</script></div>
+    <?php } ?>
+<?php } ?>

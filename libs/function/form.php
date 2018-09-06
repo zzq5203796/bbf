@@ -58,24 +58,7 @@ class Form
     }
 
     public function show($is_echo = true) {
-        $html = '';
         $fields = $this->fields;
-        foreach ($fields as $item) {
-            $t_html = '';
-            switch ($item['type']) {
-                case 's':
-                    break;
-                default:
-                    $t_html = $item['title'] . ": <input name='" . $item['name'] . "' type='text' value='" . $item['value'] . "'/>";
-                    break;
-            }
-            $html .= "<div class='form-item'>$t_html</div>";
-        }
-        $html .= "<div style='clear:both'></div><div class='form-item'style='float: right;'><input type='submit' value='提交'></div>";
-
-        $html = "<style>.form-item{padding: 2px 8px 2px 4px;  float: left;}.form-item input{padding: 2px 4px;}</style><form action='' method='get'>$html</form>";
-        if ($is_echo)
-            echo $html;
-        return $html;
+        view("form", $fields);
     }
 }

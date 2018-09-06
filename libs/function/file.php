@@ -175,9 +175,9 @@ function help($file) {
     return $txt;
 }
 
-function view($file) {
-    $file = DOCUMENT_ROOT . "view/" . $file;
-    include $file;
+function view($file, $fields) {
+    $file = DOCUMENT_ROOT . "view/" . $file . ".html";
+    require($file);
 }
 
 /* 下载文件 */
