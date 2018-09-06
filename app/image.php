@@ -12,7 +12,7 @@ namespace app;
 class Image
 {
     public function __construct() {
-        show_msg('welcome to class ' . get_class());
+        //        show_msg('welcome to class ' . get_class());
     }
 
     public function index() {
@@ -24,7 +24,7 @@ class Image
         foreach ($data as $key => $letter) {
             foreach ($letter as $vo) {
                 dump($vo['Image']);
-                down_file($vo['Image'], $path);
+                curl_file($vo['Image'], $path);
             }
         }
         //        dump($data);
@@ -74,102 +74,126 @@ class Image
         imagettftext($myImage, $fontsize, 0, $offsetx, $offsety, $textcolor, "../css/regular.ttf", $content);
         imagepng($myImage, "../$file.png");
 
-        echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />'.get_br() ;
+        echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />' . get_br();
     }
-    public function see(){
-        $num = 1103093;
+
+    public function see() {
+        $num = 1000000;
         $url = "http://resources.tongyinet.com/img2/p_";
-        for ($i=0; $i < 100; $i++) { 
-            $uri = $url.$num;
-            echo "<img src='".$uri."' />";
-            $num++;
+        for ($i = 0; $i < 2500; $i++) {
+            $uri = $url . $num;
+            echo "<img style='height: 50px' src='" . $uri . "' />";
+            $num = $num + 20;
         }
     }
 
-    public function mahua(){
-        $this->mahua666(125001, 5);
-    }
+    public function manhua() {
+        form([
+            ['page', '页码', 'text', '', []],
+        ]);
 
-    public function mahua1(){
-        $this->mahua66(1085000, 10);
-    }
-    public function mahua2(){
-        $this->mahua66(1097011, 7);
-    }
-
-
-    public function mahua666($num, $tem){
-        $key = "mahua_num" . $tem;
-        $numo = $_COOKIE[$key];
-        $start = $tem*5000 + 100001;
-        $max = $start + 5000;
-
-        dump($num);
-
-        set_time_limit(1600);
-        $url = "http://resources.tongyinet.com/img2/p_1";
-        $uri = '';
-        $path = "upload/m".$tem."/";
-
-        for ($i=0; $num < $max; $num++) { 
-            $uri = $url.$num;
-            // echo "<img src='".$uri."' />";
-                setcookie($key,  $num);
-                $res = down_file($uri, $path);
-                if(!$res){
-                    show_msg($uri);
-                }
+        $page = input("page");
+        if (!is_numeric($page) || $page < 0 || $page > 40) {
+            show_msg("页码必须为 0-40 的 整数");
+            return;
         }
-        show_msg($uri);
+        show_msg("请在 upload/manhua/dongxuange/m$page 查看结果.");
+        $this->manhua_xuange_inc(0, $page);
+        //        $this->manhua_xuange_dec(1000000, 1, 0);
     }
 
-    public function mahua66($num, $tem){
-        $key = "mahua_num" . $tem;
-        $numo = $_COOKIE[$key];
-        $start = -($tem-7)*5000 + 1100000;
-        $min = $start - 5000;
-
-        dump($num);
-        dump($min);
-
-        set_time_limit(16000);
+    private function manhua_xuange_inc($num, $tem, $must = false) {
         $url = "http://resources.tongyinet.com/img2/p_";
-        $uri = '';
-        $path = "upload/m".$tem."/";
+        $web = "dongxuange";
+        $base_num = 1000000;
+        $space = 5000;
+        $this->manhua_inc($num, $tem, $must, $url, $web, $base_num, $space);
+    }
 
-        for ($i=0; $num > $min; $num--) { 
-            $uri = $url.$num;
-            // echo "<img src='".$uri."' />";
-                setcookie($key,  $num);
-                $res = down_file($uri, $path);
-                if(!$res){
-                    show_msg($uri);
-                }
+    private function manhua_xuange_dec($num, $tem, $must = false) {
+        $url = "http://resources.tongyinet.com/img2/p_";
+        $web = "dongxuange";
+        $base_num = 1000000;
+        $space = 5000;
+        $this->manhua_dec($num, $tem, $must, $url, $web, $base_num, $space);
+    }
+
+    /**
+     * @param $num int 开始位置
+     * @param $tem int 码数 类似页码
+     * @param bool $must 是否一定按 开始位置 开始，默认系统自己计算
+     * @param $url string 固定链接
+     * @param $web string 站名 用于区分
+     * @param $base_name  int 基本位置
+     * @param $space  int  页间隔  一页多少数量
+     */
+    private function manhua_inc($num = 0, $tem, $must = false, $url, $web, $base_num, $space) {
+        $key = "run_" . $tem;
+        $mode = "manhua/$web";
+        $num1 = mode_locks($key, $mode);
+        $start = $tem * $space + $base_num;
+        $max = $start + $space;
+
+        if ($num1 && !$must) {
+            $num = $num1;
         }
-        show_msg($uri);
+
+        if (empty($num)) {
+            $num = empty($num1)? $start: $num1;
+        }
+
+        $total = $max - $num;
+        set_time_limit(1800);
+        $path = "upload/manhua/$web/m" . $tem . "/";
+        $success = 0;
+        for ($i = 0; $num < $max; $num++) {
+            mode_locks($key, $mode, $num);
+            $uri = $url . $num;
+            $res = curl_file($uri, $path, "File not found.", "jpg");
+            $i++;
+            progress_bar($i, $total);
+            if (!$res) {
+                mode_logs($uri, $mode, $key);
+            }
+            $success++;
+        }
+        show_msg("<br/>success: $success | total: $total, run: $i");
+
+    }
+
+    private function manhua_dec($num = 0, $tem, $must = false, $url, $web, $base_num, $space) {
+        $key = "dec_" . $tem;
+        $mode = "manhua/$web";
+        $num1 = mode_locks($key, $mode);
+        $rate = -1;
+        $start = $rate * $tem * $space + $base_num;
+        $max = $start + $rate * $space;
+
+        if ($num1 && !$must) {
+            $num = $num1;
+        }
+
+        if (empty($num)) {
+            $num = empty($num1)? $start: $num1;
+        }
+
+        $total = ($max - $num) * $rate;
+        set_time_limit(1800);
+        $path = "upload/manhua/$web/m" . $tem . "/";
+        $success = 0;
+        for ($i = 0; $rate * $num < $rate * $max; $num += $rate) {
+            mode_locks($key, $mode, $num);
+            $uri = $url . $num;
+            $res = curl_file($uri, $path, "File not found.", "jpg");
+            $i++;
+            progress_bar($i, $total);
+            if (!$res) {
+                mode_logs($uri, $mode, $key);
+            }
+            $success++;
+        }
+        show_msg("<br/>success: $success | total: $total | run: $i | start: $num | end: $max | " . ($num - $i * $rate));
+
     }
 }
 
-
-/**
- * @param $file_url
- * @param $save_to
- */
-function down_file($file_url, $save_to) {
-    $ch = curl_init();
-    curl_setopt($ch, CURLOPT_POST, 0);
-    curl_setopt($ch, CURLOPT_URL, $file_url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    $file_content = curl_exec($ch);
-    curl_close($ch);
-    if(trim($file_content)=="File not found."){
-        return false;
-    }
-    $filename = pathinfo($file_url, PATHINFO_BASENAME);
-
-    $downloaded_file = fopen($save_to . $filename.".jpg", 'w');
-    fwrite($downloaded_file, $file_content);
-    fclose($downloaded_file);
-    return true;
-
-}

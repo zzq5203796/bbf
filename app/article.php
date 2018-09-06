@@ -394,7 +394,7 @@ EOD;
     }
 
     public function test() {
-        $max = 333;
+        $max = 100;
         $num = 0;
         for ($i = 0; $i < $max && $num < $max; $i++) {
             $num += rand(1, 20);

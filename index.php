@@ -51,10 +51,19 @@ $extra = $_GET['extra'];
 $extra = $extra? $extra: [];
 
 $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
-foreach ($dirs as $key => $name) {
-    $dir = is_numeric($key)? $name: $key;
-    $dir_tree = get_dir_tree($dir, ['js', 'css']);
-    $tree[] = dir_tree_item($key, $name, $dir_tree);
+readdirs($tree, $dirs);
+function readdirs(&$tree, $dirs){
+    foreach ($dirs as $key => $name) {
+        if(is_array($name)){
+            $dir_tree = [];
+            readdirs($dir_tree, $name);
+            $tree[] = dir_tree_item($key, $key, $dir_tree);
+        }else{
+            $dir = is_numeric($key)? $name: $key;
+            $dir_tree = get_dir_tree($dir, ['js', 'css']);
+            $tree[] = dir_tree_item($key, $name, $dir_tree);
+        }
+    }
 }
 
 if ($_GET['is_ajax']) {

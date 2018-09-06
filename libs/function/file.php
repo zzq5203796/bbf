@@ -106,7 +106,7 @@ function write($file, $data, $mode = "w") {
 
 function read($file, $mode = "r", $opt = []) {
     $file = DOCUMENT_ROOT . "runtime/" . $file;
-    if(!file_exists($file)){
+    if (!file_exists($file)) {
         return false;
     }
     $myfile = fopen($file, $mode);
@@ -125,17 +125,41 @@ function read($file, $mode = "r", $opt = []) {
 }
 
 function logs($log, $type = "log", $mode = "a+", $opt = []) {
+    empty($mode) && $mode = "a+";
     $_type = ($type == "log" || empty($type))? "": ".$type";
+
     $now = date("H:i:s");
     $log = "[$now] $log\n\n";
     $file = "log/" . date("Ymd") . "$_type.txt";
+    if (is_array($opt) && !empty($opt["type"])) {
+        switch ($opt["type"]) {
+            case 'mode':
+                $file = $opt["name"] . "/log/" . date("Ymd") . "$_type.txt";
+                break;
+        }
+    }
     write($file, $log, $mode);
 }
 
-function locks($file, $data = null) {
+function mode_logs($log, $mode, $type = "log") {
+    logs($log, $type, "a+", ['type' => 'mode', 'name' => $mode]);
+}
+
+function mode_locks($file, $mode, $data = null) {
+    return locks($file, $data, ['type' => 'mode', 'name' => $mode]);
+}
+
+function locks($file, $data = null, $opt = []) {
     $file = "lock/$file.lock";
+    if (is_array($opt) && !empty($opt["type"])) {
+        switch ($opt["type"]) {
+            case 'mode':
+                $file = $opt["name"] . "/" . $file;
+                break;
+        }
+    }
     if ($data === null) {
-        if(IS_CLEAR) {
+        if (IS_CLEAR) {
             return '';
         }
         return read($file);
@@ -145,10 +169,15 @@ function locks($file, $data = null) {
     }
 }
 
-function help($file){
+function help($file) {
     $file = "../data/help/$file.txt";
     $txt = read($file);
     return $txt;
+}
+
+function view($file) {
+    $file = DOCUMENT_ROOT . "view/" . $file;
+    include $file;
 }
 
 /* 下载文件 */
@@ -171,4 +200,34 @@ function down_file($file, $file_name = "") {
     //读取文件内容并直接输出到浏览器
     echo $content;
     exit ();
+}
+
+/**
+ * 抓取图片 文件
+ * @param $file_url
+ * @param $save_to
+ * @return bool
+ */
+function curl_file($file_url, $save_to, $fail = '', $ext = '') {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_POST, 0);
+    curl_setopt($ch, CURLOPT_URL, $file_url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    $file_content = curl_exec($ch);
+    curl_close($ch);
+    $check = trim($file_content);
+    if ($check == $fail || !$file_content) {
+        return false;
+    }
+    $filename = pathinfo($file_url, PATHINFO_BASENAME);
+
+    $pathfile = $save_to . $filename;
+    empty($ext) || $pathfile .= ".$ext";
+
+    create_dir($pathfile);
+    $downloaded_file = fopen($pathfile, 'w');
+    fwrite($downloaded_file, $file_content);
+    fclose($downloaded_file);
+    return true;
+
 }

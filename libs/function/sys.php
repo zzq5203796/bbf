@@ -85,14 +85,14 @@ function server() {
     die();
 }
 
-function default_key_value($data, $key, $value=null){    
+function default_key_value($data, $key, $value=null){
     return isset($data[$key])? $data[$key]: $value;
 }
 
 function default_empty_value($data, $key='', $value=null){
     if($key===''){
         return empty($data)? $value: $data;
-    }else{ 
+    }else{
         return empty($data[$key])? $value: $data[$key];
     }
 }
