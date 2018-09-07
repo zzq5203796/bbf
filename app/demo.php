@@ -31,6 +31,14 @@ class Demo
 
     public function loading() {
 
+        $max = 15;
+        for($i = 0; $i<=$max;$i++){
+            progress_bar($i, $max, [
+                'info' => ("now is in run:".($i+10)),
+                'msg'  => "hello word.".$i
+                ]);
+            sleep(1);
+        }
     }
 
 }

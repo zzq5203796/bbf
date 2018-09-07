@@ -47,25 +47,39 @@
     </div>
     <div id="progress-num" class="progress-num"></div>
     <div style="clear: both; float: unset;height: 0;"></div>
+    <div> msg > > >| </div>
+    <div id="progress-msg"></div>
+    <div style="clear: both; float: unset;height: 0;"></div>
+    <div>info > > >| </div>
+    <div id="progress-info"></div>
 </div>
 
 <script type="text/jscript">
-        function show_ob(value){
+        function show_ob(value, opt){
+            console.log(opt);
             document.getElementById("progress-jump").style.width =value;
             document.getElementById("progress-num").innerHTML = value;
+            if(opt.msg) document.getElementById("progress-info").innerHTML = opt.msg;
+            if(opt.info) document.getElementById("progress-msg").innerHTML = opt.info;
         }
-        show_ob(0);
+        show_ob(0, {});
 
 </script>
 <div id="scriptBox">
 <?php } ?>
 <?php if($fields['type'] == 'push'){ ?>
-    <script>show_ob("<?php echo $fields['value']; ?>");</script>
+
+    <script>
+        var opt = <?php echo json_encode($fields['opt']); ?>;
+        show_ob("<?php echo $fields['value']; ?>", opt);
+    </script>
 
     <?php if($fields['clear']){ ?>
     </div><div id="scriptBox"><script>var child = document.getElementById("scriptBox");child.parentNode.removeChild(child);</script>
     <?php } ?>
+
     <?php if($fields['end']){ ?>
     <script>parent.close_progress && parent.close_progress(this.frameElement.id)</script></div>
     <?php } ?>
+
 <?php } ?>

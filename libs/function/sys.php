@@ -124,7 +124,6 @@ function des_encrypt($encrypt, $key="")
  * @param $decrypt string 密文
  * @return string 明文
  */
-
 function des_decrypt($decrypt, $key="")
 {
     empty($key) && $key=read("../data/auto.key", "r");

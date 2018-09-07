@@ -21,7 +21,36 @@ class Reptile
         return $str;
     }
 
+
+    public function test(){
+        $strs = "0e24098c90368aa6f14ac1c7ee3558";
+
+
+        set_time_limit(3600);
+
+        $max = 10000000;
+        $pushTemp = 1000;
+        for($k=2; $K<10; $k++){
+            $max = pow(10, $k);
+            for ($i=0;$i < $max;$i++) {
+                $str = substr($max+$i, 1);
+                $c = md5($str);
+
+                $opt = ['info' => "M: $max | D: $k | $str | $i" ];
+                if(strpos($c, $strs)){
+                    $opt['msg'] = "D：$k | $str | $c";
+                    progress_bar($i, $max, $opt);
+                    continue;
+                }elseif($i%$pushTemp == 0){
+                    progress_bar($i, $max, $opt);
+                }
+            }
+        }
+    }
+
+
     public function see() {
+        show_icon('画'); //1121315
         $page = input("page");
         $temp = input("temp", 1);
         $temp = $temp > 0? $temp: 1;
@@ -33,20 +62,27 @@ class Reptile
             show_msg("页码必须为 0-999999 的 整数", 1, 0);
             return;
         }
-        $num = 1000000 + $page;
-        $url = $this->get_xuange_url();
+        $num = 48986 + $page; // 48986
+        $url = $this->get_xuange_url()."1121315_c";
         $data = [];
-        for ($i = 0; $i < 50; $i++) {
+        $max = $temp==1? 50: 400;
+        for ($i = 0; $i < $max; $i++) {
             $uri = $url . $num;
-            $data[] = ['url' => $uri];
+            $data[] = [
+                'url' => $uri,
+                'num' => substr($num,0, 3). " " . substr($num,3),
+                'i' => $i
+            ];
             $num += $temp;
         }
         view('imgbox', $data);
     }
 
     public function manhua() {
+        show_icon('漫');
         form([
             ['page', '页码', 'text', '', []],
+            ['btn', '看画', 'btn', '/reptile/see', []],
         ]);
 
         $page = input("page");
