@@ -31,12 +31,18 @@ class Image
     }
 
     public function logo() {
-        $data = ["竹", "飞", "朱", "智", "青", "哥", "快", "哒"];
+        form([
+            ['name', '页码', 'text', '', []],
+        ]);
+
+        $name = input("name", "竹");
+
+        $data = str_split_utf8($name);
         $file = "runtime/img/img_";
         create_dir(root_dir() . $file);
         foreach ($data as $key => $vo) {
             $this->buildImage($vo, $file . $key);
-            show_msg("create $vo.");
+            show_msg("create $vo.",1,0);
         }
     }
 
@@ -76,115 +82,30 @@ class Image
 
         echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />' . get_br();
     }
-    public function t(){
-        $encrypt = "http://resources.tongyinet.com/img2/p_";
-        $key = "zzq5203796";
-        $str = base64_encode(openssl_encrypt($encrypt, "DES-ECB", $key, OPENSSL_RAW_DATA));
-        echo $str;
-    }
-    public function t1(){
-        $encrypt = "thaFqsfrEsz9Rp7Ld0cf0HkvZAXcd/CxZWv33T2fWUTF4XZNllMmwg==";
-        $key = "zzq520379";
-        $str = des_decrypt($encrypt);
-        echo $str;
 
-    }
-    private function get_xuange_url(){
-        $encrypt = "thaFqsfrEsz9Rp7Ld0cf0HkvZAXcd/CxZWv33T2fWUTF4XZNllMmwg==";
-        $str = des_decrypt($encrypt);
-        if(empty($str)){
-            show_msg("please input key.");
-            die();
-        }
-        return $str;
-    }
-    public function see() {
-        $page = input("page");
-        $temp = input("temp", 1);
-        $temp = $temp>0? $temp: 1;
-        form([
-            ['page', '页码', 'text', '', []],
-            ['temp', '间隔', 'text', $temp, []],
-        ]);
-        if (!is_numeric($page) || $page < 0 || $page > 999999) {
-            show_msg("页码必须为 0-999999 的 整数");
-            return;
-        }
-        $num = 1000000 + $page;
-        $url = $this->get_xuange_url();
-        $data = [];
-        for ($i = 0; $i < 50; $i++) {
-            $uri = $url . $num;
-            $data[] = ['url' => $uri];
-            $num += $temp;
-        }
-        view('imgbox', $data);
-    }
-
-    public function manhua() {
-        form([
-            ['page', '页码', 'text', '', []],
-        ]);
-
-        $page = input("page");
-        if (!is_numeric($page) || $page < 0 || $page > 40) {
-            show_msg("页码必须为 0-40 的 整数");
-            return;
-        }
-        show_msg("请在 upload/manhua/dongxuange/m$page 查看结果.");
-        $this->manhua_xuange(0, $page, false);
-    }
-
-    private function manhua_xuange($num, $tem, $is_inc=true, $must = false) {
-        $url = $this->get_xuange_url();
-        $web = "dongxuange";
-        $base_num = 1000000;
-        $space = 5000;
-        $this->manhua_run($num, $tem, $must, $url, $web, $base_num, $space, $is_inc);
-    }
-
-    /**
-     * @param $num int 开始位置
-     * @param $tem int 码数 类似页码
-     * @param bool $must 是否一定按 开始位置 开始，默认系统自己计算
-     * @param $url string 固定链接
-     * @param $web string 站名 用于区分
-     * @param $base_name  int 基本位置
-     * @param $space  int  页间隔  一页多少数量
-     * @param $is_inc  boolen  递增？
-     */
-    private function manhua_run($num = 0, $tem, $must = false, $url, $web, $base_num, $space, $is_inc = true) {
-        $key = "dec_" . $tem;
-        $mode = "manhua/$web";
-        $num1 = mode_locks($key, $mode);
-        $rate = $is_inc? 1: -1;
-        $start = $rate * $tem * $space + $base_num;
-        $max = $start + $rate * $space;
-
-        if ($num1 && !$must) {
-            $num = $num1;
-        }
-
-        if (empty($num)) {
-            $num = empty($num1)? $start: $num1;
-        }
-
-        $total = ($max - $num) * $rate;
-        set_time_limit(1800);
-        $path = "upload/manhua/$web/m" . $tem . "/";
-        $success = 0;
-        for ($i = 0; $rate * $num < $rate * $max; $num += $rate) {
-            mode_locks($key, $mode, $num);
-            $uri = $url . $num;
-            $res = curl_file($uri, $path, "File not found.", "jpg");
-            $i++;
-            progress_bar($i, $total);
-            if (!$res) {
-                mode_logs($uri, $mode, $key);
-            }
-            $success++;
-        }
-        show_msg("<br/>success: $success | total: $total | run: $i | start: $num | end: $max | " . ($num - $i * $rate));
-    }
 }
-
+function str_split_utf8($str)
+{
+    $split = 1;
+    $array = array();
+    for ($i = 0; $i < strlen($str);) {
+        $value = ord($str[$i]);
+        if ($value > 127) {
+            if ($value >= 192 && $value <= 223) {
+                $split = 2;
+            } elseif ($value >= 224 && $value <= 239) {
+                $split = 3;
+            } elseif ($value >= 240 && $value <= 247) {
+                $split = 4;
+            }
+        } else {
+            $split = 1;
+        }
+        $key = null;
+        for ($j = 0; $j < $split; $j++, $i++) {
+            $key .= $str[$i];
+        }
+        array_push($array, $key);
+    }
+    return $array;
+}

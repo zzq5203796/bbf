@@ -1,5 +1,7 @@
-<?php echo $fields['title']; ?>:
-<input
-        name="<?php echo $fields['name']; ?>"
-        type="<?php echo $fields['type']; ?>"
-        value="<?php echo $fields['value']; ?>" />
+<div class='form-item'>
+    <?php echo  $fields['type']=="hidden"? '': $fields['title'].": "; ?>
+    <input
+            name="<?php echo $fields['name']; ?>"
+            type="<?php echo $fields['type']; ?>"
+            value="<?php echo $fields['value']; ?>"/>
+</div>

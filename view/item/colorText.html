@@ -1,0 +1,26 @@
+<style>
+    .color-text-box{
+        border: 1px solid #ccc;
+        padding: 6px;
+        padding-bottom: 0;
+        border-radius: 3px;
+        margin-bottom: 10px;
+        background: #f4f9f9;
+        color: #555;
+    }
+    .color-text-box .color-item{
+        margin-right: 6px;
+        margin-bottom:6px;
+        padding: 3px 8px;
+        float: left;
+        border-radius: 4px;
+    }
+</style>
+<div class="color-text-box">
+    <?php foreach($fields as $vo){ ?>
+        <div class="color-item" style="background: #<?php echo $vo[0]; ?>; color: #<?php echo $vo[1]; ?> ">
+            <?php echo $vo[0]; ?> <?php echo $vo[1]; ?>
+        </div>
+    <?php } ?>
+    <div style="clear: both; float: unset;"></div>
+</div>

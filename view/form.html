@@ -1,32 +1,72 @@
+<?php
+    $bg = empty($fields['bg'])? '': $fields['bg'];
+    switch($bg){
+    case 'mdn':
+        view("../template/demo/mdn/demo", []);
+        break;
+    default:
+        view("bg/sky/index", []);
+        break;
+    }
+
+    global $_view__list_name;
+    $_view_name = "form";
+
+    if(empty($_view__list_name[$_view_name])){
+        $_view__list_name[$_view_name] = 1;
+?>
 <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
 <style>
-form{
-    margin: 0 0 3px 0;
-}
-.form-item {
-    padding: 2px 8px 2px 4px;
-    float: left;
-}
+    html {
+        /*background: url("/public/images/bg/r-1-2.jpg");*/
+        /*background: #fff url("/public/images/bg/color-1.jpg");*/
+    }
 
-.form-item input {
-    padding: 2px 4px;
-}</style>
-<form action='' method='get'>
-    <div class='form-item'>
-        <?php
-        foreach ($fields as $item) {
+    body {
+        max-width: 1190px;
+        margin: 0 auto;
+        width: 80%;
+        min-width: 500px;
+        min-height: 280px;
+        padding: 8px;
+        background: #ffffff11;
+        color: #fff;
+    }
 
-            switch ($item['type']) {
-                case 's':
-                    break;
-                default:
-                    view("fields/text", $item);
-                    break;
+    .form-box {
+        position: relative;
+    }
+
+    .form-box form {
+        margin: 0 0 3px 0;
+    }
+
+    .form-item {
+        padding: 2px 8px 2px 4px;
+        float: left;
+    }
+
+    .form-item input {
+        padding: 2px 4px;
+    }
+</style>
+<?php } ?>
+<div class="form-box">
+    <form action='' method='get'>
+            <?php
+            foreach ($fields as $item) {
+                switch ($item['type']) {
+                    case 'line':
+                        view("fields/line", $item);
+                        break;
+                    default:
+                        view("fields/".$item['type'], $item);
+                        break;
+                }
             }
-        }
-        ?>
-    </div>
+            ?>
 
-    <div class='form-item' style='float: right; margin-right: 10px;'><input type='submit' value='提交'></div>
-    <div style='clear:both'></div>
-</form>
+        <div class='form-item' style='float: right; margin-right: 10px;'><input type='submit' value='提交'></div>
+        <div style='clear:both'></div>
+    </form>
+</div>
