@@ -106,26 +106,28 @@ if(!function_exists('input')){
 /**
  * PHP DES 加密程式 BY openssl
  *
- * @param $key 密鑰（八個字元內）
- * @param $encrypt 要加密的明文
+ * @param $key string 秘钥
+ * @param $encrypt string 要加密内容
  * @return string 密文
  */
 function des_encrypt($encrypt, $key="")
 {
     empty($key) && $key=read("../data/auto.key", "r");
+    empty($key) && $key="ABCDEFG";
     return base64_encode(openssl_encrypt($encrypt, "DES-ECB", $key, OPENSSL_RAW_DATA));
 }
 
 /**
  * PHP DES 解密程式 BY openssl
  *
- * @param $key 密鑰（八個字元內）
- * @param $decrypt 要解密的密文
+ * @param $key string 秘钥 1-8
+ * @param $decrypt string 密文
  * @return string 明文
  */
 
 function des_decrypt($decrypt, $key="")
 {
     empty($key) && $key=read("../data/auto.key", "r");
+    empty($key) && $key="ABCDEFG";
     return openssl_decrypt(base64_decode($decrypt), "DES-ECB", $key, OPENSSL_RAW_DATA);
 }

@@ -3,6 +3,9 @@
 function form($data) {
     Form::getInstance()->set($data)->show();
 }
+function formAdd($data) {
+    return Form::getInstance()->add($data);
+}
 
 class Form
 {
@@ -11,7 +14,7 @@ class Form
     protected $fields;
 
     final protected function __construct() {
-
+        $this->fields = [];
     }
 
     static public function getInstance() {
@@ -23,18 +26,20 @@ class Form
     }
 
     public function set($data) {
+        $this->fields = [];
         foreach ($data as $item) {
             $this->fields[] = $this->deal_filed($item);
         }
         return $this;
     }
 
-    public function add() {
-
+    public function add($item) {
+        $this->fields[] = $this->deal_filed($item);
+        return $this;
     }
 
     public function get() {
-
+        return $this->fields;
     }
 
     protected function deal_filed($item) {

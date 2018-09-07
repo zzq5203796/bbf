@@ -73,19 +73,19 @@
         },
         {
           "name": "黑漫",
-          "url": "/image/manhua",
+          "url": "/reptile/manhua",
           "hide": true,
           "child": []
         },
         {
-          "name": "jia",
-          "url": "/crypt/encrypt",
+          "name": "加解密",
+          "url": "/crypt/index",
           "hide": true,
           "child": []
         },
         {
-          "name": " jie",
-          "url": "/crypt/decrypt",
+          "name": "LOGO大法",
+          "url": "/image/index",
           "hide": true,
           "child": []
         }
