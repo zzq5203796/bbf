@@ -85,7 +85,7 @@
         },
         {
           "name": "LOGO大法",
-          "url": "/image/index",
+          "url": "/image/logo",
           "hide": true,
           "child": []
         }

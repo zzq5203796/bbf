@@ -37,12 +37,12 @@ class Image
 
         $name = input("name", "竹");
 
-        $data = ["竹", "飞", "朱", "智", "青", "哥", "快", "哒"];
+        $data = str_split_utf8($name);
         $file = "runtime/img/img_";
         create_dir(root_dir() . $file);
         foreach ($data as $key => $vo) {
             $this->buildImage($vo, $file . $key);
-            show_msg("create $vo.");
+            show_msg("create $vo.",1,0);
         }
     }
 
@@ -84,4 +84,28 @@ class Image
     }
 
 }
-
+function str_split_utf8($str)
+{
+    $split = 1;
+    $array = array();
+    for ($i = 0; $i < strlen($str);) {
+        $value = ord($str[$i]);
+        if ($value > 127) {
+            if ($value >= 192 && $value <= 223) {
+                $split = 2;
+            } elseif ($value >= 224 && $value <= 239) {
+                $split = 3;
+            } elseif ($value >= 240 && $value <= 247) {
+                $split = 4;
+            }
+        } else {
+            $split = 1;
+        }
+        $key = null;
+        for ($j = 0; $j < $split; $j++, $i++) {
+            $key .= $str[$i];
+        }
+        array_push($array, $key);
+    }
+    return $array;
+}
