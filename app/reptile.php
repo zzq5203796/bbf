@@ -21,20 +21,67 @@ class Reptile
         return $str;
     }
 
+    public function rand($url, $path){
+        $keys = "qwertyuiopasdfghjklzxcvbnm1234567890";
+        $keyLen = 26;
+        $maxLength = 6;
+        $res = false;
+        for($k=0; $k < 1000000; $k++){
+            $str = '';
+            $num = $k;
+            for($i=0; $i < $maxLength; $i++){
+                $str .= $keys[$num%$keyLen];
+                $num = intval($num/$keyLen);
+            }
 
+            $uri = $url."_".$str;
+            $res = curl_file($uri, $path, "File not found.", "jpg");
+
+            if($k%100 == 0){
+                progress_bar($k, 1000000, [
+                    'msg' => substr($uri, 36) . " - " . ($res?'ok':'fail'), 
+                    'info' => "child: " . $k
+                ]);
+            }
+
+            if($res){
+                break;
+            }
+
+            if($num > 0){
+                break;
+            }
+        }
+
+        progress_bar(1, 100, [
+            'msg' => substr($uri, 36) . " - " . ($res?'ok':'fail'), 
+            'info' => "child: " . $i
+        ]);
+        return $res;
+    }
+
+    public function md5(){
+        // http://resources.tongyinet.com/img2/p_1121593_549610
+        //p_1121593_549610
+        $str = "549610";
+        show_msg(md5($str));
+    }
     public function test(){
-        $strs = "0e24098c90368aa6f14ac1c7ee3558";
-
+        // http://resources.tongyinet.com/static/serimgs/comics/6367/vol/f5/84ef617f81e737227359ea5722a21a.jpg
+        $strs = "84ef617f81e737227359ea5722a21a";
 
         set_time_limit(3600);
 
         $max = 10000000;
-        $pushTemp = 1000;
-        for($k=2; $K<10; $k++){
+        $pushTemp = 10000;
+        $maxLength = 6;
+        $startLength = 1;
+        $top = "";
+        for($k=$startLength; $k <= $maxLength; $k++){
             $max = pow(10, $k);
-            for ($i=0;$i < $max;$i++) {
+            for ($i=0; $i < $max; $i++) {
                 $str = substr($max+$i, 1);
-                $c = md5($str);
+                $c = md5($top . $str);
 
                 $opt = ['info' => "M: $max | D: $k | $str | $i" ];
                 if(strpos($c, $strs)){
@@ -132,15 +179,16 @@ class Reptile
         }
 
         $total = ($max - $num) * $rate;
-        set_time_limit(1800);
+        set_time_limit(10000);
         $path = "upload/manhua/$web/m" . $tem . "/";
         $success = 0;
         for ($i = 0; $rate * $num < $rate * $max; $num += $rate) {
             mode_locks($key, $mode, $num);
             $uri = $url . $num;
             $res = curl_file($uri, $path, "File not found.", "jpg");
+            $res || $this->rand($uri, $path);
             $i++;
-            progress_bar($i, $total);
+            progress_bar($i, $total, ['msg' => substr($uri, 36)." - ".($res?'ok':'fail'), 'info' => $i]);
             if (!$res) {
                 mode_logs($uri, $mode, $key);
             }

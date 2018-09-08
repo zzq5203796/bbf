@@ -1,3 +1,7 @@
+body{
+    background: #ffffff11;
+    color: #fff;
+}
 .sky {
     position: fixed;
     width: 100%;
