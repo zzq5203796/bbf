@@ -34,8 +34,11 @@
             <div class="auto-box">
                 <div class="button menu-show-all" title="展开所有">+</div>
                 <div class="button menu-hide-all" title="隐藏所有">-</div>
-                <div class="button ajax pull" url="/?is_ajax=1" ajax-data="pullData()" ajax-cb="pullCb" title="pull">
+                <div class="button ajax pull" url="/?is_ajax=1" ajax-data="_menu.pull.data()" ajax-cb="_menu.pull.cb" title="pull">
                     pull
+                </div>
+                <div class="button reload iconfont"
+                     style="font-size: 18px; padding: 0px 6px 3px 6px; line-height: 18px;" title="刷新">&#xe722;
                 </div>
                 <div class="button reload iconfont"
                      style="font-size: 18px; padding: 0px 6px 3px 6px; line-height: 18px;" title="刷新">&#xe722;
@@ -43,12 +46,15 @@
                 <!--<div class="button reload bbf-padded-0" title="刷新"><i class="icon iconfont">&#xe722;</i></div>-->
                 <!--<div class="button reload" title="刷新"><i class="icon iconfont">&#xe650;</i></div>-->
             </div>
+            <div class="auto-box">
+                <input name="fastsearch" class="fastsearch" placeholder="快速查找" type="text" style="height:24px; margin: 5px 0; padding: 0 4px;" />
+            </div>
             <!-- tabs -->
             <div class="bbf-tabs">
-                <div>
+                <!-- <div>
                     <div class="button bbf-tabs-prev" title="">&lt;</div>
                     <div class="button bbf-tabs-next" title="">&gt;</div>
-                </div>
+                </div> -->
                 <div class="bbf-tabs-select">
                     <span class="bbf-tabs-item over">STORE</span>
                     <span class="bbf-tabs-item active">pull</span>
@@ -121,7 +127,7 @@
 
     <div id="right">
         <div class="top-tip">
-            <div style="color: #fff; display: inline-block; background: #784aff; border-radius: 2px;padding: 4px; line-height: 1;margin: -2px 6px 0 0;"
+            <div class="nav-icon" style="color: #fff; display: inline-block; background: #784aff; border-radius: 2px;padding: 4px; line-height: 1;margin: -2px 6px 0 0;"
                  class="fl">竹
             </div>
             <a href="#" target="myIframe" style="color: #555;">首页</a>

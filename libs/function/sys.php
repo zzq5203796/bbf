@@ -99,7 +99,12 @@ function default_empty_value($data, $key='', $value=null){
 
 if(!function_exists('input')){
     function input($key, $value=null){
-        return default_key_value($_GET, $key, $value);
+        $data = default_key_value($_POST, $key);
+        $data === null && $data = default_key_value($_GET, $key, $value);
+        if($data === ''){
+            $data = $value;
+        }
+        return $data;
     }   
 }
 

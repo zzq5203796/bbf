@@ -62,11 +62,14 @@ class Zip
         } else {
             $content = read("../$file.$ext");
             $content = '/* '.$file.' */; '.$this->parse_js_content($content);
-            if ($option['time']) {
-                $content = '/* ' . date("Y-m-d H:i:s") . " */\r\n" . $content;
-            }
         }
         if (!isset($option['write']) || $option['write']) {
+            $now = date("Y-m-d H:i:s");
+            $content = ";var version='$now';$content";
+            if ($option['time']) {
+                $content = '/* ' . $now . " */\r\n" . $content;
+            }
+
             write($this->path."$file.min.$ext", $content);
         }
         return $content;

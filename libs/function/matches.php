@@ -41,7 +41,7 @@ function m_get_first_tag_dom($str, $tag = "div", $dom = "", $first = false) {
 // 获取 《选择器》 类型、正则表达式内容
 function m_get_dom_pattern($dom, $pattern=true){
     $top = substr($dom, 0, 1);
-    $arr = explode(":", $top);
+    $arr = explode(":", $dom);
     $type = "";
     $pa = "[\'\"]{1}";
     if (in_array($top, [".", "#"])) {
@@ -54,6 +54,11 @@ function m_get_dom_pattern($dom, $pattern=true){
     $dom !== "" && $dom.".*?";
 
     return $pattern? $dom: $type;
+}
+function m_get_tag_dom_pattern($tag, $dom=''){
+    $dom = m_get_dom_pattern($dom);
+    $pattern = "/<$tag.*?$dom>(.*?)<\/$tag>/is";
+    return $pattern;
 }
 
 //清除字符串两边空格 等空白字符

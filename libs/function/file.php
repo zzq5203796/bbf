@@ -1,5 +1,51 @@
 <?php
 
+function get_menu($opts=[], $extra=[]){
+    $menu = json_decode(file_get_contents(root_dir().'/data/menu.json'), true);
+    $menu_t = file_get_contents(root_dir() . '/menu.json');
+    $menu_t = empty($menu_t)? ['menu' => [], 'dir' => []]: json_decode($menu_t, true);
+    $tree = $menu['menu'];
+    $dirs = $menu['dir'];
+    foreach ($menu_t['dir'] as $key => $vo) {
+        $name = is_numeric($key)? $vo: $key;
+        foreach ($dirs as $k1 => $v1) {
+            $name1 = is_numeric($k1)? $v1: $k1;
+            if(empty($dirs[$name])){
+                $dirs[$name] = $vo;
+            }
+        }
+    }
+
+    foreach ($menu['dir'] as $key => $value) {
+        if ($action == $key || $action == $value) {
+            $dirs = [$key => $value];
+            break;
+        }
+    }
+    $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
+    if(empty($opts['read_dir'])){
+        $tree[] = $dirs;
+    }else{
+        readdirs($tree, $dirs);
+    }
+    return $tree;
+}
+
+
+function readdirs(&$tree, $dirs){
+    foreach ($dirs as $key => $name) {
+        if(is_array($name)){
+            $dir_tree = [];
+            readdirs($dir_tree, $name);
+            $tree[] = dir_tree_item($key, $key, $dir_tree);
+        }else{
+            $dir = is_numeric($key)? $name: $key;
+            $dir_tree = get_dir_tree($dir, ['js', 'css']);
+            $tree[] = dir_tree_item($key, $name, $dir_tree);
+        }
+    }
+}
+
 /**
  * 获取文件夹里面所有文件
  * @param $dir_t
@@ -99,7 +145,7 @@ function create_dir($file, $num = 0) {
 function write($file, $data, $mode = "w") {
     $file = root_dir() . "runtime/" . $file;
     create_dir($file);
-    $myfile = fopen($file, $mode) or die("Unable to open file! $file");
+    $myfile = @fopen($file, $mode) or die("Unable to open file! $file");
     fwrite($myfile, $data);
     fclose($myfile);
 }
@@ -109,7 +155,7 @@ function read($file, $mode = "r", $opt = []) {
     if (!file_exists($file)) {
         return false;
     }
-    $myfile = fopen($file, $mode);
+    $myfile = @fopen($file, $mode);
     if ($myfile === false) {
         return false;
     }
@@ -121,6 +167,18 @@ function read($file, $mode = "r", $opt = []) {
     } else {
         $data = $content;
     }
+    return $data;
+}
+
+function auth($file){
+    if(!file_exists($file)){
+        return false;
+    }
+    $data = [
+        'is_dir' =>is_dir($file),
+        'r' => is_readable($file),
+        'w' => is_writable($file)
+    ];
     return $data;
 }
 

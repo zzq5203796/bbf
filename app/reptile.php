@@ -8,7 +8,35 @@ class Reptile
     }
 
     public function index() {
+        form([
+            ['link', '链接', 'text', '', []],
+            ['tag', '标签', 'text', '', []],
+            ['attr', '属性', 'text', '', []],
+            ['attr_value', '属性值', 'text', '', []],
+        ]);
+        $url = input('link', '');
+        if(empty($url)){
+            return;
+        }
+        $tag = input('tag', 'body');
+        $attr = input('attr', '');
+        $attr_value = input('attr_value', '');
 
+        $pattern = m_get_tag_dom_pattern($tag, "$attr:$attr_value");
+
+        $html = curl_get($url);
+        // view("table", ['fields' => ]);
+        if (!$html) {
+            show_msg("未不到目标.");
+            return false;
+        }
+        show_msg("链接:".$url, 1, 0);
+        show_msg("规则:".$pattern, 1, 0);
+
+        show_msg("已找到目标，处理结果如下.");
+        preg_match_all($pattern, $html, $matches);
+        $match = $matches[1][0];
+        dump($match);
     }
 
     private function get_xuange_url() {
