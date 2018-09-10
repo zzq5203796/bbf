@@ -53,7 +53,7 @@ $extra = $extra? $extra: [];
 $extra = array_merge($extra, ['js', 'css', 'fonts', 'font', 'md', 'ss']);
 readdirs($tree, $dirs);
 
-if ($_GET['is_ajax']) {
+if (IS_AJAX) {
     echo json_encode(['status' => 1, 'msg' => 'success', 'data' => $tree]);
     return;
 }
