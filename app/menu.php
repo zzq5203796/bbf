@@ -24,6 +24,7 @@ class Menu
         ];
         $data = $menu;
         view("tree-form", ["fields" => $fields, 'data' => $data]);
+        dump($_POST);
     }
 
 }

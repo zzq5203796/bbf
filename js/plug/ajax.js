@@ -64,6 +64,7 @@ _ajax = (function () {
 
         function success(res) {
             log(res);
+            sound("success");
             var code = res.status;
             if (code != 1) {
                 option.error(res.msg, res);
@@ -79,6 +80,7 @@ _ajax = (function () {
 
         function error(msg) {
             showMsg(msg);
+            sound("eorror");
         }
     };
     return that;

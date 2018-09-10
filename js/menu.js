@@ -286,3 +286,4 @@ _menu.init();
 function getAutoData(name, value, new_value) {
     return name ? (new_value ? new_value : name) : value;
 }
+sound("start");

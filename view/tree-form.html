@@ -36,6 +36,7 @@
 <?php } ?>
 <div class="form-box">
     <form action='' method='post'>
+        <div> <input type="submit" value="sub" /></div>
         <table>
             <thead>
             <tr>
@@ -58,11 +59,13 @@ function _tree_show($tree, $fields, $num=0){
     foreach($tree as $key => $item){
 ?>
 <tr>
-    <td></td>
+    <td>
+        <input name="id[]" type="text" value="<?php echo $key; ?>" />
+    </td>
     <?php foreach($fields as $key1 => $field){ ?>
     <td>
         <?php if($key1 == 0) echo get_space($num*4); ?> 
-        <input name="<?php echo $field[0]; ?>" type="text" value="<?php echo $item[$field[0]]; ?>" />
+        <input name="<?php echo $field[0]; ?>[]" type="text" value="<?php echo $item[$field[0]]; ?>" />
     </td>
     <?php } ?>
 </tr>

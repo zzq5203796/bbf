@@ -42,6 +42,7 @@ class Zip
                 "js/plug/store",
                 "js/plug/string",
                 "js/plug/tabs",
+                "js/plug/sound",
             ],
         ];
         foreach ($data as $vo) {
