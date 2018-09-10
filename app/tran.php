@@ -12,7 +12,6 @@ namespace app;
 class Crypt
 {
     public function index() {
-        show_icon('密');
         form([
             ['keword', '加密内容', 'text', '12345678', []],
             ['key', '秘钥', 'text', 'ABCDEFF', []],

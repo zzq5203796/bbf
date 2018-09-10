@@ -99,7 +99,12 @@ function default_empty_value($data, $key='', $value=null){
 
 if(!function_exists('input')){
     function input($key, $value=null){
-        return default_key_value($_GET, $key, $value);
+        $data = default_key_value($_POST, $key);
+        $data === null && $data = default_key_value($_GET, $key, $value);
+        if($data === ''){
+            $data = $value;
+        }
+        return $data;
     }   
 }
 
@@ -124,7 +129,6 @@ function des_encrypt($encrypt, $key="")
  * @param $decrypt string 密文
  * @return string 明文
  */
-
 function des_decrypt($decrypt, $key="")
 {
     empty($key) && $key=read("../data/auto.key", "r");

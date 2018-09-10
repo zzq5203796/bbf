@@ -1,3 +1,8 @@
+_config = {
+    debug: true,
+    level: 0,
+};
+
 $(".sort").click(function () {
     var box = $(".menu-text.active").parent().parent(),
         sort_status = $(this).hasClass("desc") ? 1 : ($(this).hasClass("asc") ? 2 : 0);
@@ -47,15 +52,6 @@ $(".change-back").on('change', function (e) {
     $("#con")[data.toggle]();
     data.fun();
 });
-
-function showMsg(msg) {
-    layer.msg(lang.get(msg));
-}
-
-function log(data, level) {
-    level = level ? level : 0;
-    console.log(data, level);
-}
 
 function autorequires() {
     require('plug/*');

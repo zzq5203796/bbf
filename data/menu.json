@@ -66,6 +66,12 @@
       "hide": true,
       "child": [
         {
+          "name": "快输检测",
+          "url": "/reptile/index",
+          "hide": true,
+          "child": []
+        },
+        {
           "name": "爱读书",
           "url": "/template/book.html",
           "hide": true,
@@ -90,7 +96,42 @@
           "child": []
         }
       ]
+    },
+    
+    {
+      "name": "管理中心",
+      "url": "#",
+      "child": [
+        {
+          "name": "设置",
+          "url": "#",
+          "hide": true,
+          "child": [
+            {
+              "name": "hosts",
+              "url": "/setting/hosts"
+            }
+          ]
+        },
+        {
+          "name": "密钥设置",
+          "url": "/crypt",
+          "hide": true
+        },
+        {
+          "name": "菜单管理",
+          "url": "/menu",
+          "hide": true
+        },
+        {
+          "name": "用户",
+          "url": "/user",
+          "hide": true
+        }
+      ]
     }
+      
+    
   ],
   "dir": {
     "template": "模板"

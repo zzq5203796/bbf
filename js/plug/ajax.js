@@ -55,7 +55,7 @@ _ajax = (function () {
             success: success,
             error: (function (option) {
                 return function (xhr, status, error) {
-                    log([xhr, status, error], 5);
+                    log([xhr, status, error], 10);
                     option.error("require error.");
                 }
             })(option),

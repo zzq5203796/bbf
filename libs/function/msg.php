@@ -398,24 +398,39 @@ function cli_input($title) {
     return trim($value);
 }
 
-function progress_bar($num, $max = 500, $type = 0) {
+function progress_bar($num, $max = 500, $opt = []) {
     global $progressNum;
+    $opt = array_merge(['id'=>0], $opt);
+    $id = $opt['id'];
     $is_new = empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR';
+    $progressNum++;
+    $num = $num > $max? $max: $num;
+
+    $tem = 50; // 清空间隔
+    $is_end = $num == $max; // 是否结束
+
+    $maxLen = 0.001; // 精确位
+    $value = (ceil($num / $max / $maxLen * 100) * $maxLen) . "%";
+
+    $data = [
+        'id'=> $id, 
+        'is_new' => $is_new, 
+        'type' => "create", 
+        'value' => $value, 
+        'clear' => ($progressNum % $tem == 0), 
+        'end' => $is_end, 'opt' => $opt
+    ];
+
     if ($is_new) {
         ob_start();
         define(PROGRESS_BAR, true);
         header("Content-Encoding: none\r\n");
-        view("progress", ['is_new' => $is_new, 'type' => "create"]);
+        view("progress", $data);
+    }else{
+        $data['type'] = "push";
+        view("progress", $data);
     }
-    $progressNum++;
-    $maxLen = 10000;
-    $num = $num > $max? $max: $num;
-    $num = ceil($num / $max * $maxLen);
 
-    $tem = 50;
-    $is_end = $num == $max;
-
-    view("progress", ['is_new' => $is_new, 'type' => "push", 'value' => ($num / $maxLen * 100 . "%"), 'clear' => ($progressNum % $tem == 0), 'end' => $is_end]);
     echo str_repeat(" ", 1024 * 64);
     ob_flush();
     flush();
@@ -424,3 +439,6 @@ function progress_bar($num, $max = 500, $type = 0) {
     }
 }
 
+function show_icon($str){
+    echo '<link rel="shortcut icon" href="/runtime/img/'.$str.'.png">';
+}

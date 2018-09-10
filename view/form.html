@@ -4,8 +4,11 @@
     case 'mdn':
         view("../template/demo/mdn/demo", []);
         break;
-    default:
+    case 'sky':
         view("bg/sky/index", []);
+        break;
+    default:
+        // 
         break;
     }
 
@@ -25,12 +28,10 @@
     body {
         max-width: 1190px;
         margin: 0 auto;
-        width: 80%;
+        width: 95%;
         min-width: 500px;
         min-height: 280px;
         padding: 8px;
-        background: #ffffff11;
-        color: #fff;
     }
 
     .form-box {

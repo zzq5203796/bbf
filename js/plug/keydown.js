@@ -68,7 +68,7 @@ function group_key(e) {
         altKey: 18,
     };
     this.checkKey = function (data) {
-        console.log(code);
+        // console.log(code);
         for (var i in data) {
             if (e[i] && code == data[i]) {
                 return true;

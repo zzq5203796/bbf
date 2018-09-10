@@ -38,10 +38,10 @@ class Image
         $name = input("name", "竹");
 
         $data = str_split_utf8($name);
-        $file = "runtime/img/img_";
+        $file = "runtime/img/";
         create_dir(root_dir() . $file);
         foreach ($data as $key => $vo) {
-            $this->buildImage($vo, $file . $key);
+            $this->buildImage($vo, $file . $vo);
             show_msg("create $vo.",1,0);
         }
     }
@@ -77,8 +77,9 @@ class Image
         $fontsize = 140;
         $offsetx = $radius / 2 - $fontsize / 4 * (8 / 3);
         $offsety = $radius / 2 + $fontsize / 4 * (5.4 / 3);
-        imagettftext($myImage, $fontsize, 0, $offsetx, $offsety, $textcolor, "../css/regular.ttf", $content);
-        imagepng($myImage, "../$file.png");
+        $ttf = root_dir()."/css/regular.ttf";
+        imagettftext($myImage, $fontsize, 0, $offsetx, $offsety, $textcolor, $ttf, $content);
+        imagepng($myImage, root_dir()."/$file.png");
 
         echo '<style>body{background: #999;}</style><img src="/' . $file . '.png" />' . get_br();
     }

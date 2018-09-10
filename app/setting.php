@@ -47,4 +47,9 @@ class Setting
         return $str;
     }
 
+    //
+    public function hosts(){
+        include "host.php";
+    }
+
 }
