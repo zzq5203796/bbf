@@ -1,5 +1,9 @@
 $(".win-min-btn").on('click', function(){
-    $(this).parent().next().toggle();
+    $(this).toggleClass("icon-narrow");
+    $(this).parents(".win-nav").next().toggle();
+});
+$(".win-close-btn").on('click', function(){
+    $(this).parents(".win-box").hide();
 });
 function runscroll() {
     var obj = $(".run-scroll");

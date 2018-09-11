@@ -384,13 +384,23 @@ td {
 
 .win-nav{
     background: #c5c5c5;
-    padding: 6px 3px;
+    padding: 0px 3px;
     box-sizing: border-box;
     height: 28px;
+    line-height: 28px;
+}
+.win-nav-right-btn{
+    position: absolute;
+    right: 7px;
+    top: 0px;
+    height: 28px;
+    line-height: 28px;
 }
 .win-min-btn{
     width: 20px;
-    border: 1px solid #eee;
+}
+.win-close-btn{
+    width: 20px;
 }
 .win-main{
     padding: 0 2px;

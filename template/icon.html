@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>千里之行，屎于足下</title>
+    <link rel="shortcut icon" href="/runtime/img/竹.png">
+    <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
+    <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
+    <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
+</head>
+<style>
+    .box {
+
+    }
+
+    .item {
+        float: left;
+        width: 100px;
+        margin: 4px;
+        background: #fafafa;
+        text-align: center;
+        padding: 10px 0 0 0;
+    }
+
+    .item .iconfont {
+        font-size: 32px;
+        padding-bottom: 6px;
+    }
+
+    .item p {
+        padding: 4px 0;
+        height: 28px;
+    }
+
+</style>
+<body>
+<div style="max-width: 960px; margin:0 auto;">
+    <div class="item">
+        <i class="iconfont icon-cuowu"></i>
+        <p>icon-cuowu</p>
+        <p>\e641</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-erweima"></i>
+        <p>icon-erweima</p>
+        <p>\e642</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-lajixiang"></i>
+        <p>icon-lajixiang</p>
+        <p>\e645</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-lianjie"></i>
+        <p>icon-lianjie</p>
+        <p>\e646</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shangfan"></i>
+        <p>icon-shangfan</p>
+        <p>\e64a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shezhi"></i>
+        <p>icon-shezhi</p>
+        <p>\e64b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shouhuodizhi"></i>
+        <p>icon-shouhuodizhi</p>
+        <p>\e64e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shouye"></i>
+        <p>icon-shouye</p>
+        <p>\e64f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shuaxin"></i>
+        <p>icon-shuaxin</p>
+        <p>\e650</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-sousuo"></i>
+        <p>icon-sousuo</p>
+        <p>\e651</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-suo"></i>
+        <p>icon-suo</p>
+        <p>\e652</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-tishi"></i>
+        <p>icon-tishi</p>
+        <p>\e653</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-wancheng"></i>
+        <p>icon-wancheng</p>
+        <p>\e654</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-wodedingdan"></i>
+        <p>icon-wodedingdan</p>
+        <p>\e655</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiafan"></i>
+        <p>icon-xiafan</p>
+        <p>\e65b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiala"></i>
+        <p>icon-xiala</p>
+        <p>\e65c</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiangshangjiantou"></i>
+        <p>icon-xiangshangjiantou</p>
+        <p>\e65d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiangxiajiantou"></i>
+        <p>icon-xiangxiajiantou</p>
+        <p>\e65e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiangyoujiantou"></i>
+        <p>icon-xiangyoujiantou</p>
+        <p>\e65f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiangzuojiantou"></i>
+        <p>icon-xiangzuojiantou</p>
+        <p>\e660</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-yijianfankui"></i>
+        <p>icon-yijianfankui</p>
+        <p>\e662</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-zhengque"></i>
+        <p>icon-zhengque</p>
+        <p>\e664</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiaoxizhongxin"></i>
+        <p>icon-xiaoxizhongxin</p>
+        <p>\e665</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-new"></i>
+        <p>icon-new</p>
+        <p>\e667</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-liwu"></i>
+        <p>icon-liwu</p>
+        <p>\e685</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-fanhui"></i>
+        <p>icon-fanhui</p>
+        <p>\f0343</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-gengduo"></i>
+        <p>icon-gengduo</p>
+        <p>\f0344</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shangjiantou"></i>
+        <p>icon-shangjiantou</p>
+        <p>\f034d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-xiajiantou"></i>
+        <p>icon-xiajiantou</p>
+        <p>\f034e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-youjiantou"></i>
+        <p>icon-youjiantou</p>
+        <p>\f034f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-zuojiantou"></i>
+        <p>icon-zuojiantou</p>
+        <p>\f0350</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-accessory"></i>
+        <p>icon-accessory</p>
+        <p>\e6dd</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-activity"></i>
+        <p>icon-activity</p>
+        <p>\e6de</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-activity_fill"></i>
+        <p>icon-activity_fill</p>
+        <p>\e6df</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-add"></i>
+        <p>icon-add</p>
+        <p>\e6e0</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addition_fill"></i>
+        <p>icon-addition_fill</p>
+        <p>\e6e1</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addition"></i>
+        <p>icon-addition</p>
+        <p>\e6e2</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addpeople_fill"></i>
+        <p>icon-addpeople_fill</p>
+        <p>\e6e3</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addpeople"></i>
+        <p>icon-addpeople</p>
+        <p>\e6e4</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addressbook_fill"></i>
+        <p>icon-addressbook_fill</p>
+        <p>\e6e5</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-addressbook"></i>
+        <p>icon-addressbook</p>
+        <p>\e6e6</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-barrage_fill"></i>
+        <p>icon-barrage_fill</p>
+        <p>\e6e7</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-barrage"></i>
+        <p>icon-barrage</p>
+        <p>\e6e8</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-businesscard_fill"></i>
+        <p>icon-businesscard_fill</p>
+        <p>\e6e9</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-businesscard"></i>
+        <p>icon-businesscard</p>
+        <p>\e6ea</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-clock_fill"></i>
+        <p>icon-clock_fill</p>
+        <p>\e6eb</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-clock"></i>
+        <p>icon-clock</p>
+        <p>\e6ec</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-close"></i>
+        <p>icon-close</p>
+        <p>\e6ed</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-collection_fill"></i>
+        <p>icon-collection_fill</p>
+        <p>\e6ee</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-collection"></i>
+        <p>icon-collection</p>
+        <p>\e6ef</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-delete_fill"></i>
+        <p>icon-delete_fill</p>
+        <p>\e6f2</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-delete"></i>
+        <p>icon-delete</p>
+        <p>\e6f3</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-document"></i>
+        <p>icon-document</p>
+        <p>\e6f4</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-document_fill"></i>
+        <p>icon-document_fill</p>
+        <p>\e6f5</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-editor"></i>
+        <p>icon-editor</p>
+        <p>\e6f6</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-empty"></i>
+        <p>icon-empty</p>
+        <p>\e6f7</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-empty_fill"></i>
+        <p>icon-empty_fill</p>
+        <p>\e6f8</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-enter"></i>
+        <p>icon-enter</p>
+        <p>\e6f9</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-enterinto"></i>
+        <p>icon-enterinto</p>
+        <p>\e6fa</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-enterinto_fill"></i>
+        <p>icon-enterinto_fill</p>
+        <p>\e6fb</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-flag_fill"></i>
+        <p>icon-flag_fill</p>
+        <p>\e6fc</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-flag"></i>
+        <p>icon-flag</p>
+        <p>\e6fd</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-fullscreen"></i>
+        <p>icon-fullscreen</p>
+        <p>\e6fe</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-group"></i>
+        <p>icon-group</p>
+        <p>\e6ff</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-group_fill"></i>
+        <p>icon-group_fill</p>
+        <p>\e700</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-homepage_fill"></i>
+        <p>icon-homepage_fill</p>
+        <p>\e702</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-homepage"></i>
+        <p>icon-homepage</p>
+        <p>\e703</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-like_fill"></i>
+        <p>icon-like_fill</p>
+        <p>\e707</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-like"></i>
+        <p>icon-like</p>
+        <p>\e708</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-lock_fill"></i>
+        <p>icon-lock_fill</p>
+        <p>\e709</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-lock"></i>
+        <p>icon-lock</p>
+        <p>\e70a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-mail"></i>
+        <p>icon-mail</p>
+        <p>\e70b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-mail_fill"></i>
+        <p>icon-mail_fill</p>
+        <p>\e70c</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-manage_fill"></i>
+        <p>icon-manage_fill</p>
+        <p>\e70d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-manage"></i>
+        <p>icon-manage</p>
+        <p>\e70e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-message"></i>
+        <p>icon-message</p>
+        <p>\e70f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-message_fill"></i>
+        <p>icon-message_fill</p>
+        <p>\e710</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-mine"></i>
+        <p>icon-mine</p>
+        <p>\e711</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-mine_fill"></i>
+        <p>icon-mine_fill</p>
+        <p>\e712</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-more"></i>
+        <p>icon-more</p>
+        <p>\e713</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-narrow"></i>
+        <p>icon-narrow</p>
+        <p>\e714</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-offline_fill"></i>
+        <p>icon-offline_fill</p>
+        <p>\e715</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-offline"></i>
+        <p>icon-offline</p>
+        <p>\e716</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-order_fill"></i>
+        <p>icon-order_fill</p>
+        <p>\e717</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-order"></i>
+        <p>icon-order</p>
+        <p>\e718</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-other"></i>
+        <p>icon-other</p>
+        <p>\e719</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-picture_fill"></i>
+        <p>icon-picture_fill</p>
+        <p>\e71a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-picture"></i>
+        <p>icon-picture</p>
+        <p>\e71b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-play"></i>
+        <p>icon-play</p>
+        <p>\e71c</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-play_fill"></i>
+        <p>icon-play_fill</p>
+        <p>\e71d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-praise_fill"></i>
+        <p>icon-praise_fill</p>
+        <p>\e71e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-praise"></i>
+        <p>icon-praise</p>
+        <p>\e71f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-qrcode_fill"></i>
+        <p>icon-qrcode_fill</p>
+        <p>\e720</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-qrcode"></i>
+        <p>icon-qrcode</p>
+        <p>\e721</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-refresh"></i>
+        <p>icon-refresh</p>
+        <p>\e722</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-remind_fill"></i>
+        <p>icon-remind_fill</p>
+        <p>\e723</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-remind"></i>
+        <p>icon-remind</p>
+        <p>\e724</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-return"></i>
+        <p>icon-return</p>
+        <p>\e725</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-right"></i>
+        <p>icon-right</p>
+        <p>\e726</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-scan"></i>
+        <p>icon-scan</p>
+        <p>\e727</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-send"></i>
+        <p>icon-send</p>
+        <p>\e728</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-setup_fill"></i>
+        <p>icon-setup_fill</p>
+        <p>\e729</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-setup"></i>
+        <p>icon-setup</p>
+        <p>\e72a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-share_fill"></i>
+        <p>icon-share_fill</p>
+        <p>\e72b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-share"></i>
+        <p>icon-share</p>
+        <p>\e72c</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-smallscreen_fill"></i>
+        <p>icon-smallscreen_fill</p>
+        <p>\e72d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-smallscreen"></i>
+        <p>icon-smallscreen</p>
+        <p>\e72e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-success_fill"></i>
+        <p>icon-success_fill</p>
+        <p>\e72f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-success"></i>
+        <p>icon-success</p>
+        <p>\e730</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-switch"></i>
+        <p>icon-switch</p>
+        <p>\e731</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-systemprompt_fill"></i>
+        <p>icon-systemprompt_fill</p>
+        <p>\e732</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-systemprompt"></i>
+        <p>icon-systemprompt</p>
+        <p>\e733</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-tailor"></i>
+        <p>icon-tailor</p>
+        <p>\e734</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-text"></i>
+        <p>icon-text</p>
+        <p>\e735</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-time_fill"></i>
+        <p>icon-time_fill</p>
+        <p>\e736</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-time"></i>
+        <p>icon-time</p>
+        <p>\e737</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-translation_fill"></i>
+        <p>icon-translation_fill</p>
+        <p>\e738</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-translation"></i>
+        <p>icon-translation</p>
+        <p>\e739</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-trash"></i>
+        <p>icon-trash</p>
+        <p>\e73a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-trash_fill"></i>
+        <p>icon-trash_fill</p>
+        <p>\e73b</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-undo"></i>
+        <p>icon-undo</p>
+        <p>\e73c</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-unlock_fill"></i>
+        <p>icon-unlock_fill</p>
+        <p>\e73d</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-unlock"></i>
+        <p>icon-unlock</p>
+        <p>\e73e</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-warning_fill"></i>
+        <p>icon-warning_fill</p>
+        <p>\e73f</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-warning"></i>
+        <p>icon-warning</p>
+        <p>\e740</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-publishgoods_fill"></i>
+        <p>icon-publishgoods_fill</p>
+        <p>\e746</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-shop_fill"></i>
+        <p>icon-shop_fill</p>
+        <p>\e747</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-transaction_fill"></i>
+        <p>icon-transaction_fill</p>
+        <p>\e748</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-packup"></i>
+        <p>icon-packup</p>
+        <p>\e749</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-unfold"></i>
+        <p>icon-unfold</p>
+        <p>\e74a</p>
+    </div>
+    <div class="item">
+        <i class="iconfont icon-financial_fill"></i>
+        <p>icon-financial_fill</p>
+        <p>\e74b</p>
+    </div>
+</div>
+</body>
+<script type="application/javascript">
+    // window.entryJS = "/js/menu.js";
+</script>
+</html>
