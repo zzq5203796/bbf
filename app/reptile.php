@@ -54,7 +54,17 @@ class Reptile
         $keyLen = 26;
         $maxLength = 6;
         $res = false;
-        for($k=0; $k < 1000000; $k++){
+        $mode = "manhua";
+        $key = "char";
+        $data = mode_locks($key, $mode);
+        $start = 0;
+        if(!empty($data)){
+            $data = json_decode($data, true);
+            if($data['url'] == $url){
+                $start = $data['num'];
+            }
+        }
+        for($k=$start; $k < 1000000; $k++){
             $str = '';
             $num = $k;
             for($i=0; $i < $maxLength; $i++){
@@ -65,6 +75,8 @@ class Reptile
             $uri = $url."_".$str;
             $res = curl_file($uri, $path, "File not found.", "jpg");
 
+
+            mode_locks($key, $mode, json_encode(['url' => $url, 'num' => $k]));
             if($k%100 == 0){
                 progress_bar($k, 1000000, [
                     'msg' => substr($uri, 36) . " - " . ($res?'ok':'fail'), 
@@ -91,7 +103,7 @@ class Reptile
     public function md5(){
         // http://resources.tongyinet.com/img2/p_1121593_549610
         //p_1121593_549610
-        $str = "549610";
+        $str = "p_113347";
         show_msg(md5($str));
     }
     public function test(){
@@ -124,6 +136,40 @@ class Reptile
     }
 
 
+    public function seetest() {
+        show_icon('画'); //1121315
+        $page = input("page");
+        $c = input("c");
+        $temp = input("temp", 1);
+        $temp = $temp > 0? $temp: 1;
+        form([
+            ['page', '页码', 'text', '', []],
+            ['c', 'c', 'text', '', []],
+            ['temp', '间隔', 'text', $temp, []],
+        ]);
+        if (!is_numeric($page) || $page < 0 || $page > 999999) {
+            show_msg("页码必须为 0-999999 的 整数", 1, 0);
+            return;
+        }
+        $num = 1000000 + $page; // 48986
+        $url = $this->get_xuange_url();
+        $data = [];
+        $max = $temp==1? 50: 400;
+        if($c){
+
+        }
+        for ($i = 0; $i < $max; $i++) {
+            $uri = $url . $num;
+            $data[] = [
+                'url' => $uri,
+                'num' => substr($num,0, 3). " " . substr($num,3),
+                'i' => $i
+            ];
+            $num += $temp;
+        }
+        view('imgbox', $data);
+    }
+
     public function see() {
         show_icon('画'); //1121315
         $page = input("page");
@@ -137,8 +183,8 @@ class Reptile
             show_msg("页码必须为 0-999999 的 整数", 1, 0);
             return;
         }
-        $num = 48986 + $page; // 48986
-        $url = $this->get_xuange_url()."1121315_c";
+        $num = 1000000 + $page; // 48986
+        $url = $this->get_xuange_url();
         $data = [];
         $max = $temp==1? 50: 400;
         for ($i = 0; $i < $max; $i++) {

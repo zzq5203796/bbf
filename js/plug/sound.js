@@ -1,11 +1,53 @@
-
-var _sound = {
-	path: "/public/sound/"
-};
 function sound(type) {
-	var data = {
-		error: ["error", "fail-mali"]
-	};
-	audio=new Audio(_sound.path+"fail-mali.mp3");//路径
-	audio.play();
+	_sound.play(type);
 }
+
+_sound = {
+	data: {
+		error: ["error", "fail-mali",
+			"gitign/fail-aa",
+			"gitign/fail-bi",
+			"gitign/fail-game",
+			"gitign/error",
+		],
+		success: [
+			"gitign/victory-zhadan",
+			"gitign/true",
+			"gitign/true-answay",
+		],
+		warring: [
+			"gitign/warring-dudu",
+			"gitign/warring-jingbao",
+		],
+		auto: ["error", "fail-mali"],
+	},
+	path: "/public/sound/",
+	palyData: [],
+	init: function(){
+
+	},
+	getValue: function(type){
+		type = this.data[type]? this.data[type]: this.data.auto;
+		type = type[randomNum(0, type.length-1)];
+		return type;
+	},
+	play: function(type){
+		type = this.getValue(type);
+		audio=new Audio(_sound.path+type+".mp3");//路径
+		audio.play();
+		this.palyData.push(audio);
+	}
+};
+function randomNum(minNum,maxNum){ 
+    switch(arguments.length){ 
+        case 1: 
+            return parseInt(Math.random()*minNum+1,10); 
+        break; 
+        case 2: 
+            return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
+        break; 
+            default: 
+                return 0; 
+            break; 
+    } 
+} 

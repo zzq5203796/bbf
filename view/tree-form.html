@@ -40,14 +40,37 @@
         <table>
             <thead>
             <tr>
-            <td></td>
+            <td width="30px"></td>
             <?php foreach($fields['fields'] as $field){ ?>
             <td><?php echo $field[1]; ?></td>
             <?php } ?>
+            <td width="100px"></td>
             </tr>
             </thead>
             <tbody>
-                <?php _tree_show($fields['data'], $fields['fields']); ?>
+            <?php 
+            $tree = $fields['data'];
+            $fields = $fields['fields'];
+            foreach($tree as $item){ ?>
+            <tr>
+                <td>
+                    <?php echo $item['id']; ?>
+                    <input name="tree[id][]" type="hidden" value="<?php echo $item['id']; ?>" />
+                    <input name="tree[pid][]" type="hidden" value="<?php echo $item['pid']; ?>" />
+                </td>
+                <?php foreach($fields as $key1 => $field){ ?>
+                <td>
+                    <?php if($key1 == 0) echo get_space($item['level']*4); ?> 
+                    <input name="tree[<?php echo $field[0]; ?>][]" type="text" value="<?php echo $item[$field[0]]; ?>" />
+                </td>
+                <?php } ?>
+                <td>
+                    <a>add</a>
+                    <a onclick="$(this).parents('tr').remove();">del</a>
+                    <a>save</a>
+                </td>
+            </tr>
+            <?php } ?>
             </tbody>
         </table>
     </form>
