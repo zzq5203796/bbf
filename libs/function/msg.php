@@ -400,8 +400,8 @@ function cli_input($title) {
 
 function progress_bar($num, $max = 500, $opt = []) {
     global $progressNum;
-    $opt = array_merge(['id'=>0], $opt);
-    $id = $opt['id'];
+    $id = default_empty_value($opt, 'id', 0);
+
     $is_new = empty(PROGRESS_BAR) || PROGRESS_BAR === 'PROGRESS_BAR';
     $progressNum++;
     $num = $num > $max? $max: $num;
@@ -412,14 +412,16 @@ function progress_bar($num, $max = 500, $opt = []) {
     $maxLen = 0.001; // 精确位
     $value = (ceil($num / $max / $maxLen * 100) * $maxLen) . "%";
 
-    $data = [
+    $data = array_merge($opt, [
         'id'=> $id, 
         'is_new' => $is_new, 
         'type' => "create", 
         'value' => $value, 
+        'num' => $num, 
+        'max' => $max, 
         'clear' => ($progressNum % $tem == 0), 
-        'end' => $is_end, 'opt' => $opt
-    ];
+        'end' => $is_end
+    ]);
 
     if ($is_new) {
         ob_start();
@@ -434,7 +436,7 @@ function progress_bar($num, $max = 500, $opt = []) {
     echo str_repeat(" ", 1024 * 64);
     ob_flush();
     flush();
-    if ($is_end) {
+    if ($is_end && $id===0) {
         ob_end_flush();//输出并关闭缓冲
     }
 }

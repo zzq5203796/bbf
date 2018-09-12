@@ -34,7 +34,7 @@ class Test
         <i class=\"iconfont icon-$vo\"></i>
         <p>icon-$vo</p>
         <p>$char</p>
-    </div>";
+        </div>";
         }
         dump($res);
     }

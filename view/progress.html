@@ -32,7 +32,7 @@
             padding-left: 5px;
         }
 
-        .progress-bar-box .progress-bar #progress-jump {
+        .progress-bar-box .progress-bar .progress-jump {
             background: #0000FF;
             width: 1px;
             height: 100%;
@@ -54,17 +54,27 @@
         .progress-info .msg, .progress-msg .msg{
             padding-left: 10px;
         }
+        .progress-bar-box .progress-bar-other{
+            width: 100%;
+            height: auto;
+        }
+        .progress-bar-other .progress-bar-box{
+            margin: 10px 0;
+        }
     </style>
     <?php }else{ echo '</div>';/*todo*/} ?>
     <div class="progress-bar-box">
         <div id="progress-lable" class="progress-lable">
-            <?php echo default_empty_value($fields['opt'], 'title', "进度"); ?>
+            <?php echo default_empty_value($fields, 'title', "进度"); ?>
         </div>
         <div class="progress-bar">
             <div id="progress-jump" class="progress-jump"></div>
         </div>
         <div id="progress-num" class="progress-num"></div>
         <div class="line"></div>
+
+        <div id="progress-bar-other" class="progress-bar-other">
+        </div>
 
         <?php if($fields['is_new']){ ?>
         <div  class="progress-msg"> 
@@ -79,41 +89,63 @@
         <?php } ?>
     </div>
 
-    <script type="text/jscript">
-        var PROGRESS = {
-            info: document.getElementById("progress-info"),
-            msg: document.getElementById("progress-msg"),
-            jump: document.getElementById("progress-jump"),
-            num: document.getElementById("progress-num"),
-        };
-        function show_ob(value, opt){
-            PROGRESS.jump.style.width = value;
-            PROGRESS.num.innerHTML = value;
+<script type="text/jscript">
+    var PROGRESS={}, opt = <?php echo json_encode($fields); ?>;
+    PROGRESS[opt.id] = {
+        info: document.getElementById("progress-info"),
+        msg: document.getElementById("progress-msg"),
+        jump: document.getElementById("progress-jump"),
+        num: document.getElementById("progress-num"),
+    };
+    function show_ob(value, opt){
+        PROGRESS[opt.id].jump.style.width = value;
+        PROGRESS[opt.id].num.innerHTML = value;
+        if(opt.msg) 
+            appendDom(PROGRESS[opt.id].msg, opt.msg);
 
-            if(opt.msg) 
-                appendDom(PROGRESS.msg, opt.msg);
+        if(opt.info)
+            appendDom(PROGRESS[opt.id].info, opt.info);
+    }
+    function appendDom(OBJ, text){
+        var newItem=document.createElement("div");
+        var textnode=document.createTextNode(text);
+        newItem.appendChild(textnode);
 
-            if(opt.info)
-                appendDom(PROGRESS.info, opt.info);
+        OBJ.appendChild(newItem);
+        if(OBJ.childNodes.length > 10){
+            OBJ.removeChild(OBJ.childNodes[0])
         }
-        function appendDom(OBJ, text){
-            var newItem=document.createElement("div");
-            var textnode=document.createTextNode(text);
-            newItem.appendChild(textnode);
+    }
+    function addBar(opt){
+        var str = '<div class="progress-bar-box">'
+            +'<div id="progress-lable-'+opt.id+'" class="progress-lable">'
+            + (opt.title? opt.title: '进度')
+            +'</div>'
+            +'<div class="progress-bar"><div id="progress-jump-' + opt.id + '" class="progress-jump"></div></div>'
+            +'<div id="progress-num-' + opt.id + '" class="progress-num"></div><div class="line"></div>';
 
-            OBJ.appendChild(newItem);
-            if(OBJ.childNodes.length > 10){
-                OBJ.removeChild(OBJ.childNodes[0])
-            }
-        }
-        show_ob(0, {});
-    </script>
-    <div id="scriptBox">
+        var para=document.createElement("div");
+        para.innerHTML = str;
+        document.getElementById("progress-bar-other").appendChild(para);
+    }
+    show_ob(0, opt);
+</script>
+<div id="scriptBox">
 <?php } ?>
 
 <?php if($fields['type'] == 'push'){ ?>
     <script>
-        var opt = <?php echo json_encode($fields['opt']); ?>;
+        var opt = <?php echo json_encode($fields); ?>;
+        var id = opt.id;
+        if(!PROGRESS[id]){
+            addBar(opt);
+            PROGRESS[id] = {
+                jump: document.getElementById("progress-jump-"+id),
+                num: document.getElementById("progress-num-"+id),
+                msg: document.getElementById("progress-msg"),
+                info: document.getElementById("progress-info"),
+            }
+        }
         show_ob("<?php echo $fields['value']; ?>", opt);
     </script>
 

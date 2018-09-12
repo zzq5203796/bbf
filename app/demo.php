@@ -41,9 +41,9 @@ class Demo
             ['temp', '间隔', 'text', $max, []],
         ]);
 
-        $num1 = $num = 0;
+        $num4 = $num3 = $num2 = $num1 = $num = 0;
         for($i = 0; $i <= $max && $num < $max; $i++){
-            $num += rand(1, $temp);
+            $num += rand(1, $temp*0.7);
             progress_bar($num, $max, [
                 'id' => 0,
                 'info' => ("now is in run:".$num),
@@ -51,11 +51,33 @@ class Demo
                 ]);
 
             $num1 += rand(1, $temp);
-            // progress_bar($num1, $max, [
-            //     'id' => 1,
-            //     'info' => ("now is in run:".$num1),
-            //     'msg'  => "count:".$i
-            //     ]);
+            progress_bar($num1, $max, [
+                'id' => 1,
+                'title' => '排队',
+                'info' => ("now is in run:".$num1),
+                'msg'  => "count:".$i
+                ]);
+            $num2 += rand(1, $temp);
+            progress_bar($num2, $max, [
+                'id' => 2,
+                'title' => '赛程',
+                'info' => ("now is in run:".$num2),
+                'msg'  => "count:".$i
+                ]);
+            $num3 += rand(1, $temp);
+            progress_bar($num3, $max, [
+                'id' => 3,
+                'title' => '锁定',
+                'info' => ("now is in run:".$num3),
+                'msg'  => "count:".$i
+                ]);
+            $num4 += rand(1, $temp);
+            progress_bar($num4, $max, [
+                'id' => 4,
+                'title' => '施工',
+                'info' => ("now is in run:".$num4),
+                'msg'  => "count:".$i
+                ]);
             sleep(1);
         }
     }

@@ -253,7 +253,7 @@ class Reptile
         }
 
         $total = ($max - $num) * $rate;
-        set_time_limit(10000);
+        set_time_limit(40000);
         $path = "upload/manhua/$web/m" . $tem . "/";
         $success = 0;
         for ($i = 0; $rate * $num < $rate * $max; $num += $rate) {
