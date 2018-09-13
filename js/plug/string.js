@@ -15,3 +15,35 @@ lang = {
         return keyStr;
     }
 }
+function stripscript(str)
+{
+    return str.replace(/(^\s*)|(\s*$)/g, "")
+        .replace("\\", "\\\\").replace("*", "\\*")
+        .replace("+", "\\+").replace("|", "\\|")
+        .replace("{", "\\{").replace("}", "\\}")
+        .replace("(", "\\(").replace(")", "\\)")
+        .replace("^", "\\^").replace("$", "\\$")
+        .replace("[", "\\[").replace("]", "\\]")
+        .replace("?", "\\?").replace(",", "\\,")
+        .replace(".", "\\.").replace("&", "\\&");
+}
+_Trans = {
+    match: function (str) {
+        return str.replace(/(^\s*)|(\s*$)/g, "")
+            .replace("\\", "\\\\").replace("*", "\\*")
+            .replace("+", "\\+").replace("|", "\\|")
+            .replace("{", "\\{").replace("}", "\\}")
+            .replace("(", "\\(").replace(")", "\\)")
+            .replace("^", "\\^").replace("$", "\\$")
+            .replace("[", "\\[").replace("]", "\\]")
+            .replace("?", "\\?").replace(",", "\\,")
+            .replace(".", "\\.").replace("&", "\\&");
+    },
+    trim: function (str) {
+        return str.replace(/(^\s*)|(\s*$)/g, "");
+    },
+    html: function (str) {
+        return str;
+    }
+    
+}
