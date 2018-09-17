@@ -123,7 +123,7 @@ class Reptile
                 $str = substr($max+$i, 1);
                 $c = md5($top . $str);
 
-                $opt = ['info' => "M: $max | D: $k | $str | $i" ];
+                $opt = ['id' => 2, 'info' => "M: $max | D: $k | $str | $i" ];
                 if(strpos($c, $strs)){
                     $opt['msg'] = "D：$k | $str | $c";
                     progress_bar($i, $max, $opt);
