@@ -14,7 +14,7 @@ lang = {
         var keyStr = lang.data[key] ? lang.data[key] : key;
         return keyStr;
     }
-}
+};
 function stripscript(str)
 {
     return str.replace(/(^\s*)|(\s*$)/g, "")

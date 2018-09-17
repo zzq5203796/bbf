@@ -1,5 +1,10 @@
 <?php
-define('HOST_FILE', 'C:\Windows\System32\drivers\etc\hosts');
+if(IS_WIN){
+    $hosts_file = 'C:\Windows\System32\drivers\etc\hosts';
+}else{
+    $hosts_file = "/etc/hosts";
+}
+define('HOST_FILE', $hosts_file);
 $hm = new HostManage(HOST_FILE);
 $env = $argv[1];
 $domain = input("domain", "");
@@ -56,7 +61,7 @@ class HostManage {
             }else{
                 show_msg( "hosts 文件编辑 <br />", 1, 0);
             }
-            view("table-form", $hosts);
+            view("hosts-form", $hosts);
         }
     }
     public function initHosts() {

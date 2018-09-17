@@ -33,21 +33,25 @@ _sound = {
 	},
 	play: function(type){
 		type = this.getValue(type);
-		audio=new Audio(_sound.path+type+".mp3");//路径
-		audio.play();
-		this.palyData.push(audio);
+		try{
+            audio=new Audio(_sound.path+type+".mp3");//路径
+            audio.play();
+            this.palyData.push(audio);
+		}catch (e) {
+			log(e,10);
+        }
 	}
 };
 function randomNum(minNum,maxNum){ 
     switch(arguments.length){ 
-        case 1: 
+		case 1:
             return parseInt(Math.random()*minNum+1,10); 
-        break; 
-        case 2: 
+        break;
+        case 2:
             return parseInt(Math.random()*(maxNum-minNum+1)+minNum,10); 
-        break; 
-            default: 
-                return 0; 
-            break; 
-    } 
-} 
+        break;
+            default:
+                return 0;
+            break;
+    }
+};

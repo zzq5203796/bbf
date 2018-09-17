@@ -20,10 +20,11 @@
 ?>
 <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
 <style>
-    html{
+    html {
         background: #f0f0f0;
     }
-    body{
+
+    body {
         margin: 0;
         min-width: 600px;
         width: 70%;
@@ -31,35 +32,60 @@
         padding: 20px 20px 1px 20px;
         background: #fff;
     }
-    form{
+
+    form {
         margin-bottom: 14px;
     }
-    input{
-        height: 28px; 
+
+    input {
+        height: 28px;
         padding: 0 8px;
     }
-    span{
+
+    span {
         margin-right: 10px;
     }
 </style>
 <?php } ?>
+<?php
+$fileds_keys = $fields['fields'];
+$data = $fields['data'];
+        dump($data);
+?>
 <div class="form-box">
     <form action='' method='post'>
-        IP: <input type="text" name='ip' value="" />
+        IP: <input type="text" name='ip' value=""/>
         <span> </span>
-        域名: <input type="text" name='domain' value="" />
-        <input type="hidden" name='type' value="add" />
-        <input type="submit" value="添加" />
+        域名: <input type="text" name='domain' value=""/>
+        <input type="hidden" name='type' value="add"/>
+        <input type="submit" value="添加"/>
     </form>
-    <?php foreach($fields as $domain => $ip){ ?>
-    <form action='' method='post'>
-        IP: <input type="text" name='ip' value="<?php echo $ip; ?>" />
-        <span> </span>
-        域名: <input type="text" name='newdomain' value="<?php echo $domain; ?>" />
-        <input type="hidden" name='domain' value="<?php echo $domain; ?>" />
-        <input type="hidden" name='type' value="delete" />
-        <input type="button" value="保存" onclick="$(this).prev().val('add');$(this).attr('type', 'submit');$(this).click();" />
-        <input type="submit" value="删除" />
-    </form>
+    <table>
+        <thead>
+        <tr>
+            <?php foreach($fileds_keys as $field){ ?>
+            <td><?php echo $field[1]; ?></td>
+            <?php } ?>
+            <td>操作</td>
+        </tr>
+        </thead>
+        <?php foreach($data as $vo){ ?>
+        <tbody>
+        <form action='' method='post'>
+        <tr>
+                <?php foreach($fileds_keys as $field){ ?>
+                <td>
+                    <?php echo $vo[$field[0]]; ?>
+                </td>
+                <?php } ?>
+                <td>
+                    <input type="hidden" name='type' value="delete"/>
+                    <input type="button" value="保存"
+                           onclick="$(this).prev().val('add');$(this).attr('type', 'submit');$(this).click();"/>
+                    <input type="submit" value="删除"/></td>
+        </tr>
+        </form>
+        </tbody>
+    </table>
     <?php } ?>
 </div>

@@ -152,15 +152,15 @@ EOD;
         }
         foreach ($data as &$vo) {
             foreach ($more as $k => $v) {
-                if(!isset($vo[$k])){
+                if (!isset($vo[$k])) {
                     $vo[$k] = "";
                 }
             }
         }
 
-        if(IS_AJAX){
+        if (IS_AJAX) {
             return ajax_success("查询成功", ['html' => $html, 'list' => $data]);
-        }else{
+        } else {
             show_table($data);
         }
     }
@@ -427,5 +427,18 @@ EOD;
         }
         locks($lock, 0);
         exit();
+    }
+
+    public function web() {
+        $fields = [
+            ['id', 'ID', 'text', ['width' => "20px"]],
+            ['title', '标题', 'text'],
+            ['link', '链接', 'text'],
+            ['first_link', '首页', 'text'],
+            // ['target', '新窗口', 'redeio'],
+            // ['target', '新窗口', 'redeio'],
+        ];
+        $data = $this->model->query("books");
+        view("table-form", ['fields' => $fields, 'data' => $data]);
     }
 }
