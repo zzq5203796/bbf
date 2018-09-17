@@ -406,7 +406,7 @@ function progress_bar($num, $max = 500, $opt = []) {
     $progressNum++;
     $num = $num > $max? $max: $num;
 
-    $tem = 50; // 清空间隔
+    $tem = 1; // 清空间隔
     $is_end = $num == $max; // 是否结束
 
     $maxLen = 0.001; // 精确位

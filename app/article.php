@@ -244,6 +244,10 @@ EOD;
         $link = $data['url'];
         $sql = "insert into `article` (book_id, title, content, link, next_link) value ($book_id, '$title','$content','$link', '$next');";
         $res = $this->model->exec($sql);
+
+        progress_bar(1, 1000, [
+            'msg' => $title . " - " . ($res?'ok':'fail')
+        ]);
         if ($res) {
             $data_list[] = $title;
             logs($title . " \n[info] $book_id | $link | $next", "book");
@@ -252,6 +256,7 @@ EOD;
             }
             $data['url'] = $next;
             $res = $this->runGet($data);
+
             if (!empty($res)) {
                 $data_list = array_merge($data_list, $res);
             }
