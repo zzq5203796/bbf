@@ -37,11 +37,37 @@
         margin-bottom: 14px;
     }
 
-    input {
+    table{
+        border-width: 0;
+        border-spacing: 0;
+    }
+    table thead td{
+        height: 30px;
+    }
+    td{
+        border-width: 0;
+    }
+    .table-form input {
         height: 28px;
         padding: 0 8px;
+        border: 0;
+        background: #fff0;
     }
-
+    .table-form tr{
+        background: #f9f9f9;
+    }
+    .table-form tbody tr:nth-child(3n+0) {
+        background: #f9f9f9;
+    }
+    .table-form tbody tr:nth-child(3n+1) {
+        background: #f5f5f5;
+    }
+    .table-form tbody tr:nth-child(3n+2) {
+        background: #f0f0f0;
+    }
+    .table-form tbody tr td {
+        /*border-top: 1px solid #f0f0f0;*/
+    }
     span {
         margin-right: 10px;
     }
@@ -50,42 +76,51 @@
 <?php
 $fileds_keys = $fields['fields'];
 $data = $fields['data'];
-        dump($data);
 ?>
 <div class="form-box">
-    <form action='' method='post'>
-        IP: <input type="text" name='ip' value=""/>
-        <span> </span>
-        域名: <input type="text" name='domain' value=""/>
-        <input type="hidden" name='type' value="add"/>
-        <input type="submit" value="添加"/>
-    </form>
-    <table>
+    <table class="table-form">
         <thead>
         <tr>
-            <?php foreach($fileds_keys as $field){ ?>
-            <td><?php echo $field[1]; ?></td>
+            <?php foreach($fileds_keys as $field){
+                $opt = default_empty_value($field, 3, []);
+                $width =  default_empty_value($opt, 'width', 'auto');
+?>
+            <td style="width: <?php  echo $width; ?>"><?php echo $field[1]; ?></td>
             <?php } ?>
             <td>操作</td>
         </tr>
         </thead>
-        <?php foreach($data as $vo){ ?>
         <tbody>
         <form action='' method='post'>
-        <tr>
-                <?php foreach($fileds_keys as $field){ ?>
-                <td>
-                    <?php echo $vo[$field[0]]; ?>
-                </td>
+            <tr>
+                <?php foreach($fileds_keys as $field){
+                $opt = default_empty_value($field, 3, []);
+                $width =  default_empty_value($opt, 'width', 'auto');
+?>
+                <td><input type="<?php echo $field[2]; ?>" placeholder="请输入<?php  echo $field[1]; ?>" style="width: <?php  echo $width; ?>" name='<?php echo $field[0]; ?>' value=""/></td>
                 <?php } ?>
                 <td>
-                    <input type="hidden" name='type' value="delete"/>
-                    <input type="button" value="保存"
-                           onclick="$(this).prev().val('add');$(this).attr('type', 'submit');$(this).click();"/>
-                    <input type="submit" value="删除"/></td>
-        </tr>
+                    <input type="hidden" name='subtype' value="add"/>
+                    <input type="submit" value="添加"/>
+            </tr>
         </form>
+        <?php foreach($data as $vo){?>
+        <form action='' method='post'>
+            <tr>
+                <?php foreach($fileds_keys as $field){
+                $opt = default_empty_value($field, 3, []);
+                $width =  default_empty_value($opt, 'width', 'auto');
+?>
+                <td><input  style="width: <?php  echo $width; ?>" type="text" name='<?php echo $field[0]; ?>' value="<?php echo $vo[$field[0]]; ?>"/></td>
+                <?php } ?>
+                <td>
+                    <input type="hidden" name='subtype' value="edit"/>
+                    <input type="button" value="保存"/>
+                    <input type="submit" value="删除"
+                           onclick="$(this).prev().val('delete');$(this).attr('type', 'submit');$(this).click();"/></td>
+            </tr>
+        </form>
+        <?php } ?>
         </tbody>
     </table>
-    <?php } ?>
 </div>

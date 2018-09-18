@@ -246,7 +246,7 @@ EOD;
         $res = $this->model->exec($sql);
 
         progress_bar(1, 1000, [
-            'msg' => $title . " - " . ($res?'ok':'fail')
+            'msg' => $title . " - " . ($res? 'ok': 'fail')
         ]);
         if ($res) {
             $data_list[] = $title;
@@ -435,15 +435,27 @@ EOD;
     }
 
     public function web() {
+        if (IS_POST) {
+            $subtype = $_POST['subtype'];
+            if ($subtype == 'delete') {
+                $res = $this->model->delete("webs", $_POST);
+            } elseif ($subtype == 'add') {
+                $res = $this->model->add("webs", $_POST);
+            } else {
+                $res = $this->model->update("webs", $_POST);
+            }
+            echo $res? "操作成功.": "操作失败.";
+        }
         $fields = [
-            ['id', 'ID', 'text', ['width' => "20px"]],
+            ['id', 'ID', 'text', ['width' => "60px"]],
             ['title', '标题', 'text'],
             ['link', '链接', 'text'],
-            ['first_link', '首页', 'text'],
+            ['preg', '表达式', 'textarea'],
+            ['header', '头部', 'textarea'],
             // ['target', '新窗口', 'redeio'],
             // ['target', '新窗口', 'redeio'],
         ];
-        $data = $this->model->query("books");
+        $data = $this->model->query("webs");
         view("table-form", ['fields' => $fields, 'data' => $data]);
     }
 }
