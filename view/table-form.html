@@ -108,10 +108,8 @@ $data = $fields['data'];
         <form action='' method='post'>
             <tr>
                 <?php foreach($fileds_keys as $field){
-                $opt = default_empty_value($field, 3, []);
-                $width =  default_empty_value($opt, 'width', 'auto');
 ?>
-                <td><input  style="width: <?php  echo $width; ?>" type="text" name='<?php echo $field[0]; ?>' value="<?php echo $vo[$field[0]]; ?>"/></td>
+                <td><?php echo this_input($field, $vo); ?></td>
                 <?php } ?>
                 <td>
                     <input type="hidden" name='subtype' value="edit"/>
@@ -124,3 +122,24 @@ $data = $fields['data'];
         </tbody>
     </table>
 </div>
+<?php
+function this_input($field, $data){
+    list($name, $title, $type, $opt) = $field;
+    $width =  'width:'.default_empty_value($opt, 'width', 'auto');
+    $style = 'style="'. $width. '"';
+    switch($type){
+        case 'textarea':
+        $str = '<textarea name=".$name.">'. $data[$name] .'</textarea>';
+        break;
+        default:
+        $str = '<input '.$style.' type="text" name="'. $name .'" value="'. $data[$name] .'"/>';
+        break;
+    }
+
+    return $str;
+
+}
+
+
+
+ ?>

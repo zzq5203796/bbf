@@ -447,7 +447,7 @@ EOD;
             echo $res? "操作成功.": "操作失败.";
         }
         $fields = [
-            ['id', 'ID', 'text', ['width' => "60px"]],
+            ['id', 'ID', 'text', ['width' => "40px"]],
             ['title', '标题', 'text'],
             ['link', '链接', 'text'],
             ['search_link', '搜索链接', 'text'],
