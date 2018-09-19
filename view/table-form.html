@@ -27,7 +27,7 @@
     body {
         margin: 0;
         min-width: 600px;
-        width: 70%;
+        width: 90%;
         margin: 0 auto;
         padding: 20px 20px 1px 20px;
         background: #fff;
@@ -115,9 +115,9 @@ $data = $fields['data'];
                 <?php } ?>
                 <td>
                     <input type="hidden" name='subtype' value="edit"/>
-                    <input type="button" value="保存"/>
-                    <input type="submit" value="删除"
-                           onclick="$(this).prev().val('delete');$(this).attr('type', 'submit');$(this).click();"/></td>
+                    <input type="submit" value="保存"/>
+                    <input type="button" value="删除"
+                           onclick="$(this).prev().prev().val('delete');$(this).attr('type', 'submit');$(this).click();"/></td>
             </tr>
         </form>
         <?php } ?>

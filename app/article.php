@@ -450,6 +450,7 @@ EOD;
             ['id', 'ID', 'text', ['width' => "60px"]],
             ['title', '标题', 'text'],
             ['link', '链接', 'text'],
+            ['search_link', '搜索链接', 'text'],
             ['preg', '表达式', 'textarea'],
             ['header', '头部', 'textarea'],
             // ['target', '新窗口', 'redeio'],
