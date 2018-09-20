@@ -1,4 +1,5 @@
-CREATE TABLE `book_web` (
+DROP TABLE IF EXISTS `webs` ;
+CREATE TABLE `webs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL COMMENT '网站',
   `type` tinyint(2) NOT NULL DEFAULT '1' COMMENT '类型（预备）',
