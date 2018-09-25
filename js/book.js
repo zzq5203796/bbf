@@ -76,6 +76,11 @@ searchv = tableView({
     ],
     show_page: false,
     url: "/article/search",
+    click: {
+        add: function (item) {
+            ajax_post('', item)
+        }
+    }
 });
 
 $(document).on("click", ".search-keyword-box .btn", function () {

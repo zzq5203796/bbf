@@ -1,22 +1,35 @@
 /**
- *  
+ *
  *  attr ajax-data|data  ajax-post|method  tips|tips ajax-cb|cb
- *  
- *  
+ *
+ *
  */
-$(".ajax").on('click', function (e) {
+$(document).on('click', '.ajax', function (e) {
     var url = $(this).attr("url"),
         data = {A: 1},
         data_fun = $(this).attr("ajax-data"),
         method = $(this).hasClass("ajax-post") ? 'POST' : 'GET',
         tips = $(this).hasClass("tips"),
         cb = $(this).attr("ajax-cb");
-    if (data_fun) {
+    try {
         data = eval(data_fun);
+    } catch (e) {
+        data = data_fun;
+        data = JSON.parse(data);
+    }
+    try {
+        if(typeof (data) == "string"){
+            data = JSON.parse(data);
+        }
+    } catch (e) {
+        data = {};
     }
     url = url ? url : '/upload/index';
 
-    var opt = {tips: tips, success: cb ? eval(cb) : {}};
+    var opt = {
+        tips: tips, success: cb ? eval(cb) : function () {
+        }
+    };
     _ajax.request(url, method, data, opt);
     return false;
 });
@@ -28,25 +41,30 @@ _ajax = (function () {
         that.request(url, 'get', params, option);
     };
     that.post = function (url, params, option) {
-       that.request(url, 'post', params, option);
+        that.request(url, 'post', params, option);
     };
+    that.data = {};
     that.request = function (url, method, data, option) {
         var opt = {
             success: function () {
             },
             error: error,
             msg: '',
+            id: 'auto',
             show_msg: false,
             type: 'json',
-            timeout: 30
+            timeout: 30,
         };
         option = typeof (option) == 'function' ? {success: option} : option;
         option = Object.assign(opt, option);
-        if(option._obj){
+        if (option._obj) {
             option._obj.addClass("wait disable");
         }
 
-        $.ajax({
+        if (option.id !== 'auto' && that.data[option.id]) {
+            that.data[option.id].abort();
+        }
+        req = $.ajax({
             url: url,
             async: true, // default true
             type: method,
@@ -59,8 +77,11 @@ _ajax = (function () {
                     option.error("require error.");
                 }
             })(option),
-            timeout: option.timeout*1000
+            timeout: option.timeout * 1000
         });
+        if (option.id !== 'auto') {
+            that.data[option.id] = req;
+        }
 
         function success(res) {
             log(res);
@@ -83,5 +104,7 @@ _ajax = (function () {
             sound("eorror");
         }
     };
+
+
     return that;
 })();

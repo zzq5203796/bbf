@@ -19,7 +19,7 @@ _sound = {
 			"gitign/warring-dudu",
 			"gitign/warring-jingbao",
 		],
-		auto: ["error", "fail-mali"],
+		auto: ['bi',"error", "fail-mali"],
 	},
 	path: "/public/sound/",
 	palyData: [],
@@ -27,6 +27,9 @@ _sound = {
 
 	},
 	getValue: function(type){
+		if(1){
+			return this.data.auto[0];
+		}
 		type = this.data[type]? this.data[type]: this.data.auto;
 		type = type[randomNum(0, type.length-1)];
 		return type;

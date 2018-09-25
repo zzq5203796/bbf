@@ -143,18 +143,17 @@ EOD;
 
                 $item[$tk] = $mvo;
                 if (!empty($link)) {
-                    IS_AJAX && $item[$tk] = $link[0]['title'];
-                    $item[$tk . "_link"] = $link[0]['link'];
+                    IS_AJAX && $item[$tk] = trim($link[0]['title']);
+                    $item[$tk . "_link"] = trim($link[0]['link']);
                     $more[$tk . "_link"] = 1;
                 }
             }
             $data[] = $item;
         }
+
         foreach ($data as &$vo) {
             foreach ($more as $k => $v) {
-                if (!isset($vo[$k])) {
-                    $vo[$k] = "";
-                }
+                $vo[$k] = isset($vo[$k])? trim($vo[$k]): "";
             }
         }
 
@@ -208,6 +207,77 @@ EOD;
             locks($lock, 0);
         }
         $save && show_msg("total:" . count($res));
+    }
+
+    public function join() {
+        $a = [
+            'title',
+            'title_link' => 'link',
+            'new_link'   => 'first_link',
+        ];
+        $data = inputs($a);
+
+        $map_book = ['title' => $data['title']];
+        $map_web = ['link' => get_http_host($data['link'])];
+
+        $book = $this->model->query("books", "*", $map_book, "", "id desc", "", 0, 1)[0];
+        if ($book) {
+            ajax_error('书本已存在');
+        }
+
+        $webs = $this->model->query("webs", "*", $map_web, "", "id desc", "", 0, 1)[0];
+        $preg = json_decode($webs['matchs'], true);
+        if (empty($preg)) {
+            ajax_error('暂无该网站解析方式');
+        }
+        $data['preg_title'] = $preg['title'];
+        $data['preg_content'] = $preg['content'];
+        $data['preg_next'] = $preg['next'];
+        $data['header'] = $webs['header'];
+        $data['preg'] = $webs['matchs'];
+        $data['first_link'] = $this->catalog($data['link'])[0]['link'];
+        $res = $this->model->add("books", $data);
+        ajax_return_res($res);
+    }
+
+    public function checkdir() {
+        $url = "https://www.qu.la/book/28543/";
+        $data = $this->catalog($url);
+        if(is_array($data) && count($data)>0){
+            ajax_success('目录检查成功，正在检测页面', $data);
+        }else{
+            ajax_error('目录检查失败');
+        }
+    }
+    public function first() {
+        $url = "https://www.qu.la/book/28543/";
+        $data = $this->catalog($url);
+        dump($data);
+    }
+
+    //目录
+    protected function catalog($url) {
+        $html = curl_get($url);
+        $html = m_get_body($html);
+        $pattern = m_get_tag_dom_pattern('div', "id=\"list\"");
+        preg_match_all($pattern, $html, $matches);
+        $mlist = $matches[1][0];
+
+        $pattern = "/<dd>.*?<a.*?href=\"(.*?)\".*?>(.*?)<\/a>.*?<\/dd>/is";
+        preg_match_all($pattern, $mlist, $matches);
+
+        $data = array_merge_two(['title', 'link'], $matches[2], $matches[1]);
+        $data = array_sort($data, 'link');
+        $tem = 0;
+        foreach ($data as $key => $vo) {
+            if ($tem > $key) {
+                unset($data[$key]);
+            } else {
+                $tem = $key;
+            }
+        }
+        return $data;
+
     }
 
     private function runGet($data) {

@@ -38,6 +38,11 @@ function tableView(opts) {
         total_page: 0,
         show_page: true,
     }, opts);
+    opts.call = function (obj, cb) {
+        return function () {
+            cb(obj);
+        }
+    }
 
     if ($("#tableView").length == 0) {
         tableWait.push({cb: init, name: opts.box});
@@ -240,5 +245,6 @@ function tableView(opts) {
     that.push = setHtml;
     that.select = select;
     that.opts = opts;
+    that.click = opts.click;
     return that;
 }

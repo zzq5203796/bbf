@@ -12,7 +12,7 @@ function do_cli($argv) {
     if (!IS_CLI) {
         return false;
     }
-    if(IS_WIN){
+    if (IS_WIN) {
         echo "If can not see Chinese in Window:
     You Can Run [chcp 65001] And 
     Choose CMD [Right Click] -> [ATTR] -> [Font] -> use [Lucida Console]\n\n";
@@ -21,8 +21,8 @@ function do_cli($argv) {
     if (!empty($argv[1]) && ($argv[1] == "?" || $argv[1] == "--help" || $argv[1] == "-h")) {
         show_cli_help();
     }
-    if(in_array('-c', $argv) || in_array('-C', $argv)){
-        define("IS_CLEAR", true); 
+    if (in_array('-c', $argv) || in_array('-C', $argv)) {
+        define("IS_CLEAR", true);
         $argv = array_merge(array_diff($argv, ["-c", "-C"]));
     }
     $params = [];
@@ -51,17 +51,19 @@ function show_cli_help() {
     echo $content;
     exit();
 }
-function get_url_info($type=''){
+
+function get_url_info($type = '') {
     $data = [
-        "host" => $_SERVER['HTTP_HOST'],
-        'name'=>$_SERVER['REQUEST_SCHEME']."://".$_SERVER['HTTP_HOST'],
-        'path'=>$_SERVER['REDIRECT_URL'],
-        'query'=>$_SERVER['QUERY_STRING'],
+        "host"  => $_SERVER['HTTP_HOST'],
+        'name'  => $_SERVER['REQUEST_SCHEME'] . "://" . $_SERVER['HTTP_HOST'],
+        'path'  => $_SERVER['REDIRECT_URL'],
+        'query' => $_SERVER['QUERY_STRING'],
     ];
-    return empty($type)?$data:$data[$type];
+    return empty($type)? $data: $data[$type];
 }
+
 function get_url_path() {
-    $path = $_GET['s']? : get_url_info('path');
+    $path = $_GET['s']?: get_url_info('path');
     $path = trim($path, '/');
     $res = explode('/', $path);
     $res = [
@@ -72,10 +74,15 @@ function get_url_path() {
     return $res;
 }
 
+function get_http_host($url) {
+    $link = parse_url($url);
+    return $link['scheme'] . "://" . $link["host"] . "/";
+}
+
 function go_auto_home() {
-    if(IS_CLI){
+    if (IS_CLI) {
         show_cli_help();
-    }else{
+    } else {
         require_once '../index.php';
     }
 }
@@ -85,27 +92,42 @@ function server() {
     die();
 }
 
-function default_key_value($data, $key, $value=null){
+function default_key_value($data, $key, $value = null) {
     return isset($data[$key])? $data[$key]: $value;
 }
 
-function default_empty_value($data, $key='', $value=null){
-    if($key===''){
+function default_empty_value($data, $key = '', $value = null) {
+    if ($key === '') {
         return empty($data)? $value: $data;
-    }else{
+    } else {
         return empty($data[$key])? $value: $data[$key];
     }
 }
 
-if(!function_exists('input')){
-    function input($key, $value=null){
+function inputs($data) {
+    $res = [];
+    foreach ($data as $key => $vo) {
+        if (is_array($vo)) {
+            $key1 = $vo['name'];
+        } else {
+            $key1 = $vo;
+        }
+        $name = is_numeric($key)? $key1: $key;
+        $auto = '';
+        $res[$key1] = input($name, $auto);
+    }
+    return $res;
+}
+
+if (!function_exists('input')) {
+    function input($key, $value = null) {
         $data = default_key_value($_POST, $key);
         $data === null && $data = default_key_value($_GET, $key, $value);
-        if($data === ''){
+        if ($data === '') {
             $data = $value;
         }
         return $data;
-    }   
+    }
 }
 
 /**
@@ -115,10 +137,9 @@ if(!function_exists('input')){
  * @param $encrypt string 要加密内容
  * @return string 密文
  */
-function des_encrypt($encrypt, $key="")
-{
-    empty($key) && $key=read("../data/auto.key", "r");
-    empty($key) && $key="ABCDEFG";
+function des_encrypt($encrypt, $key = "") {
+    empty($key) && $key = read("../data/auto.key", "r");
+    empty($key) && $key = "ABCDEFG";
     return base64_encode(openssl_encrypt($encrypt, "DES-ECB", $key, OPENSSL_RAW_DATA));
 }
 
@@ -129,9 +150,45 @@ function des_encrypt($encrypt, $key="")
  * @param $decrypt string 密文
  * @return string 明文
  */
-function des_decrypt($decrypt, $key="")
-{
-    empty($key) && $key=read("../data/auto.key", "r");
-    empty($key) && $key="ABCDEFG";
+function des_decrypt($decrypt, $key = "") {
+    empty($key) && $key = read("../data/auto.key", "r");
+    empty($key) && $key = "ABCDEFG";
     return openssl_decrypt(base64_decode($decrypt), "DES-ECB", $key, OPENSSL_RAW_DATA);
 }
+
+function array_merge_two() {
+    $args = func_get_args();
+    $keys = $args[0];
+    $data = [];
+    $first = $args[1];
+    foreach ($first as $key => $vo) {
+        for ($i = 1; $i < func_num_args(); $i++) {          //使用for循环
+            $item = func_get_arg($i);
+            $name = isset($keys[$i - 1])? $keys[$i - 1]: $i - 1;
+            $value = isset($item[$key])? $item[$key]: '';
+            $data[$key][$name] = $value;
+        }
+    }
+    return $data;
+}
+
+function array_sort($array, $keys, $type = 'asc') {
+    //$array为要排序的数组,$keys为要用来排序的键名,$type默认为升序排序
+    $keysvalue = $new_array = [];
+    foreach ($array as $k => $v) {
+        $keysvalue[$k] = $v[$keys];
+    }
+    if ($type == 'asc') {
+        asort($keysvalue);
+    } else {
+        arsort($keysvalue);
+    }
+    reset($keysvalue);
+    foreach ($keysvalue as $k => $v) {
+        $new_array[$k] = $array[$k];
+    }
+    return $new_array;
+}
+
+
+

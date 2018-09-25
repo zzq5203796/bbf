@@ -52,6 +52,7 @@ class CPdo
     private function pdo_connect() {
         try {
             $this->pdo = new \PDO($this->_dsn, $this->_name, $this->_pass, $this->_condition);
+            $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\Exception $e) {
             $this->setExceptionError($e->getMessage(), $e->getline, $e->getFile);
         }
@@ -349,10 +350,16 @@ class CPdo
         $sql = "INSERT INTO ";
         list($setSql, $mapData) = $this->FDFields($data);
         $sql .= $table . ' set ' . $setSql;
-        $pdoStatement = $this->pdo->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
-        $execRet = $pdoStatement->execute($mapData);
-        $this->sqlLog[] = [$sql, $mapData];
-        return $execRet? $this->pdo->lastInsertId(): false;
+        try{
+            $pdoStatement = $this->pdo->prepare($sql, [\PDO::ATTR_CURSOR => \PDO::CURSOR_FWDONLY]);
+            $execRet = $pdoStatement->execute($mapData);
+            $this->sqlLog[] = [$sql, $mapData];
+            return $execRet? $this->pdo->lastInsertId(): false;
+        }catch (\PDOException $e){
+            dump($e->getCode());
+            dump($e->getMessage());
+            return false;
+        }
     }
 
     public function update($table, $data, $map = []) {
