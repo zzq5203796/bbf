@@ -7,36 +7,34 @@ var book = {
         down: "/article/down?book=",
         searc: "/article/search",
     },
-    obj:{
-
-    },
+    obj: {},
     box: {
         body: ".book-box > tbody"
     },
-    init: function(data) {
+    init: function (data) {
         var that = this;
         that.get();
 
     },
 
-    get: function(){
+    get: function () {
         var that = this;
-        _ajax.post(that.url.book, [], function(data){
+        _ajax.post(that.url.book, [], function (data) {
             that.setHtml(data);
         });
     },
-    clear: function(){
+    clear: function () {
         var that = this;
         console.log(that);
         $(that.box.body).append('');
     },
-    setHtml: function(data){
+    setHtml: function (data) {
         var that = this;
 
         var html = template('bookItem', {obj: that, list: data});
         $(that.box.body).append(html);
     },
-    search: function(){
+    search: function () {
 
     }
 }
@@ -93,26 +91,31 @@ searchv = tableView({
 
 $(document).on("click", ".search-keyword-box .btn", function () {
     _ajax.get("/article/search", {keyword: $(this).prev().val()}, function (data) {
-        console.log(data);
         searchv.push(data.list);
     });
+});
+$(".search-keyword-box .keyword").on("keyup", function (e) {
+    if (e.keyCode == 13) {
+        $(".search-keyword-box .btn").click();
+    }
 });
 $(document).on("click", ".do-pro", function () {
     show_progress('/article/test');
 });
 
-function show_progress(url, id, msg){
-    if(typeof(id)=='undefined' || id == '' || id == null){
-        id = "t"+parseInt(Math.random(0,1)*100000);
+function show_progress(url, id, msg) {
+    if (typeof(id) == 'undefined' || id == '' || id == null) {
+        id = "t" + parseInt(Math.random(0, 1) * 100000);
     }
     var html = template('progressItem', {url: url, id: id, msg: msg});
     $(".progress").append(html);
 }
 
-function close_progress(id){
+function close_progress(id) {
     console.log(id);
-    setTimeout(function(){
-        $("#"+id).parent().remove();
+    setTimeout(function () {
+        $("#" + id).parent().remove();
     }, 3000);
 }
+
 var sss;

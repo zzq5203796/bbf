@@ -188,6 +188,7 @@ EOD;
             "cookie_top" => "book_" . $book_id,
             "book_id"    => $book_id,
             "save"       => $save,
+            "link"       => $info['link'],
         ];
 
         if (!$save && !empty($_COOKIE[$data['cookie_top'] . "_link"])) {
@@ -206,7 +207,7 @@ EOD;
         if ($save) {
             locks($lock, 0);
         }
-        $save && show_msg("total:" . count($res));
+        $save && show_msg("共成功采集total: " . count($res) . " 条.");
     }
 
     public function join() {
@@ -242,7 +243,7 @@ EOD;
         $data['preg_next'] = $preg['next'];
         $data['header'] = $webs['header'];
         $data['preg'] = $webs['matchs'];
-        $data['first_link'] = trim(get_http_host($data['link']),"/").reset($this->catalog($data['link']))['link'];
+        $data['first_link'] = trim(get_http_host($data['link']), "/") . reset($this->catalog($data['link']))['link'];
         $data['source'] = '';
         $res = $this->model->add("books", $data);
         ajax_return_res($res);
@@ -251,12 +252,13 @@ EOD;
     public function checkdir() {
         $url = "https://www.qu.la/book/28543/";
         $data = $this->catalog($url);
-        if(is_array($data) && count($data)>0){
+        if (is_array($data) && count($data) > 0) {
             ajax_success('目录检查成功，正在检测页面', $data);
-        }else{
+        } else {
             ajax_error('目录检查失败');
         }
     }
+
     public function first() {
         $url = "https://www.qu.la/book/28543/";
         $data = $this->catalog($url);
@@ -291,57 +293,70 @@ EOD;
     private function runGet($data) {
         $this->temp++;
         $data_list = [];
-        if ($this->temp % 50 == 0) {
-            $lock = $data["cookie_top"];
-            if (empty(locks($lock))) {
-                return [];
-            }
-        }
-        $res = $this->get($data);
-        if (!$data['save']) {
-            if ($res) {
-                setcookie($data['cookie_top'] . "_link", $data['url']);
-                setcookie($data['cookie_top'] . "_title", $res['title']);
-                echo "<h1>" . $res['title'] . "</h1>";
-                echo "<a href=\"?book=" . $data['book_id'] . "&p=" . $res['next'] . "\">" . $res['next'] . "</a>";
-                echo "<div style='margin: 10px auto; width: 600px;'>" . $res['content'] . "</div>";
-                echo "<a href=\"?book=" . $data['book_id'] . "&p=" . $res['next'] . "\">下一章</a>";
-            }
-            return $res;
-        }
-        if (empty($res)) {
-            return $res;
-        }
-        if ($res['next'] == $data['url'] || empty($res['content'])) {
-            return [];
-        }
-        $title = $res['title'];
-        $content = str_replace("'", "\'", $res['content']);
-        $next = $res['next'];
+
         $book_id = $data['book_id'];
-        $link = $data['url'];
-        $sql = "insert into `article` (book_id, title, content, link, next_link) value ($book_id, '$title','$content','$link', '$next');";
-        $res = $this->model->exec($sql);
+        $link = $data['link'];
+        $link_len = strlen($link);
+        $is_save = $data['save'];
+        $lock = $data["cookie_top"];
+        $max = $is_save? 10000: 1;
+        $wait = 0;
 
-        progress_bar($this->temp, 1000, [
-            'msg' => $title . " - " . ($res? 'ok': 'fail')
-        ]);
-
-        if ($res) {
-            $data_list[] = $title;
-            logs($title . " \n[info] $book_id | $link | $next", "book");
-            if (IS_CLI) {
-                show_msg($title);
+        for ($i = 0; $i < $max; $i++) {
+            if (strlen($data['url']) < $link_len + 4) {
+                break;
             }
-            $data['url'] = $next;
-            $res = $this->runGet($data);
-
-            if (!empty($res)) {
-                $data_list = array_merge($data_list, $res);
+            if ($this->temp % 50 == 0 && empty(locks($lock))) {
+                break;
             }
-        } else {
-            dump(date("Y-m-d H:i:s"));
-            dump($this->model->errorInfo());
+
+            $res = $this->get($data);
+            if (empty($res) && $wait > 4) {
+                $wait++;
+                return $data_list;
+            }
+            $wait = 0;
+            $title = $res['title'];
+            $next = $res['next'];
+            $content = $res['content'];
+
+            if (!$is_save) {
+                if ($res) {
+                    setcookie($data['cookie_top'] . "_link", $data['url']);
+                    setcookie($data['cookie_top'] . "_title", $title);
+                    echo "<div style='margin: 10px auto; width: 600px;'><h1>" . $res['title'] . "</h1>";
+                    echo "<a href=\"?book=$book_id&p=$next\">$next</a>";
+                    echo "<div>$content</div>";
+                    echo "<a href=\"?book=$book_id&p=$next\">下一章</a></div>";
+                }
+                return $res;
+            }
+            if ($res['next'] == $data['url'] || empty($res['content'])) {
+                break;
+            }
+
+            $link = $data['url'];
+            $res['book_id'] = $book_id;
+            $res['link'] = $link;
+            $res['next_link'] = $next;
+            $res = $this->model->add('article', $res);
+
+            progress_bar($this->temp, $max, [
+                'msg' => $title . ($res? '': ' - fail')
+            ]);
+
+            $this->temp++;
+            if ($res) {
+                $data_list[] = $title;
+                logs($title . " \n[info] $book_id | $link | $next", "book");
+                if (IS_CLI) {
+                    show_msg($title);
+                }
+                $data['url'] = $next;
+            } else {
+                show_msg($this->model->errorInfo());
+                break;
+            }
         }
         return $data_list;
     }

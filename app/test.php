@@ -14,9 +14,23 @@ class Test
     public function index() {
         echo '["status"=>1, "msg" =>  "ok"]';
     }
+
     public function wait() {
         sleep(10);
         echo '["status"=>1, "msg" =>  "ok"]';
+    }
+
+    public function inrun() {
+        ignore_user_abort();
+        set_time_limit(20);
+        $interval = 5;
+        $max = 100;
+        do {
+            write("inrun", show_now(0));
+            sleep($interval); // 等待
+            if ($max-- < 0)
+                break;
+        } while (true);
     }
 
     public function icon() {
@@ -28,7 +42,7 @@ class Test
         $icons = $ma[1];
         $chars = $ma[2];
         $res = "";
-        foreach ($icons as $key => $vo){
+        foreach ($icons as $key => $vo) {
             $char = $chars[$key];
             $res .= " <div class=\"item\">
         <i class=\"iconfont icon-$vo\"></i>

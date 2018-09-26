@@ -349,6 +349,7 @@ function show_msgs($data, $type = "array", $num = 0, $opt = []) {
 }
 
 function show_table($data, $keys = []) {
+    is_array($data[0]) || $data = [$data];
     $temp_keys = empty($keys)? array_keys($data[0]): $keys;
     list($tr, $td) = IS_CLI? [get_br(), get_space(2)]: ["tr", "td"];
     $body = "";
@@ -413,14 +414,14 @@ function progress_bar($num, $max = 500, $opt = []) {
     $value = (ceil($num / $max / $maxLen * 100) * $maxLen) . "%";
 
     $data = array_merge($opt, [
-        'id'=> $id, 
-        'is_new' => $is_new, 
-        'type' => "create", 
-        'value' => $value, 
-        'num' => $num, 
-        'max' => $max, 
-        'clear' => ($progressNum % $tem == 0), 
-        'end' => $is_end
+        'id'     => $id,
+        'is_new' => $is_new,
+        'type'   => "create",
+        'value'  => $value,
+        'num'    => $num,
+        'max'    => $max,
+        'clear'  => ($progressNum % $tem == 0),
+        'end'    => $is_end
     ]);
 
     if ($is_new) {
@@ -428,7 +429,7 @@ function progress_bar($num, $max = 500, $opt = []) {
         define(PROGRESS_BAR, true);
         header("Content-Encoding: none\r\n");
         view("progress", $data);
-    }else{
+    } else {
         $data['type'] = "push";
         view("progress", $data);
     }
@@ -436,11 +437,11 @@ function progress_bar($num, $max = 500, $opt = []) {
     echo str_repeat(" ", 1024 * 64);
     ob_flush();
     flush();
-    if ($is_end && $id===0) {
+    if ($is_end && $id === 0) {
         ob_end_flush();//输出并关闭缓冲
     }
 }
 
-function show_icon($str){
-    echo '<link rel="shortcut icon" href="/runtime/img/'.$str.'.png">';
+function show_icon($str) {
+    echo '<link rel="shortcut icon" href="/runtime/img/' . $str . '.png">';
 }

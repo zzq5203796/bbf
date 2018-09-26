@@ -1,4 +1,8 @@
-DROP TABLE IF EXISTS `webs` ;
+
+-- -----------------------------
+-- Table structure for `webs`
+-- -----------------------------
+DROP TABLE IF EXISTS `webs`;
 CREATE TABLE `webs` (
   `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(255) NOT NULL COMMENT '网站',
@@ -9,4 +13,5 @@ CREATE TABLE `webs` (
   `header` varchar(6000) NOT NULL DEFAULT '[]' COMMENT '头部',
   `status` tinyint(2) NOT NULL DEFAULT '1' COMMENT '状态',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COMMENT='网站';
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COMMENT='网站';
+
