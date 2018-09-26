@@ -199,7 +199,7 @@ EOD;
                 echo "[INRUN] Book is running elsewhere. [$lock]\r\n";
                 return false;
             }
-            IS_CLI || set_time_limit(120);
+            IS_CLI || set_time_limit(0);
             locks($lock, json_encode($data));
         }
         $res = $this->runGet($data);
@@ -210,6 +210,13 @@ EOD;
     }
 
     public function join() {
+        // $data = [
+        // 'title' => '/<div class="bookname">.*?<h1>(.*?)<\/h1>.*?<\/div>/is',
+        // 'content' => '/<div id="content">(.*?)<\/div>/is',
+        // 'next'=> '/<a id="A3" href="(.*?)" target="_top" class="next">下一章<\/a>/is'
+        // ];
+        // dump(json_encode($data), JSON_UNESCAPED_UNICODE);
+
         $a = [
             'title',
             'title_link' => 'link',
@@ -235,7 +242,8 @@ EOD;
         $data['preg_next'] = $preg['next'];
         $data['header'] = $webs['header'];
         $data['preg'] = $webs['matchs'];
-        $data['first_link'] = $this->catalog($data['link'])[0]['link'];
+        $data['first_link'] = trim(get_http_host($data['link']),"/").reset($this->catalog($data['link']))['link'];
+        $data['source'] = '';
         $res = $this->model->add("books", $data);
         ajax_return_res($res);
     }
@@ -315,9 +323,10 @@ EOD;
         $sql = "insert into `article` (book_id, title, content, link, next_link) value ($book_id, '$title','$content','$link', '$next');";
         $res = $this->model->exec($sql);
 
-        progress_bar(1, 1000, [
+        progress_bar($this->temp, 1000, [
             'msg' => $title . " - " . ($res? 'ok': 'fail')
         ]);
+
         if ($res) {
             $data_list[] = $title;
             logs($title . " \n[info] $book_id | $link | $next", "book");

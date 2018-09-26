@@ -54,6 +54,14 @@ bookv = tableView({
         {key: 'id', title: '<div class="btn" onclick="bookv.goPage(0);">刷新</div>'},
     ],
     url: "/article/index",
+    link: {
+        book: "/article/index",
+        check: "/article/book?is_check=1&book=",
+        run: "/article/book?save=1&book=",
+        read: "/article/book?book=",
+        down: "/article/down?book=",
+        searc: "/article/search",
+    },
 });
 searchv = tableView({
     box: ".search-table",
