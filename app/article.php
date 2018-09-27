@@ -334,10 +334,15 @@ EOD;
                 break;
             }
 
+            if($wait > 10){
+                break;
+            }
+
             $res = $this->get($data);
-            if (empty($res) && $wait++ > 10) {
+            if (empty($res)) {
+                $wait++;
                 progress_bar($this->temp, $max, [
-                    'msg' => $data['url'] . "加载失败，重试 $wait 次"
+                    'msg' => "<a href='".$data['url']."'></a>加载失败，重试 第 $wait 次"
                 ]);
                 continue;
             }
