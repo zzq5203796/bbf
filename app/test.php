@@ -23,14 +23,21 @@ class Test
     public function inrun() {
         ignore_user_abort();
         set_time_limit(20);
-        $interval = 5;
-        $max = 100;
+        $interval = 3;
+        $max = 30;
         do {
             write("inrun", show_now(0));
             sleep($interval); // 等待
             if ($max-- < 0)
                 break;
         } while (true);
+    }
+
+    public function s1() {
+
+    }
+    public function __destruct() {
+        dump(123);
     }
 
     public function icon() {

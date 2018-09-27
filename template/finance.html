@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算器</title>
+    <link rel="shortcut icon" href="/public/images/ico/spider2.png">
+
+    <link rel="stylesheet" href="/public/static/layui/css/layui.css" media="all">
+    <link rel="stylesheet" href="/css/iconfont.css?t=123" media="all">
+    <link rel="stylesheet" href="/css/bbf.css?t=123" media="all">
+
+    <script type="text/javascript" src="/js/libs/jquery.min.js"></script>
+    <script type="text/javascript" src="/public/static/layui/layui.all.js"></script>
+    <script type="text/javascript" src="/js/libs/art-template/template-web.js"></script>
+</head>
+<body>
+<div class="finance">
+    <div class="input-box input-text input-money">
+        <label>投入</label>
+        <input name="use_money" value="10000" />
+    </div>
+    <div class="input-box input-text input-money">
+        <label>收益</label>
+        <input type="number" name="get_money_tem"  value="30" />
+    </div>
+    <div class="input-box input-text input-money">
+        <label>回报</label>
+        <input type="number" name="get_money"  value="10030" />
+    </div>
+    <div class="input-box input-text input-money">
+        <label>折损</label>
+        <input type="number" name="loss_money" value="0" />
+    </div>
+    <div class="input-box input-text input-money">
+        <label>时间</label>
+        <input type="number" name="use_days" value="30" />
+    </div>
+    <div class="input-box input-select bbf-ml20-">
+        <select name="use_unit">
+            <option value="day">天</option>
+            <option value="mouth">月</option>
+            <option value="year">年</option>
+        </select>
+    </div>
+</div>
+<div>
+    <div>收益</div>
+    <div class="input-box input-info">
+        <label>日均</label>
+        <div></div>
+    </div>
+    <div class="input-box input-info">
+        <label>月均</label>
+        <div></div>
+    </div>
+</div>
+
+</body>
+<script type="text/javascript" src="/public/min/js/common.min.js"></script>
+<script type="text/javascript" src="/js/table.js"></script>
+<script type="text/javascript" src="/js/finance.js"></script>
+<script type="application/javascript">
+
+</script>
+</html>

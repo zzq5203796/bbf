@@ -12,7 +12,7 @@
 }
 
 .book-box tbody tr:hover{
-    background: #f5f5f5;
+    background: #eee;
 }
 .book-box tbody tr.select{
     background: #f5f5f5;

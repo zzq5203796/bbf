@@ -52,3 +52,42 @@
     width: 50px;
     text-align: center;
 }
+
+.input-box {
+    display: inline-block;
+    padding: 0 2px;
+    margin-right: 10px;
+}
+
+.input-box label {
+
+}
+
+.input-box input {
+
+}
+
+.input-text , .input-select{
+    padding: 2px;
+}
+
+.input-text label {
+
+}
+
+.input-text input, .input-select select{
+    padding: 5px 5px 5px 5px;
+    margin-left: 5px;
+    vertical-align:middle;
+}
+.input-money input{
+    width: 90px;
+}
+.input-info div{
+    display: inline-block;
+    padding: 5px 5px;
+    margin-left: 5px;
+}
+.input-select select{
+    padding: 5px 5px;
+}

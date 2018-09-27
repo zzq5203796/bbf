@@ -81,7 +81,7 @@ function tableView(opts) {
             $(opts.box).on('click', select.bodybox, function (e) {
                 select.choose($(this));
             });
-            $(opts.box).on('click', select.bodybox+" .stop", function (e) {
+            $(opts.box).on('click', select.bodybox + " .stop", function (e) {
                 e.stopPropagation();
             });
             $(opts.box).on('click', select.allbox, function (e) {
@@ -174,7 +174,14 @@ function tableView(opts) {
         page = page > 0 ? (page < opts.total_page ? page : opts.total_page - 1) : 0;
         params.page = page;
         _ajax.get(opts.url, params, function (data) {
-            opts.paged = parseInt(page);
+            if (data.list) {
+                opts.total = parseInt(data.total);
+                opts.paged = parseInt(data.page);
+                opts.size = data.size;
+                data = data.list;
+            } else {
+                opts.paged = parseInt(page);
+            }
             opts.total_page = Math.ceil(opts.total / opts.size);
             setHtml(data);
         });
@@ -205,7 +212,7 @@ function tableView(opts) {
     }
 
     function setPageHtml() {
-        if(opts.show_page){
+        if (opts.show_page) {
             var html = template("tableViewPage", {opts: opts, page: getPage()});
             $(opts.box + " .tpage").html(html);
         }

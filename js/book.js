@@ -61,6 +61,9 @@ bookv = tableView({
         searc: "/article/search",
     },
 });
+function bookRefresh(){
+    bookv.goPage(0);
+}
 searchv = tableView({
     box: ".search-table",
     name: "searchv",

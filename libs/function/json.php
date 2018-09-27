@@ -3,6 +3,13 @@ function ajax_success($msg = 'success', $data = []) {
     ajax_return(1, $msg, $data);
 }
 
+function ajax_page($msg = 'success', $data = [], $total = 0, $size = 15, $page = 0) {
+    $total || $total = count($data);
+    $page || $page = input('page', 0);
+    $size || $size = input('size', 15);
+    ajax_return(1, $msg, ['list' => $data, 'total' => $total+100, 'page' => $page, 'size' => $size]);
+}
+
 function ajax_error($msg = 'error', $data = []) {
     ajax_return(0, $msg, $data);
 }
@@ -19,8 +26,9 @@ function ajax_not_auth($msg = 'not auth', $data = []) {
     ajax_return(403, $msg, $data);
 }
 
-function ajax_return($code, $msg = 'tips', $data = []) {
-    echo json_encode(['status' => $code, 'msg' => $msg, 'data' => $data]);
+function ajax_return($code, $msg = 'tips', $data = [], $extra = []) {
+    $data = array_merge($extra, ['status' => $code, 'msg' => $msg, 'data' => $data]);
+    echo json_encode($data);
     die();
 }
 

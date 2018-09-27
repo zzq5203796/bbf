@@ -5,6 +5,7 @@
  *
  */
 $(document).on('click', '.ajax', function (e) {
+    e.stopPropagation();
     var url = $(this).attr("url"),
         data = {A: 1},
         data_fun = $(this).attr("ajax-data"),

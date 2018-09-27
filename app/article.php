@@ -88,7 +88,7 @@ EOD;
 
 
         if (IS_AJAX) {
-            ajax_success('', $list);
+            ajax_page('',  $list);
         }
         foreach ($list as $vo) {
             $title = $vo['title'];
@@ -249,8 +249,25 @@ EOD;
         ajax_return_res($res);
     }
 
+    public function delete() {
+        $id = input('id');
+        $res = $this->model->delete("books", ['id' => $id]);
+        ajax_return_res($res);
+
+    }
+
     public function checkdir() {
-        $url = "https://www.qu.la/book/28543/";
+        $url = input('title_link');
+        $data = $this->catalog($url);
+        if (is_array($data) && count($data) > 0) {
+            ajax_success('目录检查成功，正在检测页面', $data);
+        } else {
+            ajax_error('目录检查失败');
+        }
+    }
+
+    public function chek() {
+        $url = input('title_link');
         $data = $this->catalog($url);
         if (is_array($data) && count($data) > 0) {
             ajax_success('目录检查成功，正在检测页面', $data);
@@ -260,7 +277,7 @@ EOD;
     }
 
     public function first() {
-        $url = "https://www.qu.la/book/28543/";
+        $url = input('title_link');
         $data = $this->catalog($url);
         dump($data);
     }
@@ -273,18 +290,23 @@ EOD;
         preg_match_all($pattern, $html, $matches);
         $mlist = $matches[1][0];
 
-        $pattern = "/<dd>.*?<a.*?href=\"(.*?)\".*?>(.*?)<\/a>.*?<\/dd>/is";
+        $pattern = "/<dd>.*?<a.*?href=\"(.*?(\d*?)(\.html)?)\".*?>(.*?)<\/a>.*?<\/dd>/is";
         preg_match_all($pattern, $mlist, $matches);
 
-        $data = array_merge_two(['title', 'link'], $matches[2], $matches[1]);
-        $data = array_sort($data, 'link');
-        $tem = 0;
+        $data = array_merge_two(['title', 'id', 'link'], $matches[4], $matches[2], $matches[1]);
+        $data = array_sort($data, 'id');
+        $old = '';
+        $nuique_key = "id";
+        $check_key = "link";
         foreach ($data as $key => $vo) {
-            if ($tem > $key) {
-                unset($data[$key]);
-            } else {
-                $tem = $key;
+            if ($old !== '') {
+                if ($data[$old][$nuique_key] == $vo[$nuique_key]) {
+                    $name = strlen($data[$old][$check_key]) > strlen($vo[$check_key])? $key: $old;
+                    unset($data[$name]);
+                }
+
             }
+            $old = $key;
         }
         return $data;
 
@@ -304,18 +326,21 @@ EOD;
 
         for ($i = 0; $i < $max; $i++) {
             if (strlen($data['url']) < $link_len + 4) {
+                show_msg("检测到【链接】结束.");
                 break;
             }
-            if ($this->temp % 50 == 0 && empty(locks($lock))) {
+            if ($i % 50 == 0 && empty(locks($lock))) {
+                show_msg("检测到【锁】结束.");
                 break;
             }
 
             $res = $this->get($data);
-            if (empty($res) && $wait > 4) {
-                $wait++;
-                return $data_list;
+            if (empty($res) && $wait++ > 10) {
+                progress_bar($this->temp, $max, [
+                    'msg' => $data['url'] . "加载失败，重试 $wait 次"
+                ]);
+                continue;
             }
-            $wait = 0;
             $title = $res['title'];
             $next = $res['next'];
             $content = $res['content'];
@@ -332,6 +357,7 @@ EOD;
                 return $res;
             }
             if ($res['next'] == $data['url'] || empty($res['content'])) {
+                show_msg("乏力，感觉不在爱了.");
                 break;
             }
 
@@ -341,12 +367,11 @@ EOD;
             $res['next_link'] = $next;
             $res = $this->model->add('article', $res);
 
-            progress_bar($this->temp, $max, [
-                'msg' => $title . ($res? '': ' - fail')
-            ]);
 
-            $this->temp++;
             if ($res) {
+                $this->temp++;
+                $msg = $title;
+                $wait = 0;
                 $data_list[] = $title;
                 logs($title . " \n[info] $book_id | $link | $next", "book");
                 if (IS_CLI) {
@@ -354,9 +379,12 @@ EOD;
                 }
                 $data['url'] = $next;
             } else {
-                show_msg($this->model->errorInfo());
-                break;
+                $msg = $title . " 保存失败， 重试 $wait 次";
+                $wait++;
             }
+            progress_bar($this->temp, $max, [
+                'msg' => $msg
+            ]);
         }
         return $data_list;
     }
