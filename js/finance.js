@@ -60,7 +60,6 @@ function finance() {
         '年收益': keepDecimalFull(avg_money * year_rate, 2),
     };
     console.log(res);
-
 }
 
 finance();
