@@ -98,18 +98,20 @@
         num: document.getElementById("progress-num"),
     };
     function show_ob(value, opt){
+        document.title = value;
         PROGRESS[opt.id].jump.style.width = value;
         PROGRESS[opt.id].num.innerHTML = value;
-        if(opt.msg) 
+        if(opt.msg) {
             appendDom(PROGRESS[opt.id].msg, opt.msg);
-
+            document.title = value+' '+opt.msg.replace(/<[^>]*>|/g,"");
+        }
         if(opt.info)
             appendDom(PROGRESS[opt.id].info, opt.info);
     }
     function appendDom(OBJ, text){
         var newItem=document.createElement("div");
         var textnode=document.createTextNode(text);
-        newItem.appendChild(textnode);
+        newItem.innerHTML = text;
 
         OBJ.appendChild(newItem);
         if(OBJ.childNodes.length > 10){

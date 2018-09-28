@@ -19,7 +19,7 @@ $(document).on('click', '.ajax', function (e) {
         data = JSON.parse(data);
     }
     try {
-        if(typeof (data) == "string"){
+        if (typeof (data) == "string") {
             data = JSON.parse(data);
         }
     } catch (e) {
@@ -31,6 +31,8 @@ $(document).on('click', '.ajax', function (e) {
         tips: tips, success: cb ? eval(cb) : function () {
         }
     };
+
+    if(!$(this).hasClass('ajax-only')) opt._obj = $(this);
     _ajax.request(url, method, data, opt);
     return false;
 });
@@ -59,6 +61,9 @@ _ajax = (function () {
         option = typeof (option) == 'function' ? {success: option} : option;
         option = Object.assign(opt, option);
         if (option._obj) {
+            if(option._obj.hasClass('disable')){
+                return;
+            }
             option._obj.addClass("wait disable");
         }
 
@@ -84,8 +89,14 @@ _ajax = (function () {
             that.data[option.id] = req;
         }
 
+        function autoEnd() {
+            if (option._obj) {
+                option._obj.removeClass("wait disable");
+            }
+        }
         function success(res) {
-            log(res);
+            option.show_log && log(res);
+            autoEnd();
             sound("success");
             var code = res.status;
             if (code != 1) {
@@ -101,6 +112,7 @@ _ajax = (function () {
         }
 
         function error(msg) {
+            autoEnd();
             showMsg(msg);
             sound("eorror");
         }

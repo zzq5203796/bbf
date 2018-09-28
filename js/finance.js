@@ -59,6 +59,8 @@ function finance() {
         '年利率': keepDecimalFull(avg_rate * year_rate, 2) + "%",
         '年收益': keepDecimalFull(avg_money * year_rate, 2),
     };
+    var str = JSON.stringify(res)
+    $(".finance_res").html(str);
     console.log(res);
 }
 

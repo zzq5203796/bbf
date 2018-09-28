@@ -47,9 +47,11 @@ bookv = tableView({
         {key: 'id', title: 'ID'},
         {key: 'id', title: '标题'},
         {key: 'id', title: '本地'},
+        {key: 'id', title: '数量'},
+        {key: 'id', title: '锁'},
         {key: 'id', title: '来源'},
         {key: 'id', title: '其他'},
-        {key: 'id', title: '<div class="btn" onclick="bookv.goPage(0);">刷新</div>'},
+        {key: 'id', title: '<div class="btn line-1" onclick="bookv.goPage(0);">刷新</div>'},
     ],
     url: "/article/index",
     link: {
@@ -59,6 +61,7 @@ bookv = tableView({
         read: "/article/book?book=",
         down: "/article/down?book=",
         searc: "/article/search",
+        unlock: "/article/unlocks?book=",
     },
 });
 function bookRefresh(){

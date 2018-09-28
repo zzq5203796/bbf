@@ -222,3 +222,18 @@
 .keycontent p:last-child,.keycontent1 p:last-child {
     padding-bottom: 10px;
 }
+.ajax{
+    cursor: pointer;
+    white-space: nowrap;
+}
+.op5{
+    opacity: 0.5;
+}
+.line-1{
+    white-space: nowrap;
+}
+.btn-disable{
+    cursor: not-allowed;
+    opacity: 0.5;
+    white-space: nowrap;
+}

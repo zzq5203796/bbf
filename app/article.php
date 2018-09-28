@@ -85,10 +85,14 @@ EOD;
 
         $list = $this->model->query("books", "*", [], "", "id asc");
         $str = "";
-
+        foreach ($list as &$vo) {
+            $vo['num'] = $this->model->query("article", "count(id) as num", ['book_id' => $vo['id']], "", "id asc")[0]['num'];
+            $vo['lock_book'] = $this->locks('book_' . $vo['id']);
+            $vo['lock_down'] = $this->locks('book_down_' . $vo['id']);
+        }
 
         if (IS_AJAX) {
-            ajax_page('',  $list);
+            ajax_page('', $list);
         }
         foreach ($list as $vo) {
             $title = $vo['title'];
@@ -334,7 +338,7 @@ EOD;
                 break;
             }
 
-            if($wait > 10){
+            if ($wait > 10) {
                 break;
             }
 
@@ -342,7 +346,7 @@ EOD;
             if (empty($res)) {
                 $wait++;
                 progress_bar($this->temp, $max, [
-                    'msg' => "<a href='".$data['url']."'></a>加载失败，重试 第 $wait 次"
+                    'msg' => "<a href='" . $data['url'] . "'></a>加载失败，重试 第 $wait 次"
                 ]);
                 continue;
             }
@@ -476,8 +480,11 @@ EOD;
 
     public function down() {
         $book_id = $this->bookId;
+        $type = input('type', 'down');
         $book = $this->txtPack($book_id, 0);
-        IS_CLI || down_file($book["file"], $book['name'] . ".txt");
+
+        IS_CLI || $type != 'down' || down_file($book["file"], $book['name'] . ".txt");
+        IS_AJAX && ajax_success('');
     }
 
     /**
@@ -503,13 +510,15 @@ EOD;
         $list = $this->model->query("article", "*", ['book_id' => $book_id], "", "id asc");
         $onebr = "\r\n";
         $br = $onebr . $onebr;
+        $titlebr = $br . $onebr;
+        $pagebr = $br;
         $str = "声明：本书为 $br $name $br 作者：**** $br 简介: ****** $br";
         foreach ($list as $vo) {
-            $title = $vo["title"];
-            $title = str_replace(["〇"], "零", $title);
+            $title = $this->doTitle($vo["title"]);
+
             $content = $vo["content"];
             $content = str_replace(["<br/>", "</br></br>"], $br, $content);
-            $str .= "$title$br$onebr$content$br";
+            $str .= "$title$titlebr$content$pagebr";
         }
         write($file, $str);
         $book["count"] = count($list);
@@ -518,11 +527,40 @@ EOD;
         return $book;
     }
 
+    private function doTitle($title) {
+        $title = str_replace(["〇"], "零", $title);
+        $title = explode(" ", $title);
+        if (count($title) == 1) {
+            $title = explode(".", $title[0]);
+        }
+        if (is_numeric($title[0])) {
+            $title[0] = "第" . $title[0] . "章";
+        }
+        $title = implode(" ", $title);
+        return $title;
+    }
+
+    private function locks($lock, $value = null) {
+        $res = locks($lock, $value);
+        return ($value === null? !empty($res): $res);
+    }
+
     /**
      * 清除锁
      */
     public function unlocks() {
         $type = input('type', 'down');
+        $id = input('id', 'down');
+        switch ($type) {
+            case 'book':
+                $name = 'book_';
+                break;
+            default:
+                $name = "book_down_";
+        }
+        $name .= $id;
+        $this->locks($name, 0);
+        ajax_success('');
     }
 
     public function test() {
