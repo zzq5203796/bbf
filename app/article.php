@@ -179,6 +179,7 @@ EOD;
 
         $save = empty($_GET['save'])? 0: $_GET['save'];
         $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
+        $total_page = $this->model->query("article", "count(*) as num", ['book_id' => $book_id])[0]['num'];
         $url = $last_page && !$is_check? $last_page['next_link']: $info['first_link'];
         if (!$save && !empty($_GET['p'])) {
             $url = $_GET['p'];
@@ -193,6 +194,7 @@ EOD;
             "book_id"    => $book_id,
             "save"       => $save,
             "link"       => $info['link'],
+            "total"       => $total_page,
         ];
 
         if (!$save && !empty($_COOKIE[$data['cookie_top'] . "_link"])) {
@@ -322,18 +324,24 @@ EOD;
 
         $book_id = $data['book_id'];
         $link = $data['link'];
+        $has_total = $data['total'];
         $link_len = strlen($link);
         $is_save = $data['save'];
         $lock = $data["cookie_top"];
         $max = $is_save? 10000: 1;
         $wait = 0;
 
+        if($is_save){
+            $cates = $this->catalog($link);
+            $max = count($cates) - $has_total;
+        }
+        
         for ($i = 0; $i < $max; $i++) {
             if (strlen($data['url']) < $link_len + 4) {
                 show_msg("检测到【链接】结束.");
                 break;
             }
-            if ($i % 50 == 0 && empty(locks($lock))) {
+            if ($i % 50 == 0 && empty(locks($lock)) && $is_save) {
                 show_msg("检测到【锁】结束.");
                 break;
             }
