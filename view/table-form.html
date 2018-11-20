@@ -97,7 +97,9 @@ $data = $fields['data'];
                 $opt = default_empty_value($field, 3, []);
                 $width =  default_empty_value($opt, 'width', 'auto');
 ?>
-                <td><input type="<?php echo $field[2]; ?>" placeholder="请输入<?php  echo $field[1]; ?>" style="width: <?php  echo $width; ?>" name='<?php echo $field[0]; ?>' value=""/></td>
+                <td>
+                <input type="<?php echo $field[2]; ?>" placeholder="请输入<?php  echo $field[1]; ?>" style="width: <?php  echo $width; ?>" name='<?php echo $field[0]; ?>' value=""/>
+                </td>
                 <?php } ?>
                 <td>
                     <input type="hidden" name='subtype' value="add"/>
@@ -130,6 +132,10 @@ function this_input($field, $data){
     switch($type){
         case 'textarea':
         $str = '<textarea name=".$name.">'. $data[$name] .'</textarea>';
+        break;
+        case 'json':
+        $field['value']=$data;
+        $str = view("fields/json", $field);
         break;
         default:
         $str = '<input '.$style.' type="text" name="'. $name .'" value="'. $data[$name] .'"/>';

@@ -1,0 +1,14 @@
+<div>
+<?php 
+list($field,$title,$type)=$fields;
+$data=$fields['value'];
+$value = json_decode($data[$field],true);
+foreach($value as $key=>$item){ ?>
+	<div>
+		<lable><?php echo $key; ?>:</lable> <input
+        name="<?php echo $field.'['.$key.']'; ?>"
+        type="input"
+        value="<?php echo htmlspecialchars($item); ?>"/></div>
+
+<?php } ?> 
+</div>

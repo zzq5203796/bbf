@@ -83,7 +83,7 @@ EOD;
             ["down", "TXT", "book=1"],
         ];
 
-        $list = $this->model->query("books", "*", [], "", "id asc");
+        $list = $this->model->query("books", "*", [], "", "id desc");
         $str = "";
         foreach ($list as &$vo) {
             $vo['num'] = $this->model->query("article", "count(id) as num", ['book_id' => $vo['id']], "", "id asc")[0]['num'];
@@ -624,8 +624,8 @@ EOD;
             ['title', '标题', 'text'],
             ['link', '链接', 'text'],
             ['search_link', '搜索链接', 'text'],
-            ['preg', '表达式', 'textarea'],
-            ['header', '头部', 'textarea'],
+            ['matchs', '表达式', 'json'],
+            ['header', '头部', 'json'],
             // ['target', '新窗口', 'redeio'],
             // ['target', '新窗口', 'redeio'],
         ];
