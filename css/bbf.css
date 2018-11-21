@@ -237,3 +237,8 @@
     opacity: 0.5;
     white-space: nowrap;
 }
+
+.mobile{text-align: center;}
+.mobile #myIframe{width: 414px; height: 717px;border: 1px solid #999;margin-top: 20px; border: 8px solid #c3c3c3;
+    border-radius: 18px;}
+.m-tool-box{display: none;}

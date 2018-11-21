@@ -76,6 +76,9 @@ _menu = {
             $("#main_right_nav_a_2").text(text);
             setStore('re_name', title, text);
         });
+        $(".change-client").click(function(){
+            $("#right .main").toggleClass("mobile");
+        });
         // toggle check
         $(".menu-level").on('click', '.menu-node>.menu-text>i', function (e) {
             $(this).parent().attr("disabled", true);
