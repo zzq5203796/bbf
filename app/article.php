@@ -71,7 +71,6 @@ class Article
         
     article/redo  重新格式化content
 
-
 EOD;
         echo $html;
 
@@ -202,18 +201,49 @@ EOD;
         }
         $lock = $data["cookie_top"];
         if ($save) {
-            if (!empty(locks($lock))) {
-                echo "[INRUN] Book is running elsewhere. [$lock]\r\n";
-                return false;
-            }
             IS_CLI || set_time_limit(0);
-            locks($lock, json_encode($data));
+            if (!empty(locks($lock))) {
+                echo "[Listen] Book $book_id. ".get_br();
+                $this->listen($lock);
+                return false;
+            }else{
+                $lockdata = $data;
+                $lockdata['num'] = 1;
+                $lockdata['max'] = 100;
+                $lockdata['msg'] = 'start';
+                locks($lock, $lockdata);
+            }
+            ignore_user_abort(true);
         }
         $res = $this->runGet($data);
         if ($save) {
             locks($lock, 0);
         }
         $save && show_msg("共成功采集total: " . count($res) . " 条.");
+    }
+
+    public function listen($name){
+        $i = 1000;
+        do{
+            $lock = locks($name);
+            if(!$lock){
+                break;
+            }
+            if(empty($lock['msg'])){
+                $lock['msg'] = '....';
+                $lock['num'] = 0;
+                $lock['max'] = 100;
+            }
+            $t = date("Y-m-d H:i:s", $lock['dt']);
+            $max = $lock['max'];
+            $num = $lock['num'];
+            $msg = $lock['msg'];
+            progress_bar($num, $max, [
+                'msg' => "[$t] $msg"
+            ]);
+            sleep(1);
+            $i--;
+        }while($i>0);
     }
 
     public function join() {
@@ -402,6 +432,13 @@ EOD;
             progress_bar($this->temp, $max, [
                 'msg' => $msg
             ]);
+
+            $lockdata = [
+                'num' => $this->temp,
+                'max' => $max,
+                'msg' => $msg
+            ];
+            locks($lock, $lockdata);
         }
         return $data_list;
     }
@@ -631,5 +668,50 @@ EOD;
         ];
         $data = $this->model->query("webs");
         view("table-form", ['fields' => $fields, 'data' => $data]);
+    }
+
+    public function booknew() {
+        $book_id = empty($_GET['book'])? 1: $_GET['book'];
+        $info = $this->model->query("books", "*", ['id' => $book_id])[0];
+        if (empty($info)) {
+            echo "[book|save|p],no found.\r\n";
+            return false;
+        }
+
+        $save = empty($_GET['save'])? 0: $_GET['save'];
+        $last_page = $this->model->query("article", "*", ['book_id' => $book_id], "", "id desc", "", 0, 1)[0];
+        $total_page = $this->model->query("article", "count(*) as num", ['book_id' => $book_id])[0]['num'];
+        $url = $last_page && !$is_check? $last_page['next_link']: $info['first_link'];
+        if (!$save && !empty($_GET['p'])) {
+            $url = $_GET['p'];
+        }
+        $data = [
+            'url'        => $url,
+            "content"    => $info['preg_content'],
+            "title"      => $info['preg_title'],
+            "next"       => $info['preg_next'],
+            "next_top"   => $info['link'],
+            "cookie_top" => "book_" . $book_id,
+            "book_id"    => $book_id,
+            "save"       => $save,
+            "link"       => $info['link'],
+            "total"       => $total_page,
+        ];
+
+        
+        $lock = $data["cookie_top"];
+        if ($save) {
+            if (!empty(locks($lock))) {
+                echo "[INRUN] Book is running elsewhere. [$lock]\r\n";
+                return false;
+            }
+            IS_CLI || set_time_limit(0);
+            locks($lock, json_encode($data));
+        }
+        $res = $this->runGet($data);
+        if ($save) {
+            locks($lock, 0);
+        }
+        $save && show_msg("共成功采集total: " . count($res) . " 条.");
     }
 }
