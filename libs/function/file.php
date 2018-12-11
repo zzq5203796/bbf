@@ -220,8 +220,27 @@ function locks($file, $data = null, $opt = []) {
         if (IS_CLEAR) {
             return '';
         }
-        return read($file);
+        $lock = read($file);
+        if(!empty($lock)){
+            $lock = json_decode($lock, true);
+            if($lock['locktype']=='string'){
+                $lock = $lock['content'];
+            }
+        }
+        return $lock;
     } else {
+        @define('PID') or define('PID', uniqid());
+        if(is_array($data)){
+            $data['locktype'] = 'array';
+        }else{
+            $data = [
+                'content' => $data,
+                'locktype' => 'string'
+            ];
+        }
+        $data['pid'] = PID;
+        $data['dt'] = time();
+        $data = json_encode($data);
         write($file, $data);
         return true;
     }

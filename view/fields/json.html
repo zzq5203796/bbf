@@ -2,7 +2,7 @@
 <?php 
 list($field,$title,$type)=$fields;
 $data=$fields['value'];
-$value = json_decode($data[$field],true);
+$value = json_decode($data[$field]?$data[$field]:'[]',true);
 foreach($value as $key=>$item){ ?>
 	<div>
 		<lable><?php echo $key; ?>:</lable> <input
