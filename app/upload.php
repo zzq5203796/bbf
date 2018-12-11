@@ -19,6 +19,15 @@ class Upload
         return 123;
     }
 
+    public function img(){
+        echo json_encode([
+            'status' => 1,
+            'success' => 1,
+            'msg'    => 'success',
+            'for'    => "$method-$id",
+            'data'   => ''
+        ]);
+    }
     public function json() {
         $data = $_POST;
         $method = $_GET['method'];
